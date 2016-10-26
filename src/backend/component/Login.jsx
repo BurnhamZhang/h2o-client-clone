@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux'
+import {connect} from 'react-redux';
 import {Button, Form, Input, Row, Col, Spin} from 'antd';
 import { withRouter } from 'react-router';
 import {fetchUserIfNeeded} from '../actions/user';
