@@ -2,10 +2,13 @@ import webpack from 'webpack';
 import path from 'path';
 
 module.exports = {
+    debug: true,
     entry: {
-        frontend: ['webpack-hot-middleware/client?http://localhost:3000','webpack/hot/only-dev-server',path.resolve(__dirname, '../src/frontend/index')],
-        backend: ['webpack-hot-middleware/client?http://localhost:3000','webpack/hot/only-dev-server',path.resolve(__dirname, '../src/backend/index')],
+        frontend: ['webpack-hot-middleware/client?http://localhost:3000', 'webpack/hot/only-dev-server', path.resolve(__dirname, '../src/frontend/index')],
+        backend: ['webpack-hot-middleware/client?http://localhost:3000', 'webpack/hot/only-dev-server', path.resolve(__dirname, '../src/backend/index')],
     },
+    devtool: 'source-map', // more info:https://webpack.github.io/docs/build-performance.html#sourcemaps and https://webpack.github.io/docs/configuration.html#devtool
+    // devtool: 'cheap-module-eval-source-map', // more info:https://webpack.github.io/docs/build-performance.html#sourcemaps and https://webpack.github.io/docs/configuration.html#devtool
     module: {
         loaders: [
             {
@@ -14,7 +17,7 @@ module.exports = {
                 loader: 'babel',
                 query: {
                     plugins: ['transform-decorators-legacy'],
-                    presets: ['latest', 'react', 'stage-0','react-hmre' ]
+                    presets: ['latest', 'react', 'stage-0', 'react-hmre']
                 }
             },
             {test: /\.s?css$/, loader: 'style!css!sass'},
@@ -33,9 +36,9 @@ module.exports = {
     devServer: {
         contentBase: '../dist',
         hot: true,
-        inline:true,
-        progress:true,
-        historyApiFallback:true
+        inline: true,
+        progress: true,
+        historyApiFallback: true
     },
     plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
