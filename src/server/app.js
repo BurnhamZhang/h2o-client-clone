@@ -4,6 +4,7 @@ import koa from 'koa';
 import api from './api';
 import backend from './backend';
 import frontend from './frontend';
+import app from './io';
 import path from 'path';
 import mount from 'koa-mount';
 import bodyParser from 'koa-bodyparser';
@@ -14,7 +15,7 @@ import webpack from 'webpack';
 import config from '../../config/webpack.config';
 
 
-const app = koa();
+// const app = koa();
 
 
 
@@ -33,6 +34,7 @@ app.use(bodyParser());
 app.use(mount('/backend', backend));
 app.use(mount('/frontend', frontend));
 app.use(mount('/api', api));
+// app.use(mount(io));
 
 // Serve static files
 app.use(serve(path.join(__dirname, '../../dist')));

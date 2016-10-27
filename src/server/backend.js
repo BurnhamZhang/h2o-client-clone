@@ -11,7 +11,6 @@ const app = koa();
 const router = new Router();
 
 router.get('*',function *() {
-    console.log('backend')
     this.body = `<!DOCTYPE html>
                         <html>
                           <head>

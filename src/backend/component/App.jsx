@@ -6,6 +6,17 @@ const SubMenu = Menu.SubMenu;
 import '../assets/scss/app.scss';
 import Sidebar from './Sidebar';
 
+import io from 'socket.io-client';
+
+const socket = io();
+console.log('socket',socket);
+
+socket.on('new message',function (data) {
+  console.warn('new message',data);
+})
+
+
+
 const App = React.createClass({
   getInitialState() {
     return {
@@ -18,6 +29,12 @@ const App = React.createClass({
     })
   },
   render() {
+
+    socket.emit('get message', {
+      test:1,
+      name:'dsd'
+    });
+
     const collapse = this.state.collapse;
     const key = this.props.location.pathname.split('/')[1] || 'root'
     return (
