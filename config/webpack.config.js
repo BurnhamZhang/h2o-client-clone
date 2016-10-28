@@ -3,9 +3,10 @@ import path from 'path';
 
 module.exports = {
     debug: true,
+    noInfo: true, // set to false to see a list of every file being bundled.
     entry: {
-        frontend: ['webpack-hot-middleware/client?http://localhost:3000', 'webpack/hot/only-dev-server', path.resolve(__dirname, '../src/frontend/index')],
-        backend: ['webpack-hot-middleware/client?http://localhost:3000', 'webpack/hot/only-dev-server', path.resolve(__dirname, '../src/backend/index')],
+        frontend: ['webpack-hot-middleware/client?reload=true', 'webpack/hot/only-dev-server', path.resolve(__dirname, '../src/frontend/index')],
+        backend: ['webpack-hot-middleware/client?reload=true', 'webpack/hot/only-dev-server', path.resolve(__dirname, '../src/backend/index')],
     },
     devtool: 'source-map', // more info:https://webpack.github.io/docs/build-performance.html#sourcemaps and https://webpack.github.io/docs/configuration.html#devtool
     // devtool: 'cheap-module-eval-source-map', // more info:https://webpack.github.io/docs/build-performance.html#sourcemaps and https://webpack.github.io/docs/configuration.html#devtool
@@ -16,7 +17,7 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'babel',
                 query: {
-                    plugins: ['transform-decorators-legacy'],
+                    plugins: ['transform-decorators-legacy',  ["import", [{ "libraryName": "antd" }]]],
                     presets: ['latest', 'react', 'stage-0', 'react-hmre']
                 }
             },

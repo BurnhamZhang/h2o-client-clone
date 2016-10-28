@@ -16,3 +16,5 @@ Root.propTypes = {
     history: PropTypes.object.isRequired,
     routes: PropTypes.object.isRequired,
 }
+
+export default Root

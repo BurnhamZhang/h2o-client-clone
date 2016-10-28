@@ -16,6 +16,8 @@ router.get('*',function *() {
                           <head>
                             <meta charset="utf-8">
                             <title>Node + React Starter</title>
+                            <link rel="stylesheet" href="/antd.css"/>
+                            <link rel="stylesheet" href="/app.css"/>
                           </head>
                           <body>
                             <div id='react-content'/>
