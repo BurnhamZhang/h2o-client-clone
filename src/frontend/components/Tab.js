@@ -1,6 +1,5 @@
 import '../assets/stylesheets/base.scss';
-import 'antd-mobile/dist/antd-mobile.css';
-import TabBar from 'antd-mobile/lib/tab-Bar';
+import { TabBar } from 'antd-mobile';
 import {withRouter} from 'react-router';
 
 import React, {Component} from 'react';

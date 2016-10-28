@@ -14,7 +14,7 @@ module.exports = {
     debug: false,
     noInfo: true, // set to false to see a list of every file being bundled.
     entry: {
-        // frontend: [path.resolve(__dirname, '../src/frontend/index')],
+        frontend: [path.resolve(__dirname, '../src/frontend/index')],
         backend: [path.resolve(__dirname, '../src/backend/index')],
     },
     module: {
@@ -24,7 +24,7 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'babel',
                 query: {
-                    plugins: ['transform-decorators-legacy',["import", [{ "libraryName": "antd" }]]],
+                    plugins: ['transform-decorators-legacy', ["import", [{ "libraryName": "antd" ,"style": "css"},{ "libraryName": "antd-mobile" ,"style": "css"}]]],
                     presets: ['latest', 'react', 'stage-0']
                 }
             },
@@ -37,7 +37,8 @@ module.exports = {
             // https://github.com/webpack/style-loader#recommended-configuration
             {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../node_modules/antd'), loader: extractAntd.extract('css')},
             {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../src'), loader: extractCss.extract('css!postcss!sass')},
-            {test: /\.css$/, include: path.join(__dirname, '../node_modules/antd-mobile'), loader: extractAntdMobile.extract('css')},
+            // {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../node_modules/antd-mobile'), loader: extractAntdMobile.extract('css')},
+            {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../node_modules/normalize.css'), loader: extractAntdMobile.extract('css')},
         ]
     },
     resolve: {
@@ -58,6 +59,7 @@ module.exports = {
         }),
         extractAntd,
         extractCss,
+        extractAntdMobile,
         new webpack.NoErrorsPlugin(),
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.UglifyJsPlugin({
