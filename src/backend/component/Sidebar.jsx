@@ -59,7 +59,9 @@ class Sidebar extends React.Component {
     render() {
         return (
             <aside className="ant-layout-sider">
-                <div className="ant-layout-logo"></div>
+                <div className="ant-layout-logo">
+                    <img src="http://temp.im/150x32/333/000" style={{height:32,width:150}} />
+                </div>
                 <Menu mode="inline" theme="dark" defaultSelectedKeys={[this.state.current||data[0].key]} onClick={this.handleClick}>
                     {this.state.data.map((item)=>(
                         <Menu.Item key={item.path}>

@@ -34,6 +34,54 @@ router.post('/order',function *() {
     }
 })
 
+
+
+router.post('/goods',function *() {
+    var data = [];
+    let pageSize  = this.request.body.pageSize ||20;
+    let current = this.request.body.current || 1;
+    for(var i = 0;i<pageSize;i++){
+        data.push({
+            goodsId:Math.floor(Math.random()*10000),
+            name:'名称'+Math.random().toString(36).substr(20),
+            images:['http://temp.im/144x144/FF9500/000','http://temp.im/144x144/FF9500/000'],
+            memo:'描述介绍'+Math.random().toString(36).substr(2),
+            price: (Math.random()*100).toFixed(2),
+            scale: ['10L','15L','20L','400ML','300ML','500ML'][Math.floor(Math.random()*6)],
+            stock: Math.floor(Math.random()*10000),
+            depositType:Math.floor(Math.random()*2),
+            depositMoney:(Math.random()*100).toFixed(2),
+            shelves:Math.floor(Math.random()*2)
+        })
+    }
+
+    console.log(this.request.body);
+    this.body = {
+        data : data,
+        total:264,
+        pageSize,
+        current
+    }
+})
+
+
+router.get('/goods/:id',function *() {
+    console.log(this.params.id);
+    const id = this.params.id;
+    this.body = {
+        goodsId:id||Math.floor(Math.random()*10000),
+        name:'名称'+Math.random().toString(36).substr(20),
+        images:['http://temp.im/144x144/FF9500/000','http://temp.im/144x144/FF9500/000'],
+        memo:'描述介绍'+Math.random().toString(36).substr(2),
+        price: (Math.random()*100).toFixed(2),
+        scale: ['10L','15L','20L','400ML','300ML','500ML'][Math.floor(Math.random()*6)],
+        stock: Math.floor(Math.random()*10000),
+        depositType:Math.floor(Math.random()*2),
+        depositMoney:(Math.random()*100).toFixed(2),
+        shelves:Math.floor(Math.random()*2)
+    }
+})
+
 router.post('*',function *(data) {
     console.log('post',this.request.body);
     this.body = this.request.body;

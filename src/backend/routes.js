@@ -6,7 +6,8 @@ import Manage from './component/Manage';
 import Order from './component/Order';
 import Deliver from './component/Deliver';
 import Achievement from './component/Achievement';
-import Goods from './component/Goods';
+import GoodsItem from './component/GoodsItem';
+import GoodsList from './component/GoodsList';
 import Store from './component/Store';
 import Records from './component/Records';
 import Login from './component/Login';
@@ -57,7 +58,11 @@ export default (store) =>{
                     },
                     {
                         path: 'goods',
-                        component: Goods
+                        component: GoodsList
+                    },
+                    {
+                        path: 'goods/:id',
+                        component: GoodsItem
                     },
                     {
                         path: 'store',
