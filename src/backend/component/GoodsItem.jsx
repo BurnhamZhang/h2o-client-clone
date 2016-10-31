@@ -93,12 +93,42 @@ const itemList = [{
 
 
 
-@connect((state, ownProps)=>({
-    ...state.goods
-}), (dispatch, ownProps)=>({
-    fetchGoodsIfNeeded: (payload)=>dispatch(fetchGoodsIfNeeded(payload))
-}))
 @createForm({
+    mapPropsToFields:({payload})=> {
+        console.log('mapPropsToFields', payload);
+        return {
+            goodsId: {
+                value:payload.goodsId
+            },
+            name: {
+                value:payload.name
+            },
+            images: {
+                value:payload.images
+            },
+            memo: {
+                value:payload.memo
+            },
+            price: {
+                value:payload.price
+            },
+            scale: {
+                value:payload.scale
+            },
+            stock: {
+                value:payload.stock
+            },
+            depositType: {
+                value:payload.depositType
+            },
+            depositMoney: {
+                value:payload.depositMoney
+            },
+            shelves: {
+                value:payload.shelves
+            }
+        }
+    }
 })
 class GoodsItem extends Component {
     constructor(props) {
@@ -106,20 +136,7 @@ class GoodsItem extends Component {
         this.onChooseItem =this.onChooseItem.bind(this);
     }
 
-    componentDidMount() {
-        const {id} = this.props.params;
-        const payload = this.props.payload;
 
-        if(id=='create'){
-            this.onChooseItem(itemList[3].goodsId)
-        }
-        else {
-            this.props.fetchGoodsIfNeeded(id);
-
-        }
-        console.log('componentDidMount ','payload',payload)
-        payload && this.props.form.setFieldsValue(payload);
-    }
     onChooseItem(value){
 
 
@@ -149,19 +166,14 @@ class GoodsItem extends Component {
 
     render() {
         const {getFieldDecorator, getFieldValue ,getFieldsValue} = this.props.form;
-        console.log('props', this.props)
-        const {id} = this.props.params;
-        const { payload  ,isFetching } = this.props;
+        const { type ,payload} = this.props;
 
 
-        if(isFetching  || !payload){
-            return <span>搜索中</span>
-        }
+
 
         const item = payload;
 
-        console.log('item',item)
-        console.log('getFieldsValue' ,getFieldsValue())
+        console.warn('render',item,getFieldsValue());
 
 
         return (<div className="ant-layout-content">
@@ -172,9 +184,8 @@ class GoodsItem extends Component {
                     wrapperCol={{span: 22}}
                 >
                     {
-                        id == 'create' ?
+                        type == 'create' ?
                         getFieldDecorator('goodsId', {
-                            initialValue:item.name
                         })(
                             <Select style={{width: 120}}  onChange={(value)=>{this.onChooseItem(value)}}>
                                 {
@@ -242,7 +253,6 @@ class GoodsItem extends Component {
                 >
                     {
                         getFieldDecorator('price', {
-                            initialValue:  1
                         })(
                             <InputNumber min={0.01} step="0.01" size="120"/>
                         )
@@ -255,7 +265,6 @@ class GoodsItem extends Component {
                 >
                     {
                         getFieldDecorator('stock', {
-                            initialValue: 0
                         })(
                             <InputNumber min={0} step="1" size="120"/>
                         )
@@ -268,7 +277,6 @@ class GoodsItem extends Component {
                 >
                     {
                         getFieldDecorator('depositType', {
-                            initialValue: 0,
                         })(
                             <RadioGroup>
                                 <Radio key="a" value={0}>无押金</Radio>
@@ -279,7 +287,6 @@ class GoodsItem extends Component {
                     }
                     {
                         getFieldValue('depositType') == 1 ? getFieldDecorator('depositMoney', {
-                            initialValue: 1,
                         })(
                             <InputNumber min={0.01}  step="0.01" size="120"/>) : ''
                     }
@@ -291,7 +298,6 @@ class GoodsItem extends Component {
                 >
                     {
                         getFieldDecorator('shelves', {
-                            initialValue: 1,
                         })(
                             <RadioGroup>
                                 <Radio key="a" value={1}>上架</Radio>
@@ -312,5 +318,56 @@ class GoodsItem extends Component {
     }
 }
 
+@connect((state, ownProps)=>({
+    ...state.goods
+}),(dispatch, ownProps)=>({
+    fetchGoodsIfNeeded: (payload)=>dispatch(fetchGoodsIfNeeded(payload))
+}))
+class GoodsForm extends Component {
 
-export default GoodsItem;
+    componentWillMount() {
+        console.warn('componentWillMount'.toLocaleUpperCase());
+        const id =this.props.params.id;
+        if(id!='create'){
+            this.props.fetchGoodsIfNeeded(id);
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+        const id =nextProps.params.id;
+        console.warn('componentWillReceiveProps',this.props,nextProps)
+        if(this.props.params.id !==id ){
+            if(id!='create'){
+                this.props.fetchGoodsIfNeeded(id);
+            }
+        }
+    }
+
+    render(){
+        const {id} = this.props.params;
+
+        console.warn('render'.toLocaleUpperCase(),id);
+
+
+
+        let payload = this.props.payload;
+        if(id=='create'){
+            payload= Object.assign({},itemList[0],{
+                shelves:1,
+                depositMoney:1,
+                depositType:0,
+                stock:0,
+                price:1,
+            });
+        }
+
+        if(!payload){
+            return <span>搜索中</span>
+        }
+
+        return <GoodsItem type={id} payload={payload}></GoodsItem>
+    }
+}
+
+export default GoodsForm;
