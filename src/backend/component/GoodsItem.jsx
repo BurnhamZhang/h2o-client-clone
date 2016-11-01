@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {fetchGoodsIfNeeded} from '../actions/goods';
-import {Table, DatePicker, Radio, Form, Button, Select, Input, Row, Col, InputNumber} from 'antd';
+import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber} from 'antd';
+import Block from './Block';
 const ButtonGroup = Button.Group;
 const Option = Select.Option;
 const createForm = Form.create;
@@ -92,61 +93,35 @@ const itemList = [{
 }];
 
 
-
 @createForm({
-    mapPropsToFields:({payload})=> {
-        console.log('mapPropsToFields', payload);
-        return {
-            goodsId: {
-                value:payload.goodsId
-            },
-            name: {
-                value:payload.name
-            },
-            images: {
-                value:payload.images
-            },
-            memo: {
-                value:payload.memo
-            },
-            price: {
-                value:payload.price
-            },
-            scale: {
-                value:payload.scale
-            },
-            stock: {
-                value:payload.stock
-            },
-            depositType: {
-                value:payload.depositType
-            },
-            depositMoney: {
-                value:payload.depositMoney
-            },
-            shelves: {
-                value:payload.shelves
+    mapPropsToFields: ({payload})=> {
+        const fields = {};
+        for (var a in payload) {
+            fields[a] = {
+                value: payload[a]
             }
         }
+        console.log('mapPropsToFields', fields);
+        return fields;
     }
 })
 class GoodsItem extends Component {
     constructor(props) {
         super(props)
-        this.onChooseItem =this.onChooseItem.bind(this);
+        this.onChooseItem = this.onChooseItem.bind(this);
     }
 
 
-    onChooseItem(value){
+    onChooseItem(value) {
 
 
-        const item = itemList.find((item)=>(value==item.goodsId));
-        console.log('onChooseItem',value,item)
+        const item = itemList.find((item)=>(value == item.goodsId));
+        console.log('onChooseItem', value, item)
         this.props.form.setFieldsValue({
-            goodsId:item.goodsId,
-            images:item.images,
-            memo:item.memo,
-            scale:item.scale
+            goodsId: item.goodsId,
+            images: item.images,
+            memo: item.memo,
+            scale: item.scale
         });
     }
 
@@ -158,22 +133,20 @@ class GoodsItem extends Component {
                 console.log('Errors in form!!!');
                 return;
             }
-            console.log('values',values)
+            console.log('values', values)
             return
         });
 
     }
 
     render() {
-        const {getFieldDecorator, getFieldValue ,getFieldsValue} = this.props.form;
-        const { type ,payload} = this.props;
+        const {getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
+        const {type, payload} = this.props;
 
 
+        const item = Object.assign({}, payload, getFieldsValue());
 
-
-        const item = payload;
-
-        console.warn('render',item,getFieldsValue());
+        console.warn('render', item);
 
 
         return (<div className="ant-layout-content">
@@ -185,17 +158,18 @@ class GoodsItem extends Component {
                 >
                     {
                         type == 'create' ?
-                        getFieldDecorator('goodsId', {
-                        })(
-                            <Select style={{width: 120}}  onChange={(value)=>{this.onChooseItem(value)}}>
-                                {
-                                    itemList.map((item, index)=>(
-                                        <Option value={item.goodsId +''} key={item.goodsId}>{item.name}</Option>))
-                                }
-                            </Select>
-                        )
+                            getFieldDecorator('goodsId', {})(
+                                <Select style={{width: 120}} onChange={(value)=> {
+                                    this.onChooseItem(value)
+                                }}>
+                                    {
+                                        itemList.map((item, index)=>(
+                                            <Option value={item.goodsId + ''} key={item.goodsId}>{item.name}</Option>))
+                                    }
+                                </Select>
+                            )
 
-                         : item.name
+                            : item.name
                     }
                 </FormItem>
                 <FormItem
@@ -204,16 +178,16 @@ class GoodsItem extends Component {
                     wrapperCol={{span: 22}}
                 >
                     {
-                        getFieldDecorator('images', {
-                        })(
-                          <div>
-                              {
-                                  item.images.map((item, index)=>(
-                                      <img src={item} key={index} style={{width: 144, height: 144, margin: '0 5px 5px 0'}}
-                                             alt={item} />
-                                  ))
-                              }
-                          </div>
+                        getFieldDecorator('images', {})(
+                            <div>
+                                {
+                                    item.images.map((item, index)=>(
+                                        <img src={item} key={index}
+                                             style={{width: 144, height: 144, margin: '0 5px 5px 0'}}
+                                             alt={item}/>
+                                    ))
+                                }
+                            </div>
                         )
 
                     }
@@ -227,8 +201,7 @@ class GoodsItem extends Component {
                 >
                     {
 
-                        getFieldDecorator('memo', {
-                        })(
+                        getFieldDecorator('memo', {})(
                             <span>{item.memo}</span>
                         )
                     }
@@ -240,8 +213,7 @@ class GoodsItem extends Component {
                 >
                     {
 
-                        getFieldDecorator('scale', {
-                        })(
+                        getFieldDecorator('scale', {})(
                             <span>{item.scale}</span>
                         )
                     }
@@ -252,8 +224,7 @@ class GoodsItem extends Component {
                     wrapperCol={{span: 22}}
                 >
                     {
-                        getFieldDecorator('price', {
-                        })(
+                        getFieldDecorator('price', {})(
                             <InputNumber min={0.01} step="0.01" size="120"/>
                         )
                     }
@@ -264,8 +235,7 @@ class GoodsItem extends Component {
                     wrapperCol={{span: 22}}
                 >
                     {
-                        getFieldDecorator('stock', {
-                        })(
+                        getFieldDecorator('stock', {})(
                             <InputNumber min={0} step="1" size="120"/>
                         )
                     }
@@ -276,8 +246,7 @@ class GoodsItem extends Component {
                     wrapperCol={{span: 22}}
                 >
                     {
-                        getFieldDecorator('depositType', {
-                        })(
+                        getFieldDecorator('depositType', {})(
                             <RadioGroup>
                                 <Radio key="a" value={0}>无押金</Radio>
                                 <Radio key="b" value={1}>有押金</Radio>
@@ -286,9 +255,8 @@ class GoodsItem extends Component {
 
                     }
                     {
-                        getFieldValue('depositType') == 1 ? getFieldDecorator('depositMoney', {
-                        })(
-                            <InputNumber min={0.01}  step="0.01" size="120"/>) : ''
+                        getFieldValue('depositType') == 1 ? getFieldDecorator('depositMoney', {})(
+                            <InputNumber min={0.01} step="0.01" size="120"/>) : ''
                     }
                 </FormItem>
                 <FormItem
@@ -297,8 +265,7 @@ class GoodsItem extends Component {
                     wrapperCol={{span: 22}}
                 >
                     {
-                        getFieldDecorator('shelves', {
-                        })(
+                        getFieldDecorator('shelves', {})(
                             <RadioGroup>
                                 <Radio key="a" value={1}>上架</Radio>
                                 <Radio key="b" value={0}>下架</Radio>
@@ -320,53 +287,51 @@ class GoodsItem extends Component {
 
 @connect((state, ownProps)=>({
     ...state.goods
-}),(dispatch, ownProps)=>({
+}), (dispatch, ownProps)=>({
     fetchGoodsIfNeeded: (payload)=>dispatch(fetchGoodsIfNeeded(payload))
 }))
 class GoodsForm extends Component {
 
     componentWillMount() {
         console.warn('componentWillMount'.toLocaleUpperCase());
-        const id =this.props.params.id;
-        if(id!='create'){
+        const id = this.props.params.id;
+        if (id != 'create') {
             this.props.fetchGoodsIfNeeded(id);
         }
     }
 
     componentWillReceiveProps(nextProps) {
 
-        const id =nextProps.params.id;
-        console.warn('componentWillReceiveProps',this.props,nextProps)
-        if(this.props.params.id !==id ){
-            if(id!='create'){
+        const id = nextProps.params.id;
+        console.warn('componentWillReceiveProps', this.props, nextProps)
+        if (this.props.params.id !== id) {
+            if (id != 'create') {
                 this.props.fetchGoodsIfNeeded(id);
             }
         }
     }
 
-    render(){
+    render() {
         const {id} = this.props.params;
-
-        console.warn('render'.toLocaleUpperCase(),id);
-
-
-
         let payload = this.props.payload;
-        if(id=='create'){
-            payload= Object.assign({},itemList[0],{
-                shelves:1,
-                depositMoney:1,
-                depositType:0,
-                stock:0,
-                price:1,
+
+        if (id == 'create') {
+            payload = Object.assign({}, itemList[0], {
+                shelves: 1,
+                depositMoney: 1,
+                depositType: 0,
+                stock: 0,
+                price: 1,
             });
+            delete payload.goodsId;
         }
 
-        if(!payload){
-            return <span>搜索中</span>
-        }
+        return (
+            <Block spinning={!payload} >
+                <GoodsItem type={id} payload={payload} ></GoodsItem>
+            </Block>
 
-        return <GoodsItem type={id} payload={payload}></GoodsItem>
+        )
     }
 }
 
