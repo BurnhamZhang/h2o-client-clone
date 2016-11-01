@@ -110,7 +110,6 @@ class Login extends Component {
         )
         return (
             <Row type="flex" justify="center" align="middle" className='full-height'>
-
                 <Col span={12} style={{width: 600}}>
                     <Spin tip="登录中...请稍后" spinning={isFetching}>{ form }</Spin>
                 </Col>

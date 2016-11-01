@@ -4,7 +4,7 @@
 import App from './component/App';
 import Manage from './component/Manage';
 import Order from './component/Order';
-import Deliver from './component/Deliver';
+import CourierList from './component/CourierList';
 import Achievement from './component/Achievement';
 import GoodsItem from './component/GoodsItem';
 import GoodsList from './component/GoodsList';
@@ -49,8 +49,8 @@ export default (store) =>{
                         component: Order
                     },
                     {
-                        path: 'deliver',
-                        component: Deliver
+                        path: 'courier',
+                        component: CourierList
                     },
                     {
                         path: 'achievement',

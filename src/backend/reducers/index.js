@@ -4,6 +4,7 @@ import example from './example';
 import user from './user';
 import order from './order';
 import goods from './goods';
+import courier from './courier';
 import goodslist from './goodsList';
 
 
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   user,
   goods,
   goodslist,
-  order
+  order,
+  courier
 });
 
 export default rootReducer;

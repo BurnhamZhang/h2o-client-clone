@@ -51,15 +51,15 @@ class Order extends Component {
     }
 
 
-    handleSubmit(current=this.props.current,pageSize=this.props.pageSize) {
-        console.log('handleSubmit',current,pageSize);
+    handleSubmit(pageNum=this.props.pageNum,pageSize=this.props.pageSize) {
+        console.log('handleSubmit',pageNum,pageSize);
         this.props.form.validateFields((errors, values) => {
             if (errors) {
                 console.log('Errors in form!!!');
                 return;
             }
             values = Object.assign({}, values, {
-                current,
+                pageNum,
                 pageSize,
             })
             console.log('Submit!!!', values);
@@ -70,13 +70,15 @@ class Order extends Component {
         const {getFieldDecorator, getFieldError} = this.props.form;
 
         const pagination = {
-            ...this.props,
-            defaultPageSize: this.props.pageSize,
-            defaultCurrent: this.props.current,
-            showQuickJumper:true,
+            pageSize:this.props.pagination.pageSize,
+            current	: this.props.pagination.pageNum,
+            total: this.props.pagination.totalCount,
+            defaultPageSize: this.props.pagination.pageSize,
+            defaultCurrent: this.props.pageNum,
+            showQuickJumper: true,
             showSizeChanger: true,
-            onShowSizeChange:this.handleSubmit,
-            onChange:this.handleSubmit
+            onShowSizeChange: this.handleSubmit,
+            onChange: this.handleSubmit
         }
 
         console.log('pagination',pagination)

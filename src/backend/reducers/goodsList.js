@@ -3,6 +3,8 @@ import {GOODS_LIST_REQUEST, GOODS_LIST_SUCCESS, GOODS_LIST_FAILURE} from '../act
 export default function goodslist(state = {
     isFetching: false,
     didInvalidate: true,
+    pagination:{
+    }
 }, action) {
     switch (action.type) {
         case GOODS_LIST_FAILURE:
@@ -18,6 +20,7 @@ export default function goodslist(state = {
             })
             break;
         case GOODS_LIST_SUCCESS:
+            console.warn(action)
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,

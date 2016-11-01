@@ -25,9 +25,9 @@ const data = [{
     path:'/store'
 },{
     name: '配送员管理',
-    key: 'deliver',
+    key: 'courier',
     type: 'laptop',
-    path:'/deliver'
+    path:'/courier'
 },{
     name: '业绩管理',
     key: 'achievement',

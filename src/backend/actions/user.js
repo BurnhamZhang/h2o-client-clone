@@ -1,4 +1,4 @@
-import fetch from 'isomorphic-fetch';
+import fetch from '../common/fetch';
 import { User } from '../constants/globals';
 
 export const REQUEST_USER = 'REQUEST_USER';
@@ -31,13 +31,8 @@ function fetchData(data) {
     dispatch(requestUser(data));
     return fetch(User,{
       method:'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
       body: JSON.stringify(data)
     })
-    .then((req) => req.json())
     .then((json) => {
       dispatch(receiveUser(json));
     });

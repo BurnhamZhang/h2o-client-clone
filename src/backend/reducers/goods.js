@@ -22,7 +22,7 @@ export default function goods(state = {
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                payload:action.payload
+                payload:action.payload.data
             })
             break;
         default:

@@ -1,37 +1,38 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchGoodsListIfNeeded} from '../actions/goodsList';
+import {fetchCourierListIfNeeded} from '../actions/courier';
 import {Table, DatePicker, Radio, Form, Button, Select, Input, Row, Col} from 'antd';
 const ButtonGroup = Button.Group;
 
 
 
 const columns = [
-    {title: '商品名', dataIndex: 'name', key: '1'},
-    {
-        title: '商品图片', dataIndex: 'images', key: '2',
+    {title: '照片', dataIndex: 'image', key: '1',
         render: (text, record, index) => (
-            <img src={text[0]} style={{width: 60, height: 60}}/>
+            <img src={text} style={{width: 60, height:60}}/>
         ),
     },
-    {title: '商品描述', dataIndex: 'memo', key: '3'},
-    {title: '单价', dataIndex: 'price', key: '4'},
-    {title: '库存', dataIndex: 'stock', key: '5'},
     {
-        title: '状态', dataIndex: 'shelves', key: '6',
+        title: '姓名', dataIndex: 'name', key: '2',
+
+    },
+    {title: '账号', dataIndex: 'account', key: '3'},
+    {title: '电话', dataIndex: 'phone', key: '4'},
+    {
+        title: '状态', dataIndex: 'shelves', key: '5',
         render: (text, record, index) => (
             text == 0 ? '已下架' : '销售中'
         )
     },
     {
         title: '操作',
-        key: '7',
+        key: '6',
         fixed: 'right',
         width: 100,
         render: (text, record, index) => (
             <ButtonGroup>
-                <Link to={ '/goods/' + record.goodsId }><Button type="primary">详情</Button></Link>
+                <Link to={ '/courier/' + record.id }><Button type="primary">编辑</Button></Link>
             </ButtonGroup>
         ),
     },
@@ -39,11 +40,11 @@ const columns = [
 
 
 @connect((state, ownProps)=>({
-    ...state.goodslist
+    ...state.courier.list
 }), (dispatch, ownProps)=>({
-    fetchGoodsListIfNeeded: (payload)=>dispatch(fetchGoodsListIfNeeded(payload))
+    fetchCourierListIfNeeded: (payload)=>dispatch(fetchCourierListIfNeeded(payload))
 }))
-class GoodsList extends Component {
+class CourierList extends Component {
     constructor(props) {
         super(props)
 
@@ -56,9 +57,9 @@ class GoodsList extends Component {
     }
 
 
-    handleSubmit(pageNum = this.props.pagination.pageNum, pageSize = this.props.pagination.pageSize) {
+    handleSubmit(pageNum = this.props.pageNum, pageSize = this.props.pageSize) {
         console.log('handleSubmit', pageNum, pageSize);
-        this.props.fetchGoodsListIfNeeded({
+        this.props.fetchCourierListIfNeeded({
             pageNum,
             pageSize,
         });
@@ -87,16 +88,16 @@ class GoodsList extends Component {
                 <Col span={8} offset={8}>
                     <div style={{marginBottom: 16, float: 'right'}}>
                         <Link to="/goods/create">
-                            <Button type="primary">添加商品</Button>
+                            <Button type="primary">添加配送员</Button>
                         </Link>
                     </div>
                 </Col>
             </Row>
-            <Table columns={columns} size="small" dataSource={this.props.data} bgoodsed loading={this.props.isFetching}
+            <Table columns={columns} dataSource={this.props.data} bgoodsed loading={this.props.isFetching}
                    pagination={pagination}/>
         </div>)
     }
 }
 
 
-export default GoodsList;
+export default CourierList;
