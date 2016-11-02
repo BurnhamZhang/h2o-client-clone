@@ -31,7 +31,7 @@ function fetchData(data) {
     dispatch(requestUser(data));
     return fetch(User,{
       method:'POST',
-      body: JSON.stringify(data)
+      data
     })
     .then((json) => {
       dispatch(receiveUser(json));

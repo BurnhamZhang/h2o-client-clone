@@ -3,7 +3,7 @@ import {COURIER_REQUEST, COURIER_SUCCESS, COURIER_FAILURE} from '../../actions/c
 export default function (state = {
     isFetching: false,
     didInvalidate: true,
-    payload:null,
+    data:null,
 }, action) {
     switch (action.type) {
         case COURIER_FAILURE:
@@ -22,7 +22,7 @@ export default function (state = {
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                payload:action.payload
+                ...action.payload
             })
             break;
         default:

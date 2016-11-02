@@ -173,3 +173,10 @@ html,body,#react-content,.full-height {
   opacity: 0;
   transform: translateX(-5em);
 }
+
+
+.upload-list-inline .ant-upload-list-item {
+  display: inline-block;
+  width: 200px;
+  margin-right: 8px;
+}

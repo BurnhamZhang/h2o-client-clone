@@ -29,7 +29,6 @@ function fetchData(data) {
   return dispatch => {
     dispatch(orders_request(data));
     return fetch('/api/order',{
-      method:'POST',
       body: JSON.stringify(data)
     })
     .then((json) => {

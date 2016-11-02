@@ -313,22 +313,22 @@ class GoodsForm extends Component {
 
     render() {
         const {id} = this.props.params;
-        let payload = this.props.payload;
+        let data = this.props.data;
 
         if (id == 'create') {
-            payload = Object.assign({}, itemList[0], {
+            data = Object.assign({}, itemList[0], {
                 shelves: 1,
                 depositMoney: 1,
                 depositType: 0,
                 stock: 0,
                 price: 1,
             });
-            delete payload.goodsId;
+            delete data.goodsId;
         }
 
         return (
-            <Block spinning={!payload} >
-                <GoodsItem type={id} payload={payload} ></GoodsItem>
+            <Block spinning={!data} >
+                <GoodsItem type={id} payload={data} ></GoodsItem>
             </Block>
 
         )

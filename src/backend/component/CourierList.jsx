@@ -5,7 +5,7 @@ import {fetchCourierListIfNeeded} from '../actions/courier';
 import {Table, DatePicker, Radio, Form, Button, Select, Input, Row, Col} from 'antd';
 const ButtonGroup = Button.Group;
 
-
+const statusList = ['休息','正常','停用']
 
 const columns = [
     {title: '照片', dataIndex: 'image', key: '1',
@@ -21,9 +21,7 @@ const columns = [
     {title: '电话', dataIndex: 'phone', key: '4'},
     {
         title: '状态', dataIndex: 'shelves', key: '5',
-        render: (text, record, index) => (
-            text == 0 ? '已下架' : '销售中'
-        )
+        render: (text, record, index) =>  statusList[text]
     },
     {
         title: '操作',
@@ -87,7 +85,7 @@ class CourierList extends Component {
                 </Col>
                 <Col span={8} offset={8}>
                     <div style={{marginBottom: 16, float: 'right'}}>
-                        <Link to="/goods/create">
+                        <Link to="/courier/create">
                             <Button type="primary">添加配送员</Button>
                         </Link>
                     </div>

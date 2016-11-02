@@ -27,7 +27,7 @@ router.use(function *(next) {
 });
 
 
-router.post('/order', function *() {
+router.get('/order', function *() {
     var data = [];
     let pageSize = this.request.body.pageSize || 20;
     let pageNum = this.request.body.pageNum || 1;
@@ -51,7 +51,7 @@ router.post('/order', function *() {
 })
 
 
-router.post('/goods', function *() {
+router.get('/goods', function *() {
     var data = [];
     let pageSize = this.request.body.pageSize || 20;
     let pageNum = this.request.body.pageNum || 1;
@@ -97,7 +97,7 @@ router.get('/goods/:id', function *() {
     }
 })
 
-router.post('/courier', function *() {
+router.get('/courier', function *() {
     var data = [];
     let pageSize = this.request.body.pageSize || 20;
     let pageNum = this.request.body.pageNum || 1;
@@ -107,8 +107,12 @@ router.post('/courier', function *() {
             name: '名称' + Math.random().toString(36).substr(20),
             image: 'http://temp.im/144x144/FF9500/000',
             account: '账号' + Math.random().toString(36).substr(20),
+            password: '名称' + Math.random().toString(36).substr(20),
             phone: 1 + Math.floor(Math.random() * 9999999999),
-            status: Math.floor(Math.random() * 3)
+            status: Math.floor(Math.random() * 3)+'',
+            region:{
+                streetId:'1',streetName:"航空路"
+            }
         })
     }
 
@@ -121,6 +125,30 @@ router.post('/courier', function *() {
         pageCount: 13
     }
 
+})
+
+
+router.get('/courier/:id', function *() {
+    const id = this.params.id;
+    this.body = {
+        id: id|| Math.floor(Math.random() * 10000),
+        name: '名称' + Math.random().toString(36).substr(20),
+        password: '名称' + Math.random().toString(36).substr(20),
+        image: 'http://temp.im/144x144/FF9500/000',
+        account: '账号' + Math.random().toString(36).substr(20),
+        phone: 1 + Math.floor(Math.random() * 9999999999),
+        status: Math.floor(Math.random() * 3)+'',
+        region:{
+            streetId:'1',streetName:"航空路"
+        }
+    }
+})
+
+
+router.post('/upload', function *() {
+    this.body = {
+       url:'http://temp.im/144x144/FF9500/000'
+    }
 })
 
 router.post('*', function *(data) {

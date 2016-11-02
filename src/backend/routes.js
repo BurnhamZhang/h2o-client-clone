@@ -5,6 +5,7 @@ import App from './component/App';
 import Manage from './component/Manage';
 import Order from './component/Order';
 import CourierList from './component/CourierList';
+import CourierItem from './component/CourierItem';
 import Achievement from './component/Achievement';
 import GoodsItem from './component/GoodsItem';
 import GoodsList from './component/GoodsList';
@@ -51,6 +52,10 @@ export default (store) =>{
                     {
                         path: 'courier',
                         component: CourierList
+                    },
+                    {
+                        path: 'courier/:id',
+                        component: CourierItem
                     },
                     {
                         path: 'achievement',

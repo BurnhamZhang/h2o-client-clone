@@ -38,9 +38,7 @@ function courier_success(json) {
 function fetchCourier(data) {
     return dispatch => {
         dispatch(courier_request(data));
-        return fetch('/api/courier/' + data, {
-            method: 'GET',
-        })
+        return fetch('/api/courier/' + data)
             .then((json) => {
                 dispatch(courier_success(json));
             }).catch(error => {
@@ -58,12 +56,12 @@ export function fetchCourierIfNeeded(id) {
 
     return (dispatch, getState) => {
         const {list,item} = getState().courier;
-        const courier = list.data && list.data.find(item => item.courierId == id);
+        const courier = list.data && list.data.find(item => item.id == id);
         if (courier) {
-            return dispatch(courier_success(courier));
+            return dispatch(courier_success({data:courier}));
         }
 
-        if (shouldFetchData(courier)) {
+        if (shouldFetchData(item)) {
             return dispatch(fetchCourier(id));
         }
     };
@@ -104,8 +102,7 @@ function fetchCourierList(data) {
     return dispatch => {
         dispatch(courier_list_request(data));
         return fetch('/api/courier', {
-            method: 'POST',
-            body: JSON.stringify(data)
+            data
         })
             .then((json) => {
                 dispatch(courier_list_success(json));

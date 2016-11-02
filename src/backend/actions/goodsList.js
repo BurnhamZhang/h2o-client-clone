@@ -30,8 +30,7 @@ function fetchGoodsList(data) {
     return dispatch => {
         dispatch(goods_list_request(data));
         return fetch('/api/goods', {
-            method: 'POST',
-            body: JSON.stringify(data)
+            data
         })
             .then((json) => {
                 dispatch(goods_list_success(json));

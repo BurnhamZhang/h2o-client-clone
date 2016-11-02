@@ -3,7 +3,7 @@ import {GOODS_REQUEST, GOODS_SUCCESS, GOODS_FAILURE} from '../actions/goods';
 export default function goods(state = {
     isFetching: false,
     didInvalidate: true,
-    payload:null,
+    data:null,
 }, action) {
     switch (action.type) {
         case GOODS_FAILURE:
@@ -22,7 +22,7 @@ export default function goods(state = {
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                payload:action.payload.data
+                ...action.payload
             })
             break;
         default:

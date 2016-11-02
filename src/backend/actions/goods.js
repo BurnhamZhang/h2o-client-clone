@@ -29,9 +29,7 @@ function goods_success(json) {
 function fetchGoods(data) {
     return dispatch => {
         dispatch(goods_request(data));
-        return fetch('/api/goods/' + data, {
-            method: 'GET',
-        })
+        return fetch('/api/goods/' + data)
             .then((json) => {
                 dispatch(goods_success(json));
             }).catch(error => {
