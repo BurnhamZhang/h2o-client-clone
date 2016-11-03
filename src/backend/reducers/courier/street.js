@@ -1,29 +1,28 @@
-import {REQUEST_USER, RECEIVE_USER, INVALIDATE_USER} from '../actions/user';
+import {STREET_REQUEST, STREET_SUCCESS, STREET_FAILURE} from '../../actions/street';
 
-export default function user(state = {
+export default function (state = {
     isFetching: false,
     didInvalidate: true,
-    payload:{
-    }
+    data:null
 }, action) {
     switch (action.type) {
-        case INVALIDATE_USER:
+        case STREET_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true
             })
             break;
-        case REQUEST_USER:
+        case STREET_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
             })
             break;
-        case RECEIVE_USER:
+        case STREET_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                payload: action.payload.data
+                ...action.payload
             })
             break;
         default:

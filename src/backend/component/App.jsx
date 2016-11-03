@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{ Component } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { Menu, Breadcrumb, Icon } from 'antd';
 const SubMenu = Menu.SubMenu;
@@ -8,32 +8,33 @@ import Sidebar from './Sidebar';
 
 import io from 'socket.io-client';
 
-const socket = io();
-console.log('socket',socket);
+// const socket = io();
+// console.log('socket',socket);
 
-socket.on('new message',function (data) {
-  console.warn('new message',data);
-})
+// socket.on('new message',function (data) {
+//   console.warn('new message',data);
+// })
+// socket.emit('get message', {
+//   test:1,
+//   name:'dsd'
+// });
 
 
+class App extends Component {
 
-const App = React.createClass({
-  getInitialState() {
-    return {
-      collapse: false,
-    };
-  },
+  constructor(props){
+     super(props);
+     this.state = {
+       collapse: false,
+     }
+     this.onCollapseChange = this.onCollapseChange.bind(this);
+  }
   onCollapseChange() {
     this.setState({
       collapse: !this.state.collapse,
     })
-  },
+  }
   render() {
-
-    socket.emit('get message', {
-      test:1,
-      name:'dsd'
-    });
 
     const collapse = this.state.collapse;
     const key = this.props.location.pathname.split('/')[1] || 'root'
@@ -65,8 +66,8 @@ const App = React.createClass({
         </div>
       </div>
     );
-  },
-});
+  }
+};
 
 
 export default App;

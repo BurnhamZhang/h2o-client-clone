@@ -286,7 +286,7 @@ class GoodsItem extends Component {
 }
 
 @connect((state, ownProps)=>({
-    ...state.goods
+    ...state.goods.item
 }), (dispatch, ownProps)=>({
     fetchGoodsIfNeeded: (payload)=>dispatch(fetchGoodsIfNeeded(payload))
 }))

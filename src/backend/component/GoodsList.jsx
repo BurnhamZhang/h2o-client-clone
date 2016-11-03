@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchGoodsListIfNeeded} from '../actions/goodsList';
+import {fetchGoodsListIfNeeded} from '../actions/goods';
 import {Table, DatePicker, Radio, Form, Button, Select, Input, Row, Col} from 'antd';
 const ButtonGroup = Button.Group;
 
@@ -39,7 +39,7 @@ const columns = [
 
 
 @connect((state, ownProps)=>({
-    ...state.goodslist
+    ...state.goods.list
 }), (dispatch, ownProps)=>({
     fetchGoodsListIfNeeded: (payload)=>dispatch(fetchGoodsListIfNeeded(payload))
 }))

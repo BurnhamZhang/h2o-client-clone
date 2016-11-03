@@ -1,24 +1,24 @@
-import {GOODS_REQUEST, GOODS_SUCCESS, GOODS_FAILURE} from '../actions/goods';
+import {ENTERPRISE_GOODS_REQUEST, ENTERPRISE_GOODS_SUCCESS, ENTERPRISE_GOODS_FAILURE} from '../../../actions/enterprise/goods';
 
-export default function goods(state = {
+export default function (state = {
     isFetching: false,
     didInvalidate: true,
     data:null,
 }, action) {
     switch (action.type) {
-        case GOODS_FAILURE:
+        case ENTERPRISE_GOODS_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true
             })
             break;
-        case GOODS_REQUEST:
+        case ENTERPRISE_GOODS_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
             })
             break;
-        case GOODS_SUCCESS:
+        case ENTERPRISE_GOODS_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,

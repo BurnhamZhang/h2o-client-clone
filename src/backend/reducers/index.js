@@ -2,10 +2,11 @@ import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import example from './example';
 import user from './user';
-import order from './order';
-import goods from './goods';
+import goods from './goods/index';
 import courier from './courier';
-import goodslist from './goodsList';
+import order from './order/index';
+import enterprise from './enterprise/index';
+import shop from './shop';
 
 
 
@@ -14,8 +15,9 @@ const rootReducer = combineReducers({
   example,
   user,
   goods,
-  goodslist,
   order,
+  shop,
+  enterprise,
   courier
 });
 

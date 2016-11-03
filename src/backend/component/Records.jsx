@@ -1,6 +1,5 @@
 import React from 'react';
-import {Menu, Breadcrumb, Icon} from 'antd';
-import {Link} from 'react-router';
+
 
 
 class Records extends React.Component {

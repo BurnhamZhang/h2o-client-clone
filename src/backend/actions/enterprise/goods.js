@@ -1,30 +1,30 @@
-import fetch from '../common/fetch';
+import fetch from '../../common/fetch';
 
-export const GOODS_REQUEST = 'GOODS_REQUEST';
-export const GOODS_SUCCESS = 'GOODS_SUCCESS';
-export const GOODS_FAILURE = 'GOODS_FAILURE';
+export const ENTERPRISE_GOODS_REQUEST = 'ENTERPRISE_GOODS_REQUEST';
+export const ENTERPRISE_GOODS_SUCCESS = 'ENTERPRISE_GOODS_SUCCESS';
+export const ENTERPRISE_GOODS_FAILURE = 'ENTERPRISE_GOODS_FAILURE';
 
 
-export const GOODS_LIST_REQUEST = 'GOODS_LIST_REQUEST';
-export const GOODS_LIST_SUCCESS = 'GOODS_LIST_SUCCESS';
-export const GOODS_LIST_FAILURE = 'GOODS_LIST_FAILURE';
+export const ENTERPRISE_GOODS_LIST_REQUEST = 'ENTERPRISE_GOODS_LIST_REQUEST';
+export const ENTERPRISE_GOODS_LIST_SUCCESS = 'ENTERPRISE_GOODS_LIST_SUCCESS';
+export const ENTERPRISE_GOODS_LIST_FAILURE = 'ENTERPRISE_GOODS_LIST_FAILURE';
 
 function goods_failure() {
     return {
-        type: GOODS_FAILURE,
+        type: ENTERPRISE_GOODS_FAILURE,
     };
 }
 
 function goods_request(payload) {
     return {
-        type: GOODS_REQUEST,
+        type: ENTERPRISE_GOODS_REQUEST,
         payload
     };
 }
 
 function goods_success(json) {
     return {
-        type: GOODS_SUCCESS,
+        type: ENTERPRISE_GOODS_SUCCESS,
         receiveAt: Date.now(),
         payload: json
     };
@@ -51,7 +51,7 @@ export function fetchGoodsIfNeeded(id) {
     }
 
     return (dispatch, getState) => {
-        const {list,item} = getState().goods;
+        const {list,item} = getState().enterprise.goods;
         const goods = list.data && list.data.find(item => item.goodsId == id);
         if (goods) {
             return dispatch(goods_success(goods));
@@ -77,20 +77,20 @@ function shouldFetchData(goods) {
 
 function goods_list_failure() {
     return {
-        type: GOODS_LIST_FAILURE,
+        type: ENTERPRISE_GOODS_LIST_FAILURE,
     };
 }
 
 function goods_list_request(payload) {
     return {
-        type: GOODS_LIST_REQUEST,
+        type: ENTERPRISE_GOODS_LIST_REQUEST,
         payload
     };
 }
 
 function goods_list_success(json) {
     return {
-        type: GOODS_LIST_SUCCESS,
+        type: ENTERPRISE_GOODS_LIST_SUCCESS,
         receiveAt: Date.now(),
         payload: json
     };
@@ -112,7 +112,7 @@ function fetchGoodsList(data) {
 
 
 function shouldFetchGoodsList(state) {
-    const {list} = state.goods;
+    const {list} = state.enterprise.goods;
     if (list.isFetching) {
         return false;
     }

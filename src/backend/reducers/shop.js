@@ -1,29 +1,28 @@
-import {REQUEST_USER, RECEIVE_USER, INVALIDATE_USER} from '../actions/user';
+import {SHOP_REQUEST, SHOP_SUCCESS, SHOP_FAILURE} from '../actions/shop';
 
-export default function user(state = {
+export default function (state = {
     isFetching: false,
     didInvalidate: true,
-    payload:{
-    }
+    data:null,
 }, action) {
     switch (action.type) {
-        case INVALIDATE_USER:
+        case SHOP_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true
             })
             break;
-        case REQUEST_USER:
+        case SHOP_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
             })
             break;
-        case RECEIVE_USER:
+        case SHOP_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                payload: action.payload.data
+                ...action.payload
             })
             break;
         default:

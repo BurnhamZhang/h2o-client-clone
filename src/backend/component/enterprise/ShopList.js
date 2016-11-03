@@ -1,27 +1,24 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchCourierListIfNeeded} from '../actions/courier';
+import {fetchShopListIfNeeded} from '../../actions/enterprise/shop';
 import {Table, DatePicker, Radio, Form, Button, Select, Input, Row, Col} from 'antd';
 const ButtonGroup = Button.Group;
 
-const statusList = ['休息','正常','停用']
+const statusList = {'1': '正常', '0': '停用'}
 
 const columns = [
-    {title: '照片', dataIndex: 'image', key: '1',
-        render: (text, record, index) => (
-            <img src={text} style={{width: 60, height:60}}/>
-        ),
+    {
+        title: '门店名', dataIndex: 'shopName', key: '1',
     },
     {
-        title: '姓名', dataIndex: 'name', key: '2',
-
+        title: '门店负责人', dataIndex: 'leader', key: '2',
     },
     {title: '账号', dataIndex: 'account', key: '3'},
     {title: '电话', dataIndex: 'phone', key: '4'},
     {
-        title: '状态', dataIndex: 'shelves', key: '5',
-        render: (text, record, index) =>  statusList[text]
+        title: '状态', dataIndex: 'status', key: '5',
+        render: (text, record, index) => statusList[text]
     },
     {
         title: '操作',
@@ -30,7 +27,7 @@ const columns = [
         width: 100,
         render: (text, record, index) => (
             <ButtonGroup>
-                <Link to={ '/courier/' + record.id }><Button type="primary">编辑</Button></Link>
+                <Link to={ '/shop/' + record.id }><Button type="primary">编辑</Button></Link>
             </ButtonGroup>
         ),
     },
@@ -38,9 +35,9 @@ const columns = [
 
 
 @connect((state, ownProps)=>({
-    ...state.courier.list
+    ...state.enterprise.shop.list
 }), (dispatch, ownProps)=>({
-    fetchCourierListIfNeeded: (payload)=>dispatch(fetchCourierListIfNeeded(payload))
+    fetchShopListIfNeeded: (payload)=>dispatch(fetchShopListIfNeeded(payload))
 }))
 class CourierList extends Component {
     constructor(props) {
@@ -57,7 +54,7 @@ class CourierList extends Component {
 
     handleSubmit(pageNum = this.props.pagination.pageNum, pageSize = this.props.pagination.pageSize) {
         console.log('handleSubmit', pageNum, pageSize);
-        this.props.fetchCourierListIfNeeded({
+        this.props.fetchShopListIfNeeded({
             pageNum,
             pageSize,
         });
@@ -65,8 +62,8 @@ class CourierList extends Component {
 
     render() {
         const pagination = {
-            pageSize:this.props.pagination.pageSize,
-            current	: this.props.pagination.pageNum,
+            pageSize: this.props.pagination.pageSize,
+            current: this.props.pagination.pageNum,
             total: this.props.pagination.totalCount,
             defaultPageSize: this.props.pagination.pageSize,
             defaultCurrent: this.props.pageNum,
@@ -81,12 +78,12 @@ class CourierList extends Component {
         return (<div className="ant-layout-content">
             <Row>
                 <Col span={8}>
-                    <h3>商品管理</h3>
+                    <h3>门店账号管理</h3>
                 </Col>
                 <Col span={8} offset={8}>
                     <div style={{marginBottom: 16, float: 'right'}}>
-                        <Link to="/courier/create">
-                            <Button type="primary">添加配送员</Button>
+                        <Link to="/shop/create">
+                            <Button type="primary">添加账号</Button>
                         </Link>
                     </div>
                 </Col>

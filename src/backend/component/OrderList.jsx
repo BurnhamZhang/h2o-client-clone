@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchOrdersIfNeeded} from '../actions/order';
+import {fetchOrderListIfNeeded} from '../actions/order';
 import {Table, DatePicker, Radio, Form, Button, Select, Input} from 'antd';
 const Option = Select.Option;
 const createForm = Form.create;
@@ -22,7 +22,7 @@ const columns = [
         fixed: 'right',
         width: 100,
         render: (text, record, index) => {
-            return <Link to="/">查看详情</Link>
+            return <Link to={"order/"+record.id }>查看详情</Link>
         },
     },
 ];
@@ -33,9 +33,9 @@ const orderStatus = [{label: '全部', value: 'all'},
 
 
 @connect((state, ownProps)=>({
-    ...state.order
+    ...state.order.list
 }), (dispatch, ownProps)=>({
-    fetchOrdersIfNeeded: (payload)=>dispatch(fetchOrdersIfNeeded(payload))
+    fetchOrderListIfNeeded: (payload)=>dispatch(fetchOrderListIfNeeded(payload))
 }))
 @createForm()
 class Order extends Component {
@@ -51,7 +51,7 @@ class Order extends Component {
     }
 
 
-    handleSubmit(pageNum=this.props.pageNum,pageSize=this.props.pageSize) {
+    handleSubmit(pageNum=this.props.pagination.pageNum,pageSize=this.props.pagination.pageSize) {
         console.log('handleSubmit',pageNum,pageSize);
         this.props.form.validateFields((errors, values) => {
             if (errors) {
@@ -63,11 +63,12 @@ class Order extends Component {
                 pageSize,
             })
             console.log('Submit!!!', values);
-            this.props.fetchOrdersIfNeeded(values);
+            this.props.fetchOrderListIfNeeded(values);
         });
     }
     render() {
         const {getFieldDecorator, getFieldError} = this.props.form;
+        console.warn('render',this.props)
 
         const pagination = {
             pageSize:this.props.pagination.pageSize,
@@ -81,7 +82,6 @@ class Order extends Component {
             onChange: this.handleSubmit
         }
 
-        console.log('pagination',pagination)
 
         return (<div className="ant-layout-content">
             <Form horizontal>

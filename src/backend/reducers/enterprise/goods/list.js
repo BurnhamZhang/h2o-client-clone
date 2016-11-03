@@ -1,25 +1,25 @@
-import {GOODS_LIST_REQUEST, GOODS_LIST_SUCCESS, GOODS_LIST_FAILURE} from '../actions/goodsList';
+import {ENTERPRISE_GOODS_LIST_REQUEST, ENTERPRISE_GOODS_LIST_SUCCESS, ENTERPRISE_GOODS_LIST_FAILURE} from '../../../actions/enterprise/goods';
 
-export default function goodslist(state = {
+export default function (state = {
     isFetching: false,
     didInvalidate: true,
     pagination:{
     }
 }, action) {
     switch (action.type) {
-        case GOODS_LIST_FAILURE:
+        case ENTERPRISE_GOODS_LIST_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true
             })
             break;
-        case GOODS_LIST_REQUEST:
+        case ENTERPRISE_GOODS_LIST_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
             })
             break;
-        case GOODS_LIST_SUCCESS:
+        case ENTERPRISE_GOODS_LIST_SUCCESS:
             console.warn(action)
             return Object.assign({}, state, {
                 isFetching: false,

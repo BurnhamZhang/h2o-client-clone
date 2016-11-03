@@ -3,28 +3,114 @@
  */
 import App from './component/App';
 import Manage from './component/Manage';
-import Order from './component/Order';
+import OrderList from './component/OrderList';
+import OrderItem from './component/OrderItem';
 import CourierList from './component/CourierList';
 import CourierItem from './component/CourierItem';
-import Achievement from './component/Achievement';
+import Achievement from './component/enterprise/Achievement';
 import GoodsItem from './component/GoodsItem';
 import GoodsList from './component/GoodsList';
-import Store from './component/Store';
+import Shop from './component/Shop';
 import Records from './component/Records';
 import Login from './component/Login';
+import Enterprise from './component/enterprise'
 
 
+const enterprize = [
+    {
+        path: 'shop',
+        component: Enterprise.ShopList
+    },
+    {
+        path: 'shop/:id',
+        component: Enterprise.ShopItem
+    },
+    {
+        path: 'achievement',
+        component: Enterprise.Achievement
+    },
+    {
+        path: 'goods',
+        component: Enterprise.GoodsList
+    },
+    {
+        path: 'goods/:id',
+        component: Enterprise.GoodsItem
+    },
+    {
+        path: '*',
+        onEnter: (nextState, replace) => replace('/shop')
+    }
+]
 
+const shop = [
+    {
+        path: 'manage',
+        component: Manage
+    },
+    {
+        path: 'order',
+        component: OrderList
+    },
+    {
+        path: 'order/:id',
+        component: OrderItem
+    },
+    {
+        path: 'courier',
+        component: CourierList
+    },
+    {
+        path: 'courier/:id',
+        component: CourierItem
+    },
 
+    {
+        path: 'goods',
+        component: GoodsList
+    },
+    {
+        path: 'goods/:id',
+        component: GoodsItem
+    },
+    {
+        path: 'shop',
+        component: Shop
+    },
+    {
+        path: 'records',
+        component: Records
+    },
+    {
+        path: '*',
+        onEnter: (nextState, replace) => replace('/manage')
+    }
+]
 
-export default (store) =>{
+const defaults = [
+    {
+        path: '*',
+        onEnter: (nextState, replace) => replace('/login')
+    }
+]
+
+const routes =  (loginType) => {
+    if (loginType == 1) {
+        return enterprize
+    }
+    if (loginType == 2) {
+        return shop
+    }
+    return defaults
+}
+
+export default (store) => {
     function requireAuth(nextState, replace) {
-        console.log('requireAuth')
-        const state  = store.getState();
-        if (!state.user.payload || !state.user.payload.name) {
+        const state = store.getState();
+        if (!state.user.payload.name) {
             replace({
                 pathname: '/login',
-                state: { nextPathname: nextState.location.pathname }
+                state: {nextPathname: nextState.location.pathname}
             })
         }
     }
@@ -38,50 +124,13 @@ export default (store) =>{
             {
                 path: '/',
                 component: App,
-                onEnter:requireAuth,
+                onEnter: requireAuth,
                 indexRoute: {onEnter: (nextState, replace) => replace('/manage')},
-                childRoutes: [
-                    {
-                        path: 'manage',
-                        component: Manage
-                    },
-                    {
-                        path: 'order',
-                        component: Order
-                    },
-                    {
-                        path: 'courier',
-                        component: CourierList
-                    },
-                    {
-                        path: 'courier/:id',
-                        component: CourierItem
-                    },
-                    {
-                        path: 'achievement',
-                        component: Achievement
-                    },
-                    {
-                        path: 'goods',
-                        component: GoodsList
-                    },
-                    {
-                        path: 'goods/:id',
-                        component: GoodsItem
-                    },
-                    {
-                        path: 'store',
-                        component: Store
-                    },
-                    {
-                        path: 'records',
-                        component: Records
-                    },
-                    {
-                        path: '*',
-                        onEnter: (nextState, replace) => replace('/manage')
-                    }
-                ]
+                getChildRoutes: (partialNextState, callback)=> {
+                    const state = store.getState();
+                    const loginType = state.user.payload.loginType;
+                    callback(null,routes(loginType))
+                },
             }
         ]
     };

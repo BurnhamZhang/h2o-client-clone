@@ -1,29 +1,29 @@
-import {REQUEST_USER, RECEIVE_USER, INVALIDATE_USER} from '../actions/user';
+import {ORDER_LIST_REQUEST, ORDER_LIST_SUCCESS, ORDER_LIST_FAILURE} from '../../actions/order';
 
-export default function user(state = {
+export default function (state = {
     isFetching: false,
     didInvalidate: true,
-    payload:{
+    pagination:{
     }
 }, action) {
     switch (action.type) {
-        case INVALIDATE_USER:
+        case ORDER_LIST_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true
             })
             break;
-        case REQUEST_USER:
+        case ORDER_LIST_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
             })
             break;
-        case RECEIVE_USER:
+        case ORDER_LIST_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                payload: action.payload.data
+                ...action.payload
             })
             break;
         default:

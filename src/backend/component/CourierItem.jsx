@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {fetchCourierIfNeeded} from '../actions/courier';
+import {fetchStreetIfNeeded} from '../actions/street';
 import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon} from 'antd';
 import Block from './Block';
 import CustomUpload from './CustomUpload';
@@ -54,6 +55,8 @@ class CourierItem extends Component {
 
     render() {
         const {getFieldDecorator, getFieldsValue} = this.props.form;
+
+        const  street = this.props.street;
 
         const item = getFieldsValue();
 
@@ -108,8 +111,7 @@ class CourierItem extends Component {
                 </FormItem>
                 <FormItem label="上传照片"   {...itemLayout}    >
                     {
-                        getFieldDecorator('image', {
-                        })(
+                        getFieldDecorator('image', {})(
                             <CustomUpload />
                         )
                     }
@@ -117,15 +119,10 @@ class CourierItem extends Component {
                 <FormItem label="配送范围"  {...itemLayout} >
                     {
                         getFieldDecorator('region', {})(
-                            <Select multiple style={{width: 300}} placeholder="请选择街区">
-                                <Option value='1'>航空路</Option>
-                                <Option value='2'>a路</Option>
-                                <Option value='3'>b路</Option>
-                                <Option value='4'>c路</Option>
-                                <Option value='5'>d路</Option>
-                                <Option value='6'>e路</Option>
-                                <Option value='7'>f路</Option>
-                                <Option value='8'>g路</Option>
+                            <Select multiple placeholder="请选择街区">
+                                {
+                                    street.map((item)=>  <Option value={item.streetId} key={item.streetId}>{item.streetName}</Option>)
+                                }
                             </Select>
                         )
                     }
@@ -140,9 +137,11 @@ class CourierItem extends Component {
 }
 
 @connect((state, ownProps)=>({
-    ...state.courier.item
+    ...state.courier.item,
+    street: state.courier.street.data
 }), (dispatch, ownProps)=>({
-    fetchCourierIfNeeded: (payload)=>dispatch(fetchCourierIfNeeded(payload))
+    fetchCourierIfNeeded: (payload)=>dispatch(fetchCourierIfNeeded(payload)),
+    fetchStreetIfNeeded: ()=>dispatch(fetchStreetIfNeeded())
 }))
 class CourierForm extends Component {
 
@@ -151,6 +150,7 @@ class CourierForm extends Component {
         const id = this.props.params.id;
         if (id != 'create') {
             this.props.fetchCourierIfNeeded(id);
+            this.props.fetchStreetIfNeeded();
         }
     }
 
@@ -161,12 +161,14 @@ class CourierForm extends Component {
         if (this.props.params.id !== id) {
             if (id != 'create') {
                 this.props.fetchCourierIfNeeded(id);
+                this.props.fetchStreetIfNeeded();
             }
         }
     }
 
     render() {
         const {id} = this.props.params;
+        const street = this.props.street;
         let data = this.props.data;
 
         if (id == 'create') {
@@ -176,7 +178,7 @@ class CourierForm extends Component {
         }
 
         return (
-            data ? <CourierItem type={id} payload={data}></CourierItem> : <Block spinning/>
+            (data && street) ? <CourierItem type={id} payload={data} street={street}></CourierItem> : <Block spinning/>
         )
     }
 }

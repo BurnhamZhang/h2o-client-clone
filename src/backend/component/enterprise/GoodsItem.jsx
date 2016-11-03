@@ -1,15 +1,18 @@
-import React from 'react';
+/**
+ * Created by zhangbohan on 16/11/3.
+ */
+import React, {Component}from 'react';
 import {Menu, Breadcrumb, Icon} from 'antd';
 import {Link} from 'react-router';
 
 
-class Achievement extends React.Component {
+class GoodsItem extends Component {
     render() {
         return (<div className="ant-layout-content">
-            Achievement
+            GoodsItem
         </div>)
     }
 }
 
 
-export default Achievement;
+export default GoodsItem;

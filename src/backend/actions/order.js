@@ -1,56 +1,112 @@
 import fetch from '../common/fetch';
 
-export const ORDERS_REQUEST = 'ORDERS_REQUEST';
-export const ORDERS_SUCCESS = 'ORDERS_SUCCESS';
-export const ORDERS_FAILURE = 'ORDERS_FAILURE';
+export const ORDER_REQUEST = 'ORDER_REQUEST';
+export const ORDER_SUCCESS = 'ORDER_SUCCESS';
+export const ORDER_FAILURE = 'ORDER_FAILURE';
 
-export function orders_failure() {
+export const ORDER_LIST_REQUEST = 'ORDER_LIST_REQUEST';
+export const ORDER_LIST_SUCCESS = 'ORDER_LIST_SUCCESS';
+export const ORDER_LIST_FAILURE = 'ORDER_LIST_FAILURE';
+
+
+
+function order_failure() {
   return {
-    type: ORDERS_FAILURE,
+    type: ORDER_FAILURE,
   };
 }
 
-function orders_request(payload) {
+function order_request(payload) {
   return {
-    type: ORDERS_REQUEST,
+    type: ORDER_REQUEST,
     payload
   };
 }
 
-function orders_success(json) {
+function order_success(json) {
   return {
-    type: ORDERS_SUCCESS,
+    type: ORDER_SUCCESS,
     receiveAt: Date.now(),
     payload:json
   };
 }
 
-function fetchData(data) {
+function fetchData(id) {
   return dispatch => {
-    dispatch(orders_request(data));
-    return fetch('/api/order',{
-      body: JSON.stringify(data)
+    dispatch(order_request(id));
+    return fetch('/api/order/'+id,{
     })
     .then((json) => {
-      dispatch(orders_success(json));
+      dispatch(order_success(json));
     }).catch(error =>{
-      dispatch(orders_failure(error))
+      dispatch(order_failure(error))
         } );
   };
 }
 
 function shouldFetchData(state) {
-  const { order } = state;
+  const  order  = state.order.item;
   if (order.isFetching) {
     return false;
   }
   return true;
 }
 
-export function fetchOrdersIfNeeded(data) {
+export function fetchOrderIfNeeded(data) {
   return (dispatch, getState) => {
     if (shouldFetchData(getState())) {
       return dispatch(fetchData(data));
+    }
+  };
+}
+
+
+function order_list_failure() {
+  return {
+    type: ORDER_LIST_FAILURE,
+  };
+}
+
+function order_list_request(payload) {
+  return {
+    type: ORDER_LIST_REQUEST,
+    payload
+  };
+}
+
+function order_list_success(json) {
+  return {
+    type: ORDER_LIST_SUCCESS,
+    receiveAt: Date.now(),
+    payload:json
+  };
+}
+
+function fetchOrderList(data) {
+  return dispatch => {
+    dispatch(order_list_request(data));
+    return fetch('/api/order',{
+    })
+        .then((json) => {
+          dispatch(order_list_success(json));
+        }).catch(error =>{
+          dispatch(order_list_failure(error))
+        } );
+  };
+}
+
+function shouldFetchOrderList(state) {
+  const list = state.order.list;
+  if (list.isFetching) {
+    return false;
+  }
+  return true;
+}
+
+export function fetchOrderListIfNeeded(data) {
+  return (dispatch, getState) => {
+    if (shouldFetchOrderList(getState())) {
+      return dispatch(fetchOrderList(data));
     }
   };
 }

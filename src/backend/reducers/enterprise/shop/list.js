@@ -1,29 +1,30 @@
-import {ORDERS_REQUEST, ORDERS_SUCCESS, ORDERS_FAILURE} from '../actions/order';
+import {ENTERPRISE_SHOP_LIST_REQUEST, ENTERPRISE_SHOP_LIST_SUCCESS, ENTERPRISE_SHOP_LIST_FAILURE} from '../../../actions/enterprise/shop';
 
-export default function order(state = {
+export default function (state = {
     isFetching: false,
     didInvalidate: true,
     pagination:{
     }
 }, action) {
     switch (action.type) {
-        case ORDERS_FAILURE:
+        case ENTERPRISE_SHOP_LIST_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true
             })
             break;
-        case ORDERS_REQUEST:
+        case ENTERPRISE_SHOP_LIST_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
             })
             break;
-        case ORDERS_SUCCESS:
+        case ENTERPRISE_SHOP_LIST_SUCCESS:
+            console.warn(action)
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                payload: action.payload.data
+                ... action.payload
             })
             break;
         default:

@@ -1,36 +1,37 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchCourierListIfNeeded} from '../actions/courier';
+import {fetchGoodsListIfNeeded} from '../../actions/enterprise/goods';
 import {Table, DatePicker, Radio, Form, Button, Select, Input, Row, Col} from 'antd';
 const ButtonGroup = Button.Group;
 
-const statusList = ['休息','正常','停用']
+
 
 const columns = [
-    {title: '照片', dataIndex: 'image', key: '1',
+    {title: '商品名', dataIndex: 'name', key: '1'},
+    {
+        title: '商品图片', dataIndex: 'images', key: '2',
         render: (text, record, index) => (
-            <img src={text} style={{width: 60, height:60}}/>
+            <img src={text[0]} style={{width: 60, height: 60}}/>
         ),
     },
+    {title: '商品描述', dataIndex: 'memo', key: '3'},
+    {title: '单价', dataIndex: 'price', key: '4'},
+    {title: '库存', dataIndex: 'stock', key: '5'},
     {
-        title: '姓名', dataIndex: 'name', key: '2',
-
-    },
-    {title: '账号', dataIndex: 'account', key: '3'},
-    {title: '电话', dataIndex: 'phone', key: '4'},
-    {
-        title: '状态', dataIndex: 'shelves', key: '5',
-        render: (text, record, index) =>  statusList[text]
+        title: '状态', dataIndex: 'shelves', key: '6',
+        render: (text, record, index) => (
+            text == 0 ? '已下架' : '销售中'
+        )
     },
     {
         title: '操作',
-        key: '6',
+        key: '7',
         fixed: 'right',
         width: 100,
         render: (text, record, index) => (
             <ButtonGroup>
-                <Link to={ '/courier/' + record.id }><Button type="primary">编辑</Button></Link>
+                <Link to={ '/goods/' + record.goodsId }><Button type="primary">详情</Button></Link>
             </ButtonGroup>
         ),
     },
@@ -38,11 +39,11 @@ const columns = [
 
 
 @connect((state, ownProps)=>({
-    ...state.courier.list
+    ...state.goods.list
 }), (dispatch, ownProps)=>({
-    fetchCourierListIfNeeded: (payload)=>dispatch(fetchCourierListIfNeeded(payload))
+    fetchGoodsListIfNeeded: (payload)=>dispatch(fetchGoodsListIfNeeded(payload))
 }))
-class CourierList extends Component {
+class GoodsList extends Component {
     constructor(props) {
         super(props)
 
@@ -57,7 +58,7 @@ class CourierList extends Component {
 
     handleSubmit(pageNum = this.props.pagination.pageNum, pageSize = this.props.pagination.pageSize) {
         console.log('handleSubmit', pageNum, pageSize);
-        this.props.fetchCourierListIfNeeded({
+        this.props.fetchGoodsListIfNeeded({
             pageNum,
             pageSize,
         });
@@ -85,17 +86,17 @@ class CourierList extends Component {
                 </Col>
                 <Col span={8} offset={8}>
                     <div style={{marginBottom: 16, float: 'right'}}>
-                        <Link to="/courier/create">
-                            <Button type="primary">添加配送员</Button>
+                        <Link to="/goods/create">
+                            <Button type="primary">添加商品</Button>
                         </Link>
                     </div>
                 </Col>
             </Row>
-            <Table columns={columns} dataSource={this.props.data} bgoodsed loading={this.props.isFetching}
+            <Table columns={columns} size="small" dataSource={this.props.data} bgoodsed loading={this.props.isFetching}
                    pagination={pagination}/>
         </div>)
     }
 }
 
 
-export default CourierList;
+export default GoodsList;

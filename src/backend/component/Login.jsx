@@ -1,19 +1,15 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Button, Form, Input, Row, Col, Spin} from 'antd';
-import { withRouter } from 'react-router';
+import {Button, Form, Input, Row, Col, Spin, Icon, Checkbox} from 'antd';
+import {withRouter, Link} from 'react-router';
 import {fetchUserIfNeeded} from '../actions/user';
 const createForm = Form.create;
 const FormItem = Form.Item;
 
 
-function noop() {
-    return false;
-}
-
 @connect((state, ownProps)=>({
     user: state.user.payload,
-    isFetching:state.user.isFetching
+    isFetching: state.user.isFetching
 }), (dispatch, ownProps)=>({
     login: (payload)=>dispatch(fetchUserIfNeeded(payload))
 }))
@@ -40,13 +36,15 @@ class Login extends Component {
                 return;
             }
             console.log('Submit!!!');
+            values.loginType = values.loginType ? 1 : 2;
             console.log(values);
             this.props.login(values);
         });
     }
+
     shouldComponentUpdate(nextProps) {
-        if (nextProps.user) {
-            const { location } = nextProps;
+        if (nextProps.user.name) {
+            const {location} = nextProps;
             if (location.state && location.state.nextPathname) {
                 this.props.router.replace(location.state.nextPathname)
             } else {
@@ -63,48 +61,41 @@ class Login extends Component {
 
 
         const formItemLayout = {
-            labelCol: {span: 7},
-            wrapperCol: {span: 12},
+            wrapperCol: {span: 12, offset: 6},
         };
         const form = (
-            <Form horizontal>
-                <FormItem
-                    {...formItemLayout}
-                    label="用户名"
-                    hasFeedback
-                    help={(getFieldError('name') || []).join(', ')}
-                >
+            <Form horizontal onSubmit={this.handleSubmit}>
+                <FormItem   {...formItemLayout} hasFeedback help={(getFieldError('name') || []).join(', ')}>
                     {getFieldDecorator('name', {
                         rules: [
                             {required: true, min: 2, message: '请至少输入两个字符'},
                         ],
                     })(
-                        <Input placeholder="请输入用户名"/>
+                        <Input addonBefore={<Icon type="user"/>} placeholder="用户名"/>
                     )}
                 </FormItem>
 
 
-                <FormItem
-                    {...formItemLayout}
-                    label="密码"
-                    hasFeedback
-                >
+                <FormItem   {...formItemLayout} hasFeedback>
                     {getFieldDecorator('password', {
                         rules: [
                             {required: true, whitespace: true, message: '请输入您的密码'},
                         ],
                     })(
-                        <Input type="password" autoComplete="off"
-                               onContextMenu={noop} onPaste={noop} onCopy={noop} onCut={noop}
-                        />
+                        <Input addonBefore={<Icon type="lock"/>} placeholder="密码" type="password" autoComplete="off"/>
                     )}
                 </FormItem>
 
 
-                <FormItem wrapperCol={{span: 12, offset: 7}}>
-                    <Button type="primary" onClick={this.handleSubmit}>确定</Button>
-                    &nbsp;&nbsp;&nbsp;
-                    <Button type="ghost" onClick={this.handleReset}>重置</Button>
+                <FormItem  {...formItemLayout}>
+                    {getFieldDecorator('loginType', {
+                        valuePropName: 'checked',
+                        initialValue: false,
+                    })(
+                        <Checkbox>企业号登录</Checkbox>
+                    )}
+                    <a onClick={this.handleReset} style={{float: 'right'}}>重置</a>
+                    <Button type="primary" htmlType="submit" style={{width: '100%'}}>登录</Button>
                 </FormItem>
             </Form>
         )
