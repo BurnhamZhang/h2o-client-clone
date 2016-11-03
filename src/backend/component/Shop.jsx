@@ -15,6 +15,7 @@ const RangePicker = DatePicker.RangePicker;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 import {itemLayout, actionLayout} from '../constants/formLayout';
+import RegionPicker from './RegionPicker';
 
 
 @createForm({
@@ -142,15 +143,7 @@ class ShopForm extends Component {
 
                 </FormItem>
                 <FormItem label="配送范围"  {...itemLayout} >
-                    {
-                        getFieldDecorator('shopRegions', {})(
-                            <Select multiple placeholder="请选择街区">
-                                {
-                                    street.map((item)=>  <Option value={item.streetId} key={item.streetId}>{item.streetName}</Option>)
-                                }
-                            </Select>
-                        )
-                    }
+                    <RegionPicker/>
                 </FormItem>
                 <FormItem     {...actionLayout}     >
                     <Button type="primary" htmlType="button" style={{margin: ' 0 10px'}}

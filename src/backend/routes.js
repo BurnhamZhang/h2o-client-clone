@@ -7,7 +7,6 @@ import OrderList from './component/OrderList';
 import OrderItem from './component/OrderItem';
 import CourierList from './component/CourierList';
 import CourierItem from './component/CourierItem';
-import Achievement from './component/enterprise/Achievement';
 import GoodsItem from './component/GoodsItem';
 import GoodsList from './component/GoodsList';
 import Shop from './component/Shop';

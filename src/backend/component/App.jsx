@@ -35,7 +35,7 @@ class App extends Component {
     })
   }
   render() {
-
+      console.warn('!!!!!!!!!!',this.props);
     const collapse = this.state.collapse;
     const key = this.props.location.pathname.split('/')[1] || 'root'
     return (
