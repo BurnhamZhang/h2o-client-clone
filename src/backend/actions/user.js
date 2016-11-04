@@ -34,8 +34,10 @@ function fetchData(data) {
       data
     })
     .then((json) => {
-      json.loginType = data.loginType;
+      json.data.loginType = data.loginType;
       dispatch(receiveUser(json));
+    }).catch(error => {
+      dispatch(invalidateUser(error))
     });
   };
 }

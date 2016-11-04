@@ -106,7 +106,7 @@ const routes =  (loginType) => {
 export default (store) => {
     function requireAuth(nextState, replace) {
         const state = store.getState();
-        if (!state.user.payload.name) {
+        if (!state.user.payload.account) {
             replace({
                 pathname: '/login',
                 state: {nextPathname: nextState.location.pathname}

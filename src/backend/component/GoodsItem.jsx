@@ -101,6 +101,8 @@ const itemList = [{
                 value: payload[a]
             }
         }
+        fields.shelves && (fields.shelves.value*=1);
+        fields.depositType && (fields.depositType.value*=1);
         console.log('mapPropsToFields', fields);
         return fields;
     }

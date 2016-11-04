@@ -43,7 +43,8 @@ class Login extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        if (nextProps.user.name) {
+
+        if (nextProps.user.account) {
             const {location} = nextProps;
             if (location.state && location.state.nextPathname) {
                 this.props.router.replace(location.state.nextPathname)
@@ -65,8 +66,8 @@ class Login extends Component {
         };
         const form = (
             <Form horizontal onSubmit={this.handleSubmit}>
-                <FormItem   {...formItemLayout} hasFeedback help={(getFieldError('name') || []).join(', ')}>
-                    {getFieldDecorator('name', {
+                <FormItem   {...formItemLayout} hasFeedback help={(getFieldError('account') || []).join(', ')}>
+                    {getFieldDecorator('account', {
                         rules: [
                             {required: true, min: 2, message: '请至少输入两个字符'},
                         ],
