@@ -1,5 +1,6 @@
 import webpack from 'webpack';
 import path from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 module.exports = {
     debug: true,
@@ -44,6 +45,16 @@ module.exports = {
     plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
+        new HtmlWebpackPlugin({
+            title: 'frontend',
+            filename: path.resolve(__dirname, '../dist/frontend.html'),
+            chunks: ['frontend']
+        }),
+        new HtmlWebpackPlugin({
+            title: 'backend',
+            filename: path.resolve(__dirname, '../dist/backend.html'),
+            chunks: ['backend']
+        })
     ]
 };

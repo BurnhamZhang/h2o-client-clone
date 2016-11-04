@@ -2,9 +2,11 @@ import webpack from 'webpack';
 import path from 'path';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import autoprefixer from 'autoprefixer';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 
-const extractCss = new ExtractTextPlugin('app.css');
+const extractBackendCss = new ExtractTextPlugin('backend.css');
+const extractFrontendCss = new ExtractTextPlugin('frontend.css');
 // const extractCss = new ExtractTextPlugin('app.[contenthash].css');
 const extractAntd = new ExtractTextPlugin('antd.css');
 const extractAntdMobile = new ExtractTextPlugin('antd.mobile.css');
@@ -36,7 +38,8 @@ module.exports = {
             {test: /\.ico$/, loader: 'file-loader?name=[name].[ext]'},
             // https://github.com/webpack/style-loader#recommended-configuration
             {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../node_modules/antd'), loader: extractAntd.extract('css')},
-            {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../src'), loader: extractCss.extract('css!postcss!sass')},
+            {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../src/backend'), loader: extractBackendCss.extract('css!postcss!sass')},
+            {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../src/frontend'), loader: extractFrontendCss.extract('css!postcss!sass')},
             // {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../node_modules/antd-mobile'), loader: extractAntdMobile.extract('css')},
             {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../node_modules/normalize.css'), loader: extractAntdMobile.extract('css')},
         ]
@@ -58,7 +61,8 @@ module.exports = {
             }
         }),
         extractAntd,
-        extractCss,
+        extractBackendCss,
+        extractFrontendCss,
         extractAntdMobile,
         new webpack.NoErrorsPlugin(),
         new webpack.optimize.DedupePlugin(),
@@ -67,6 +71,17 @@ module.exports = {
                 warnings: false
             }
         }),
+        new HtmlWebpackPlugin({
+            filename: path.resolve(__dirname, '../dist/frontend.html'),
+            chunks: ['frontend'],
+            template:path.resolve(__dirname, '../src/frontend/index.html')
+        }),
+        new HtmlWebpackPlugin({
+            title: 'backend',
+            filename: path.resolve(__dirname, '../dist/backend.html'),
+            chunks: ['backend'],
+            template:path.resolve(__dirname, '../src/backend/index.html')
+        })
     ],
     postcss: ()=> [autoprefixer]
 };

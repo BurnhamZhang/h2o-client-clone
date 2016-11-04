@@ -1,4 +1,4 @@
-import '../assets/stylesheets/base.scss';
+import '../assets/base.scss';
 import { TabBar } from 'antd-mobile';
 import {withRouter} from 'react-router';
 

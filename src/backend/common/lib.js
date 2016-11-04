@@ -1,1 +1,1 @@
-// import 'antd/dist/antd.css';
+import '../assets/scss/app.scss';

@@ -1,5 +1,5 @@
 import 'babel-polyfill';
-
+import './assets/base.scss';
 // redux-devtools
 import {createDevTools, persistState} from 'redux-devtools';
 import LogMonitor from 'redux-devtools-log-monitor';
