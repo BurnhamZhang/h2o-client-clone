@@ -126,7 +126,9 @@ class ShopLayout extends Component {
     componentWillMount() {
         const {id} = this.props.params;
         console.warn('componentWillMount'.toLocaleUpperCase());
-        this.props.fetchShopIfNeeded(id);
+        if (id != 'create') {
+            this.props.fetchShopIfNeeded(id);
+        }
     }
 
 

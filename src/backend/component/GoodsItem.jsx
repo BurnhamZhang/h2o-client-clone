@@ -11,7 +11,7 @@ const FormItem = Form.Item;
 const RangePicker = DatePicker.RangePicker;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
-
+import {itemLayout, actionLayout} from '../constants/formLayout';
 
 const itemList = [{
     "goodsId": 7201,
@@ -151,11 +151,7 @@ class GoodsItem extends Component {
 
         return (<div className="ant-layout-content">
             <Form horizontal>
-                <FormItem
-                    label="选择商品"
-                    labelCol={{span: 2}}
-                    wrapperCol={{span: 22}}
-                >
+                <FormItem  label="选择商品" {...itemLayout} >
                     {
                         type == 'create' ?
                             getFieldDecorator('goodsId', {})(
@@ -172,11 +168,7 @@ class GoodsItem extends Component {
                             : item.name
                     }
                 </FormItem>
-                <FormItem
-                    label="图片预览"
-                    labelCol={{span: 2}}
-                    wrapperCol={{span: 22}}
-                >
+                <FormItem  label="图片预览" {...itemLayout} >
                     {
                         getFieldDecorator('images', {})(
                             <div>
@@ -194,11 +186,7 @@ class GoodsItem extends Component {
 
 
                 </FormItem>
-                <FormItem
-                    label="描述"
-                    labelCol={{span: 2}}
-                    wrapperCol={{span: 22}}
-                >
+                <FormItem  label="描述" {...itemLayout}  >
                     {
 
                         getFieldDecorator('memo', {})(
@@ -206,11 +194,7 @@ class GoodsItem extends Component {
                         )
                     }
                 </FormItem>
-                <FormItem
-                    label="规格"
-                    labelCol={{span: 2}}
-                    wrapperCol={{span: 22}}
-                >
+                <FormItem label="规格"  {...itemLayout}    >
                     {
 
                         getFieldDecorator('scale', {})(
@@ -218,33 +202,21 @@ class GoodsItem extends Component {
                         )
                     }
                 </FormItem>
-                <FormItem
-                    label="价格"
-                    labelCol={{span: 2}}
-                    wrapperCol={{span: 22}}
-                >
+                <FormItem label="价格" {...itemLayout}   >
                     {
                         getFieldDecorator('price', {})(
                             <InputNumber min={0.01} step="0.01" size="120"/>
                         )
                     }
                 </FormItem>
-                <FormItem
-                    label="库存"
-                    labelCol={{span: 2}}
-                    wrapperCol={{span: 22}}
-                >
+                <FormItem label="库存"  {...itemLayout}  >
                     {
                         getFieldDecorator('stock', {})(
                             <InputNumber min={0} step="1" size="120"/>
                         )
                     }
                 </FormItem>
-                <FormItem
-                    label="押金费"
-                    labelCol={{span: 2}}
-                    wrapperCol={{span: 22}}
-                >
+                <FormItem   label="押金费" {...itemLayout}   >
                     {
                         getFieldDecorator('depositType', {})(
                             <RadioGroup>
@@ -259,11 +231,7 @@ class GoodsItem extends Component {
                             <InputNumber min={0.01} step="0.01" size="120"/>) : ''
                     }
                 </FormItem>
-                <FormItem
-                    label="是否上架"
-                    labelCol={{span: 2}}
-                    wrapperCol={{span: 22}}
-                >
+                <FormItem   label="是否上架" {...itemLayout}  >
                     {
                         getFieldDecorator('shelves', {})(
                             <RadioGroup>
@@ -274,9 +242,7 @@ class GoodsItem extends Component {
                     }
                 </FormItem>
 
-                <FormItem
-                    wrapperCol={{span: 22, offset: 2}}
-                >
+                <FormItem  {...actionLayout}  >
                     <Button type="primary" htmlType="button" style={{margin: ' 0 10px'}}
                             onClick={()=>(this.handleSubmit())}>确定</Button>
                 </FormItem>
@@ -326,12 +292,7 @@ class GoodsForm extends Component {
             delete data.goodsId;
         }
 
-        return (
-            <Block spinning={!data} >
-                <GoodsItem type={id} payload={data} ></GoodsItem>
-            </Block>
-
-        )
+        return  data ? <GoodsItem type={id} payload={data} ></GoodsItem> : <Block spinning/>
     }
 }
 

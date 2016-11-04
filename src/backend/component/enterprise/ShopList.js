@@ -75,20 +75,17 @@ class CourierList extends Component {
 
         console.log('pagination', pagination)
 
+        const title = ()=>(
+            <div>
+                <Link to="/shop/create">
+                    <Button type="primary" style={{float: 'right'}}>添加账号</Button>
+                </Link>
+                <h3>门店账号管理</h3>
+            </div>
+        )
         return (<div className="ant-layout-content">
-            <Row>
-                <Col span={8}>
-                    <h3>门店账号管理</h3>
-                </Col>
-                <Col span={8} offset={8}>
-                    <div style={{marginBottom: 16, float: 'right'}}>
-                        <Link to="/shop/create">
-                            <Button type="primary">添加账号</Button>
-                        </Link>
-                    </div>
-                </Col>
-            </Row>
-            <Table columns={columns} dataSource={this.props.data} bgoodsed loading={this.props.isFetching}
+            <Table title={title} columns={columns} bordered dataSource={this.props.data} bgoodsed
+                   loading={this.props.isFetching}
                    pagination={pagination}/>
         </div>)
     }

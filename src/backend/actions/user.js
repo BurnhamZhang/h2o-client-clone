@@ -34,6 +34,7 @@ function fetchData(data) {
       data
     })
     .then((json) => {
+      json.loginType = data.loginType;
       dispatch(receiveUser(json));
     });
   };

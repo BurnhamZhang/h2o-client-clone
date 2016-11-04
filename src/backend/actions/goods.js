@@ -54,7 +54,7 @@ export function fetchGoodsIfNeeded(id) {
         const {list,item} = getState().goods;
         const goods = list.data && list.data.find(item => item.goodsId == id);
         if (goods) {
-            return dispatch(goods_success(goods));
+            return dispatch(goods_success({data:goods}));
         }
 
         if (shouldFetchData(item)) {

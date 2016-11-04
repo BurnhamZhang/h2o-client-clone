@@ -9,8 +9,9 @@
     ]
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "babel-node test",
     "start": "babel-node src/server/app.js",
+    "start:mock": "export  MOCK=mock &&  babel-node src/server/app.js",
     "postinstall": "npm run build",
     "build": "babel-node config/build.js",
     "prod": "export NODE_ENV=production && babel-node src/server/app.js"

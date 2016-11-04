@@ -82,8 +82,7 @@ class Order extends Component {
             onChange: this.handleSubmit
         }
 
-
-        return (<div className="ant-layout-content">
+        const title = (
             <Form horizontal>
                 <FormItem
                     label="时间范围"
@@ -92,7 +91,7 @@ class Order extends Component {
                 >
                     {
                         getFieldDecorator('date-range', {})(
-                            <RangePicker showTime format="YYYY/MM/DD HH:mm:ss" style={{width: 300}} onOpenChange={(status)=>!status && this.handleSubmit(1,20)}/>
+                            <RangePicker format="YYYY/MM/DD" style={{width: 300}} onOpenChange={(status)=>!status && this.handleSubmit(1,20)}/>
                         )
                     }
                 </FormItem>
@@ -144,8 +143,11 @@ class Order extends Component {
                     }  }>重置</a>
                 </FormItem>
             </Form>
+        )
 
-            <Table columns={columns} dataSource={this.props.data} bordered loading={this.props.isFetching} pagination={pagination}/>
+
+        return (<div className="ant-layout-content">
+            <Table columns={columns} title={()=>title} dataSource={this.props.data} bordered loading={this.props.isFetching} pagination={pagination}/>
         </div>)
     }
 }

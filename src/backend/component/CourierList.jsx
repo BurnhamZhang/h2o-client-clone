@@ -5,12 +5,13 @@ import {fetchCourierListIfNeeded} from '../actions/courier';
 import {Table, DatePicker, Radio, Form, Button, Select, Input, Row, Col} from 'antd';
 const ButtonGroup = Button.Group;
 
-const statusList = ['休息','正常','停用']
+const statusList = {'0': '休息', '1': '正常', '2': '停用'};
 
 const columns = [
-    {title: '照片', dataIndex: 'image', key: '1',
+    {
+        title: '照片', dataIndex: 'image', key: '1',
         render: (text, record, index) => (
-            <img src={text} style={{width: 60, height:60}}/>
+            <img src={text} style={{width: 60, height: 60}}/>
         ),
     },
     {
@@ -20,8 +21,8 @@ const columns = [
     {title: '账号', dataIndex: 'account', key: '3'},
     {title: '电话', dataIndex: 'phone', key: '4'},
     {
-        title: '状态', dataIndex: 'shelves', key: '5',
-        render: (text, record, index) =>  statusList[text]
+        title: '状态', dataIndex: 'status', key: '5',
+        render: (text, record, index) => statusList[text]
     },
     {
         title: '操作',
@@ -65,8 +66,8 @@ class CourierList extends Component {
 
     render() {
         const pagination = {
-            pageSize:this.props.pagination.pageSize,
-            current	: this.props.pagination.pageNum,
+            pageSize: this.props.pagination.pageSize,
+            current: this.props.pagination.pageNum,
             total: this.props.pagination.totalCount,
             defaultPageSize: this.props.pagination.pageSize,
             defaultCurrent: this.props.pageNum,
@@ -78,20 +79,17 @@ class CourierList extends Component {
 
         console.log('pagination', pagination)
 
+        const title = ()=>(
+            <div>
+                <Link to="/courier/create">
+                    <Button type="primary" style={{float: 'right'}}>添加配送员</Button>
+                </Link>
+                <h3>配送员管理</h3>
+            </div>
+        )
         return (<div className="ant-layout-content">
-            <Row>
-                <Col span={8}>
-                    <h3>商品管理</h3>
-                </Col>
-                <Col span={8} offset={8}>
-                    <div style={{marginBottom: 16, float: 'right'}}>
-                        <Link to="/courier/create">
-                            <Button type="primary">添加配送员</Button>
-                        </Link>
-                    </div>
-                </Col>
-            </Row>
-            <Table columns={columns} dataSource={this.props.data} bgoodsed loading={this.props.isFetching}
+            <Table title={title} columns={columns} bordered dataSource={this.props.data} bgoodsed
+                   loading={this.props.isFetching}
                    pagination={pagination}/>
         </div>)
     }

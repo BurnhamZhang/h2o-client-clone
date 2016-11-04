@@ -45,16 +45,11 @@ function fetchGoods(data) {
 
 
 export function fetchGoodsIfNeeded(id) {
-
-    if (id == 'create') {
-        return false
-    }
-
     return (dispatch, getState) => {
         const {list,item} = getState().enterprise.goods;
         const goods = list.data && list.data.find(item => item.goodsId == id);
         if (goods) {
-            return dispatch(goods_success(goods));
+            return dispatch(goods_success({data:goods}));
         }
 
         if (shouldFetchData(item)) {

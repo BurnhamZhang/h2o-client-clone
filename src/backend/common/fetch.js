@@ -3,7 +3,7 @@
  */
 import fetch from 'isomorphic-fetch';
 
-
+import param from './param';
 
 
 
@@ -20,6 +20,12 @@ export default function (url,options = {}) {
         if(options.data){
             options.body  = typeof options.data =='object'?JSON.stringify(options.data):options.data;
             delete options.data;
+        }
+    }
+    else{
+        if(options.data){
+            url += (/\?/.test(url)?'&':'?')+param(options.data);
+            delete  options.data;
         }
     }
 

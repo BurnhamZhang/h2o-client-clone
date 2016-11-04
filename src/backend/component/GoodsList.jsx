@@ -6,7 +6,6 @@ import {Table, DatePicker, Radio, Form, Button, Select, Input, Row, Col} from 'a
 const ButtonGroup = Button.Group;
 
 
-
 const columns = [
     {title: '商品名', dataIndex: 'name', key: '1'},
     {
@@ -66,8 +65,8 @@ class GoodsList extends Component {
 
     render() {
         const pagination = {
-            pageSize:this.props.pagination.pageSize,
-            current	: this.props.pagination.pageNum,
+            pageSize: this.props.pagination.pageSize,
+            current: this.props.pagination.pageNum,
             total: this.props.pagination.totalCount,
             defaultPageSize: this.props.pagination.pageSize,
             defaultCurrent: this.props.pageNum,
@@ -77,24 +76,23 @@ class GoodsList extends Component {
             onChange: this.handleSubmit
         }
 
-        console.log('pagination', pagination)
+        console.log('pagination', columns)
 
-        return (<div className="ant-layout-content">
-            <Row>
-                <Col span={8}>
-                    <h3>商品管理</h3>
-                </Col>
-                <Col span={8} offset={8}>
-                    <div style={{marginBottom: 16, float: 'right'}}>
+        return (
+
+            <div className="ant-layout-content">
+
+                <Table title={()=>(
+                    <div>
                         <Link to="/goods/create">
-                            <Button type="primary">添加商品</Button>
+                            <Button type="primary" style={{float: 'right'}}>添加商品</Button>
                         </Link>
+                        <h3>商品管理</h3>
                     </div>
-                </Col>
-            </Row>
-            <Table columns={columns} size="small" dataSource={this.props.data} bgoodsed loading={this.props.isFetching}
-                   pagination={pagination}/>
-        </div>)
+                )} columns={columns}  bordered dataSource={this.props.data} bgoodsed
+                       loading={this.props.isFetching}
+                       pagination={pagination}/>
+            </div>)
     }
 }
 
