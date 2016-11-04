@@ -2,6 +2,7 @@
 
 import koa from 'koa';
 import Router from 'koa-router';
+import render from './render';
 
 
 
@@ -11,18 +12,7 @@ const app = koa();
 const router = new Router();
 
 router.get('*',function *() {
-    console.log('frontend')
-    this.body = `<!DOCTYPE html>
-                        <html>
-                          <head>
-                            <meta charset="utf-8">
-                            <title>Node + React Starter</title>
-                          </head>
-                          <body>
-                            <div id='react-content'/>
-                          </body>
-                          <script src="/frontend.js"></script>
-                        </html>`;
+    this.body = yield render('frontend');
 });
 
 

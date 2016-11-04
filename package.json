@@ -27,6 +27,7 @@
     "antd-mobile": "^0.9.3",
     "babel-loader": "^6.2.5",
     "babel-polyfill": "^6.16.0",
+    "co-views": "^2.1.0",
     "css-loader": "^0.25.0",
     "file-loader": "^0.9.0",
     "koa": "^1.2.4",
@@ -49,6 +50,7 @@
     "redux-thunk": "^2.1.0",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
+    "swig": "^1.4.2",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.2"
   },
