@@ -10,6 +10,7 @@ const extractFrontendCss = new ExtractTextPlugin('frontend.css');
 // const extractCss = new ExtractTextPlugin('app.[contenthash].css');
 const extractAntd = new ExtractTextPlugin('antd.css');
 const extractAntdMobile = new ExtractTextPlugin('antd.mobile.css');
+const extractNormalizeMobile = new ExtractTextPlugin('normalize.css');
 // const extractAntd = new ExtractTextPlugin('antd.[contenthash].css');
 
 module.exports = {
@@ -22,7 +23,7 @@ module.exports = {
     module: {
         loaders: [
             {
-                test: /src(\\|\/).+\.jsx?$/,
+                test: /\.jsx?$/,
                 exclude: /node_modules/,
                 loader: 'babel',
                 query: {
@@ -37,11 +38,13 @@ module.exports = {
             {test: /\.(jpe?g|png|gif)$/i, loaders: ['file']},
             {test: /\.ico$/, loader: 'file-loader?name=[name].[ext]'},
             // https://github.com/webpack/style-loader#recommended-configuration
-            {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../node_modules/antd'), loader: extractAntd.extract('css')},
-            {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../src/backend'), loader: extractBackendCss.extract('css!postcss!sass')},
-            {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../src/frontend'), loader: extractFrontendCss.extract('css!postcss!sass')},
-            // {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../node_modules/antd-mobile'), loader: extractAntdMobile.extract('css')},
-            {test: /(\.css|\.scss)$/, include: path.join(__dirname, '../node_modules/normalize.css'), loader: extractAntdMobile.extract('css')},
+
+            {test: /\.s?css$/, include: [path.join(__dirname, '../node_modules/antd'),path.join(__dirname, '../node_modules/antd-mobile')], loader: extractAntd.extract('style','css!sass')},
+            {test: /\.s?css$/, include: path.join(__dirname, '../src/backend'), loader: extractBackendCss.extract('style','css!sass')},
+            // {test: /\.s?css$/, include: path.join(__dirname, '../node_modules/antd-mobile'), loader: extractAntdMobile.extract('style','css!sass')},
+            {test: /\.s?css$/, include: path.join(__dirname, '../src/frontend'), loader: extractFrontendCss.extract('style','css!sass')},
+            {test: /\.css$/, include: path.join(__dirname, '../node_modules/normalize'), loader: extractNormalizeMobile.extract('css')},
+            // {test: /\.s?css$/, include: path.join(__dirname, '../node_modules/antd-mobile'), loader: 'style!css!sass'},
         ]
     },
     resolve: {
@@ -64,11 +67,15 @@ module.exports = {
         extractBackendCss,
         extractFrontendCss,
         extractAntdMobile,
+        extractNormalizeMobile,
         new webpack.NoErrorsPlugin(),
+        // new webpack.optimize.CommonsChunkPlugin(/*chunkName=*/'common', /*filename=*/'common.js'),
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
+            compress : {
+                unused    : true,
+                dead_code : true,
+                warnings  : false
             }
         }),
         new HtmlWebpackPlugin({

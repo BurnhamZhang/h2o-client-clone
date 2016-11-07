@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "babel-node test",
-    "start": "babel-node src/server/app.js",
+    "start": "nodemon --exec 'babel-node src/server/app.js' ",
     "start:mock": "export  MOCK=mock &&  babel-node src/server/app.js",
     "postinstall": "npm run build",
     "build": "babel-node config/build.js",
@@ -38,6 +38,7 @@
     "koa.io": "0.0.3",
     "moment": "^2.15.2",
     "node-sass": "^3.10.1",
+    "nodemon": "^1.11.0",
     "path": "^0.12.7",
     "postcss-loader": "^1.0.0",
     "react": "^15.3.2",

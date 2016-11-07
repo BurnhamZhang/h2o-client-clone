@@ -49,11 +49,13 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'frontend',
             filename: path.resolve(__dirname, '../dist/frontend.html'),
+            template:path.resolve(__dirname, '../src/frontend/index.html'),
             chunks: ['frontend']
         }),
         new HtmlWebpackPlugin({
             title: 'backend',
             filename: path.resolve(__dirname, '../dist/backend.html'),
+            template:path.resolve(__dirname, '../src/backend/index.html'),
             chunks: ['backend']
         })
     ]
