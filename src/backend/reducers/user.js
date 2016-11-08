@@ -1,12 +1,16 @@
-import {REQUEST_USER, RECEIVE_USER, INVALIDATE_USER} from '../actions/user';
+import {REQUEST_USER, RECEIVE_USER, INVALIDATE_USER,AUTH_TIMEOUT} from '../actions/user';
 
 export default function user(state = {
     isFetching: false,
     didInvalidate: true,
-    payload:{
+    data:{
     }
 }, action) {
     switch (action.type) {
+        case AUTH_TIMEOUT:
+            return Object.assign({}, state, {
+                payload:{}
+            })
         case INVALIDATE_USER:
             return Object.assign({}, state, {
                 isFetching: false,
@@ -23,7 +27,7 @@ export default function user(state = {
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                payload: action.payload.data
+                ...action.payload
             })
             break;
         default:

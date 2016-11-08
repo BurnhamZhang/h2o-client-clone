@@ -8,8 +8,7 @@ const FormItem = Form.Item;
 
 
 @connect((state, ownProps)=>({
-    user: state.user.payload,
-    isFetching: state.user.isFetching
+    ...state.user
 }), (dispatch, ownProps)=>({
     login: (payload)=>dispatch(fetchUserIfNeeded(payload))
 }))
@@ -43,8 +42,8 @@ class Login extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
-
-        if (nextProps.user.account) {
+        console.log('shouldComponentUpdate',nextProps)
+        if (nextProps.data.account) {
             const {location} = nextProps;
             if (location.state && location.state.nextPathname) {
                 this.props.router.replace(location.state.nextPathname)
@@ -58,7 +57,8 @@ class Login extends Component {
 
     render() {
         const {getFieldDecorator, getFieldError} = this.props.form;
-        const {isFetching} = this.props;
+        const {isFetching,remoteMsg} = this.props;
+        console.log(this.props)
 
 
         const formItemLayout = {
@@ -66,10 +66,14 @@ class Login extends Component {
         };
         const form = (
             <Form horizontal onSubmit={this.handleSubmit}>
-                <FormItem   {...formItemLayout} hasFeedback help={(getFieldError('account') || []).join(', ')}>
+                <FormItem   {...formItemLayout} hasFeedback help={(getFieldError('account') || []).join(', ')} >
                     {getFieldDecorator('account', {
                         rules: [
                             {required: true, min: 2, message: '请至少输入两个字符'},
+                            {validator:function (key,value,callback) {
+                                console.warn('validator',remoteMsg)
+                                callback(remoteMsg)
+                            }}
                         ],
                     })(
                         <Input addonBefore={<Icon type="user"/>} placeholder="用户名"/>

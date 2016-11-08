@@ -11,7 +11,9 @@
   "scripts": {
     "test": "babel-node test",
     "start": "nodemon --exec 'babel-node src/server/app.js' ",
-    "start:mock": "export  MOCK=mock &&  babel-node src/server/app.js",
+    "start:mock": "export  SERVER=mock &&  babel-node src/server/app.js",
+    "start:test": "export  SERVER=test &&  babel-node src/server/app.js",
+    "start:prod": "export  SERVER=prod &&  babel-node src/server/app.js",
     "postinstall": "npm run build",
     "build": "babel-node config/build.js",
     "prod": "export NODE_ENV=production && babel-node src/server/app.js"

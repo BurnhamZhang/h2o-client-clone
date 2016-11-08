@@ -12,7 +12,10 @@ const columns = [
     {
         title: '商品图片', dataIndex: 'images', key: '2',
         render: (text, record, index) => (
-            <img src={text[0]} style={{width: 60, height: 60}}/>
+            <div>
+                { text.map((item)=>(<img src={item} style={{width: 60, height: 60}} key={item}/>))}
+            </div>
+
         ),
     },
     {title: '商品描述', dataIndex: 'memo', key: '3'},
@@ -39,7 +42,7 @@ const columns = [
 
 
 @connect((state, ownProps)=>({
-    ...state.goods.list
+    ...state.enterprise.goods.list
 }), (dispatch, ownProps)=>({
     fetchGoodsListIfNeeded: (payload)=>dispatch(fetchGoodsListIfNeeded(payload))
 }))
@@ -66,11 +69,11 @@ class GoodsList extends Component {
 
     render() {
         const pagination = {
-            pageSize:this.props.pagination.pageSize,
-            current	: this.props.pagination.pageNum,
-            total: this.props.pagination.totalCount,
-            defaultPageSize: this.props.pagination.pageSize,
-            defaultCurrent: this.props.pageNum,
+            pageSize:this.props.pagination.pageSize*1,
+            current	: this.props.pagination.pageNum*1,
+            total: this.props.pagination.totalCount*1,
+            defaultPageSize: this.props.pagination.pageSize*1,
+            defaultCurrent: this.props.pageNum*1,
             showQuickJumper: true,
             showSizeChanger: true,
             onShowSizeChange: this.handleSubmit,

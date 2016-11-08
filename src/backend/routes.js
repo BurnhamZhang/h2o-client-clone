@@ -15,7 +15,7 @@ import Login from './component/Login';
 import Enterprise from './component/enterprise'
 
 
-const enterprize = [
+const enterprise = [
     {
         path: 'shop',
         component: Enterprise.ShopList
@@ -95,7 +95,7 @@ const defaults = [
 
 const routes =  (loginType) => {
     if (loginType == 1) {
-        return enterprize
+        return enterprise
     }
     if (loginType == 2) {
         return shop
@@ -106,7 +106,7 @@ const routes =  (loginType) => {
 export default (store) => {
     function requireAuth(nextState, replace) {
         const state = store.getState();
-        if (!state.user.payload.account) {
+        if (!state.user.data.account) {
             replace({
                 pathname: '/login',
                 state: {nextPathname: nextState.location.pathname}
@@ -127,7 +127,8 @@ export default (store) => {
                 indexRoute: {onEnter: (nextState, replace) => replace('/manage')},
                 getChildRoutes: (partialNextState, callback)=> {
                     const state = store.getState();
-                    const loginType = state.user.payload.loginType;
+                    const loginType = state.user.data.loginType;
+                    console.warn('>>>>>>>',loginType,routes(loginType))
                     callback(null,routes(loginType))
                 },
             }

@@ -90,7 +90,7 @@ class Sidebar extends Component {
         this.changeCurrent(pathname);
     }
     render() {
-        const data = this.props.payload.loginType == 1 ? enterprise : shop;
+        const data = this.props.data.loginType == 1 ? enterprise : shop;
 
         return (
             <aside className="ant-layout-sider">
