@@ -53,7 +53,7 @@ class RegionPicker extends Component {
         const options = this.getOptions(optionsDefault.concat(), map)
 
         const state = {
-            value: [],
+            value: value,
             tags,
             map,
             options
@@ -80,7 +80,6 @@ class RegionPicker extends Component {
         const options = this.getOptions(optionsDefault.concat(), map)
 
         const state = {
-            value: [],
             tags,
             map,
             options
