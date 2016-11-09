@@ -17,7 +17,7 @@ module.exports = {
     debug: false,
     noInfo: true, // set to false to see a list of every file being bundled.
     entry: {
-        frontend: [path.resolve(__dirname, '../src/frontend/index')],
+        // frontend: [path.resolve(__dirname, '../src/frontend/index')],
         backend: [path.resolve(__dirname, '../src/backend/index')],
     },
     module: {
