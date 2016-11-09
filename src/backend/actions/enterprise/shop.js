@@ -13,6 +13,22 @@ export const ENTERPRISE_SHOP_LIST_REQUEST = 'ENTERPRISE_SHOP_LIST_REQUEST';
 export const ENTERPRISE_SHOP_LIST_SUCCESS = 'ENTERPRISE_SHOP_LIST_SUCCESS';
 export const ENTERPRISE_SHOP_LIST_FAILURE = 'ENTERPRISE_SHOP_LIST_FAILURE';
 
+
+export const ENTERPRISE_SHOP_CREATE_REQUEST = 'ENTERPRISE_SHOP_CREATE_REQUEST';
+export const ENTERPRISE_SHOP_CREATE_SUCCESS = 'ENTERPRISE_SHOP_CREATE_SUCCESS';
+export const ENTERPRISE_SHOP_CREATE_FAILURE = 'ENTERPRISE_SHOP_CREATE_FAILURE';
+
+
+
+export const ENTERPRISE_SHOP_UPDATE_REQUEST = 'ENTERPRISE_SHOP_UPDATE_REQUEST';
+export const ENTERPRISE_SHOP_UPDATE_SUCCESS = 'ENTERPRISE_SHOP_UPDATE_SUCCESS';
+export const ENTERPRISE_SHOP_UPDATE_FAILURE = 'ENTERPRISE_SHOP_UPDATE_FAILURE';
+
+export const ENTERPRISE_SHOP_DELETE_REQUEST = 'ENTERPRISE_SHOP_DELETE_REQUEST';
+export const ENTERPRISE_SHOP_DELETE_SUCCESS = 'ENTERPRISE_SHOP_DELETE_SUCCESS';
+export const ENTERPRISE_SHOP_DELETE_FAILURE = 'ENTERPRISE_SHOP_DELETE_FAILURE';
+
+
 function shop_failure() {
     return {
         type: ENTERPRISE_SHOP_FAILURE,
@@ -125,5 +141,120 @@ export function fetchShopListIfNeeded(data) {
         if (shouldFetchShopList(getState())) {
             return dispatch(fetchShopList(data));
         }
+    };
+}
+
+function shop_update_failure() {
+    return {
+        type: ENTERPRISE_SHOP_UPDATE_FAILURE,
+    };
+}
+
+function shop_update_request(payload) {
+    return {
+        type: ENTERPRISE_SHOP_UPDATE_REQUEST,
+        payload
+    };
+}
+
+function shop_update_success(json) {
+    return {
+        type: ENTERPRISE_SHOP_UPDATE_SUCCESS,
+        receiveAt: Date.now(),
+        payload: json
+    };
+}
+
+
+
+export function updateShopById(id ,data) {
+    return (dispatch, getState) => {
+        dispatch(shop_update_request(id));
+        return fetch('/api/shop/' + id,{
+            method:'PUT',
+            data:data
+        })
+            .then((json) => {
+                dispatch(shop_update_success(json));
+            }).catch(error => {
+                dispatch(shop_update_failure(error))
+            });
+    };
+}
+
+
+function shop_create_failure() {
+    return {
+        type: ENTERPRISE_SHOP_CREATE_FAILURE,
+    };
+}
+
+function shop_create_request(payload) {
+    return {
+        type: ENTERPRISE_SHOP_CREATE_REQUEST,
+        payload
+    };
+}
+
+function shop_create_success(json) {
+    return {
+        type: ENTERPRISE_SHOP_CREATE_SUCCESS,
+        receiveAt: Date.now(),
+        payload: json
+    };
+}
+
+
+
+export function createShop(payload) {
+    return (dispatch, getState) => {
+        dispatch(shop_create_request());
+        return fetch('/api/shop/',{
+            method:'POST',
+            data:payload
+        })
+            .then((json) => {
+                dispatch(shop_create_success(json));
+            }).catch(error => {
+                dispatch(shop_create_failure(error))
+            });
+    };
+}
+
+
+function shop_delete_failure() {
+    return {
+        type: ENTERPRISE_SHOP_DELETE_FAILURE,
+    };
+}
+
+function shop_delete_request(payload) {
+    return {
+        type: ENTERPRISE_SHOP_DELETE_REQUEST,
+        payload
+    };
+}
+
+function shop_delete_success(json) {
+    return {
+        type: ENTERPRISE_SHOP_DELETE_SUCCESS,
+        receiveAt: Date.now(),
+        payload: json
+    };
+}
+
+
+
+export function deleteShopById(id) {
+    return (dispatch, getState) => {
+        dispatch(shop_delete_request());
+        return fetch('/api/shop/'+id,{
+            method:'DELETE',
+        })
+            .then((json) => {
+                dispatch(shop_delete_success(json));
+            }).catch(error => {
+                dispatch(shop_delete_failure(error))
+            });
     };
 }

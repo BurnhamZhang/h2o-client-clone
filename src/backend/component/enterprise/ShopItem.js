@@ -4,7 +4,8 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchShopIfNeeded} from '../../actions/enterprise/shop';
+import {fetchShopIfNeeded,updateShopById,createShop,deleteShopById} from '../../actions/enterprise/shop';
+
 import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon ,Switch,TimePicker,Checkbox } from 'antd';
 import Block from '../Block';
 import moment from 'moment';
@@ -17,7 +18,11 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 import {itemLayout, actionLayout} from '../../constants/formLayout';
 
-
+@connect(null, (dispatch, ownProps)=>({
+    updateShopById: (id,data)=>dispatch(updateShopById(id,data)),
+    createShop: (data)=>dispatch(createShop(data)),
+    deleteShopById: (id)=>dispatch(deleteShopById(id)),
+}))
 @createForm({
     mapPropsToFields: ({payload = {}})=> ({
         id:{
@@ -49,15 +54,31 @@ class ShopForm extends Component {
     handleSubmit(e) {
         e.preventDefault();
         console.log('handleSubmit');
+        const {type,updateShopById,createShop} = this.props;
+
+
         this.props.form.validateFields((errors, values) => {
             if (errors) {
                 console.log('Errors in form!!!');
                 return;
             }
             console.log('values', values)
+            if(type =='create'){
+                createShop(values)
+            }
+            else {
+                updateShopById(type,values)
+            }
+
             return
         });
 
+    }
+
+
+    handleDelete(){
+        const {type,deleteShopById} = this.props;
+        deleteShopById(type);
     }
 
     render() {
@@ -110,6 +131,17 @@ class ShopForm extends Component {
                 </FormItem>
                 <FormItem     {...actionLayout}     >
                     <Button type="primary" htmlType="submit" >确定</Button>
+                    {
+                        type!='create' ?
+
+                            <Popconfirm title="确定要删除吗？" okText="确定" cancelText="不了" onConfirm={()=>(this.handleDelete())}>
+                                <Button type="dashed" htmlType="button" style={{margin: ' 0 10px'}}
+                                >删除</Button>
+                            </Popconfirm>
+
+                            :null
+                    }
+
                 </FormItem>
             </Form>
         </div>)
@@ -140,6 +172,15 @@ class ShopLayout extends Component {
                 this.props.fetchShopIfNeeded(id);
             }
         }
+    }
+
+    shouldComponentUpdate(nextProps) {
+        if (nextProps.didUpdate) {
+            console.warn(this.props.router);
+            this.props.router.push('/shop')
+            return false
+        }
+        return true
     }
 
     render() {

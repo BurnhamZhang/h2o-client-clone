@@ -81,21 +81,17 @@ class GoodsList extends Component {
         }
 
         console.log('pagination', pagination)
-
         return (<div className="ant-layout-content">
-            <Row>
-                <Col span={8}>
+
+            <Table title={()=>(
+                <div>
+                    <Link to="/goods/create">
+                        <Button type="primary" style={{float: 'right'}}>添加商品</Button>
+                    </Link>
                     <h3>商品管理</h3>
-                </Col>
-                <Col span={8} offset={8}>
-                    <div style={{marginBottom: 16, float: 'right'}}>
-                        <Link to="/goods/create">
-                            <Button type="primary">添加商品</Button>
-                        </Link>
-                    </div>
-                </Col>
-            </Row>
-            <Table columns={columns} size="small" dataSource={this.props.data} bgoodsed loading={this.props.isFetching}
+                </div>
+            )} columns={columns}  bordered dataSource={this.props.data} bgoodsed
+                   loading={this.props.isFetching}
                    pagination={pagination}/>
         </div>)
     }
