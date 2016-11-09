@@ -1,4 +1,4 @@
-import {REQUEST_USER, RECEIVE_USER, INVALIDATE_USER,AUTH_TIMEOUT} from '../actions/user';
+import {REQUEST_USER, RECEIVE_USER, INVALIDATE_USER,AUTH_TIMEOUT,AUTH_LOGOUT} from '../actions/user';
 
 export default function user(state = {
     isFetching: false,
@@ -21,6 +21,7 @@ export default function user(state = {
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
+                remoteMsg:null
             })
             break;
         case RECEIVE_USER:
@@ -30,6 +31,13 @@ export default function user(state = {
                 ...action.payload
             })
             break;
+        case AUTH_LOGOUT:
+            return Object.assign({}, state, {
+                isFetching: false,
+                didInvalidate: false,
+                remoteMsg:null,
+                data:{}
+            })
         default:
             return state
     }

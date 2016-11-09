@@ -19,3 +19,7 @@ export function get(key) {
     }
     return data
 }
+
+export function remove(key) {
+  storage.removeItem(key);
+}

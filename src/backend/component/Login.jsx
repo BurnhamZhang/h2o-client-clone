@@ -64,16 +64,14 @@ class Login extends Component {
         const formItemLayout = {
             wrapperCol: {span: 12, offset: 6},
         };
+        const help = remoteMsg||(getFieldError('account') || []).join(', ');
+
         const form = (
             <Form horizontal onSubmit={this.handleSubmit}>
-                <FormItem   {...formItemLayout} hasFeedback help={(getFieldError('account') || []).join(', ')} >
+                <FormItem   {...formItemLayout} hasFeedback help={help} validateStatus={help?'error':null} >
                     {getFieldDecorator('account', {
                         rules: [
                             {required: true, min: 2, message: '请至少输入两个字符'},
-                            {validator:function (key,value,callback) {
-                                console.warn('validator',remoteMsg)
-                                callback(remoteMsg)
-                            }}
                         ],
                     })(
                         <Input addonBefore={<Icon type="user"/>} placeholder="用户名"/>

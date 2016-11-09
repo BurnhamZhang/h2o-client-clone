@@ -106,6 +106,7 @@ const routes =  (loginType) => {
 export default (store) => {
     function requireAuth(nextState, replace) {
         const state = store.getState();
+        console.warn('requireAuth>>>>>>>',state.user.data.account)
         if (!state.user.data.account) {
             replace({
                 pathname: '/login',
@@ -124,11 +125,11 @@ export default (store) => {
                 path: '/',
                 component: App,
                 onEnter: requireAuth,
-                indexRoute: {onEnter: (nextState, replace) => replace('/manage')},
+                indexRoute: {onEnter: (nextState, replace) => replace('/login')},
                 getChildRoutes: (partialNextState, callback)=> {
                     const state = store.getState();
                     const loginType = state.user.data.loginType;
-                    console.warn('>>>>>>>',loginType,routes(loginType))
+                    console.warn('getChildRoutes>>>>>>>',loginType,routes(loginType))
                     callback(null,routes(loginType))
                 },
             }

@@ -5,7 +5,7 @@ const SubMenu = Menu.SubMenu;
 import {connect} from 'react-redux';
 import '../assets/scss/app.scss';
 import Sidebar from './Sidebar';
-
+import {auth_logout} from '../actions/user'
 import io from 'socket.io-client';
 
 // const socket = io();
@@ -21,6 +21,8 @@ import io from 'socket.io-client';
 
 @connect((state, ownProps)=>({
     user: state.user
+}),(dispatch, ownProps)=>({
+    auth_logout:()=>dispatch(auth_logout())
 }))
 class App extends Component {
 
@@ -30,12 +32,17 @@ class App extends Component {
             collapse: false,
         }
         this.onCollapseChange = this.onCollapseChange.bind(this);
+        this.handleLogout = this.handleLogout.bind(this);
     }
 
     onCollapseChange() {
         this.setState({
             collapse: !this.state.collapse,
         })
+    }
+
+    handleLogout(){
+        this.props.auth_logout();
     }
 
     render() {
@@ -51,7 +58,7 @@ class App extends Component {
                 </Sidebar>
                 <div className="ant-layout-main">
                     <div className="ant-layout-header">
-                        <span style={{float: 'right'}}>{userName}</span>
+                        <span style={{float: 'right'}}>{userName} <a href="#" onClick={this.handleLogout}>登出</a>  </span>
                     </div>
                     <div className="ant-layout-breadcrumb">
                         <Breadcrumb>

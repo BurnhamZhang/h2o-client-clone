@@ -7,7 +7,6 @@ import frontend from './frontend';
 import app from './io';
 import path from 'path';
 import mount from 'koa-mount';
-import bodyParser from 'koa-bodyparser';
 import serve from 'koa-static';
 import webpackDevMiddleware  from 'koa-webpack-dev-middleware';
 import webpackHotMiddleware from 'koa-webpack-hot-middleware';
@@ -29,7 +28,6 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 
-app.use(bodyParser());
 
 app.use(mount('/backend', backend));
 app.use(mount('/frontend', frontend));

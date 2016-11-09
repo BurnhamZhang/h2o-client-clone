@@ -5,12 +5,20 @@ export const REQUEST_USER = 'REQUEST_USER';
 export const RECEIVE_USER = 'RECEIVE_USER';
 export const INVALIDATE_USER = 'INVALIDATE_USER';
 export const AUTH_TIMEOUT = 'AUTH_TIMEOUT';
+export const AUTH_LOGOUT = 'AUTH_LOGOUT';
 
 
 export function auth_timeout(payload) {
     return {
         type: AUTH_TIMEOUT,
         payload
+    };
+}
+
+export function auth_logout() {
+    storage.remove('USER_INFO');
+    return {
+        type: AUTH_LOGOUT,
     };
 }
 export function invalidateUser() {
