@@ -17,14 +17,22 @@ $  npm install
 $ npm run build                   
 ```
 
+### 开发
+```bash
+$ npm start                   
+```
 
 ### 测试
+
+**测试环境需要先打包**
 
 ```bash
 $ npm run test                   
 ```
 
 ### 生产
+
+**生产环境需要先打包**
 
 ```bash
 $ npm run prod                   
