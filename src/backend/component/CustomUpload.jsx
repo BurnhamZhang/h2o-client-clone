@@ -11,10 +11,9 @@ class CustomUpload extends Component {
         onChange: PropTypes.func,
     }
     componentWillReceiveProps(nextProps){
-        console.warn('componentWillReceiveProps',nextProps.value,this.props.value);
-        if(nextProps.value!=this.props.value){
-            this.setState(this.mapValueToFileList(nextProps.value));
-        }
+
+        this.setState(this.mapValueToFileList(nextProps.value));
+
     }
     mapValueToFileList(value){
         let fileList = [];
@@ -51,6 +50,18 @@ class CustomUpload extends Component {
         let fileList = e.fileList;
 
         if(this.state.isList){
+            fileList = fileList.map((file) => {
+                if (file.response) {
+                    // Component will show file.url as link
+                    file.url = file.response.response.data.url;
+                    file.thumbUrl = file.url;
+                    file.name = file.url;
+                    file.uid = file.url;
+                }
+                return file;
+            });
+
+
             if(e.file.status == 'removed'){
                 this.props.onChange(null)
             }
@@ -67,10 +78,11 @@ class CustomUpload extends Component {
             else if(e.file.status == 'done'){
                 this.props.onChange(e.file.response.response.data.url)
             }
-            this.setState({
-                fileList
-            })
         }
+
+        this.setState({
+            fileList
+        })
 
 
     }
