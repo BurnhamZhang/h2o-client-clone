@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import {Menu, Breadcrumb, Icon} from 'antd';
+import {Menu, Breadcrumb, Icon ,Popconfirm } from 'antd';
+import {withRouter} from 'react-router';
 const SubMenu = Menu.SubMenu;
 import {connect} from 'react-redux';
 import '../assets/scss/app.scss';
@@ -24,6 +25,7 @@ import io from 'socket.io-client';
 }),(dispatch, ownProps)=>({
     auth_logout:()=>dispatch(auth_logout())
 }))
+@withRouter
 class App extends Component {
 
     constructor(props) {
@@ -43,6 +45,7 @@ class App extends Component {
 
     handleLogout(){
         this.props.auth_logout();
+        this.props.router.replace('/login');
     }
 
     render() {
@@ -58,7 +61,11 @@ class App extends Component {
                 </Sidebar>
                 <div className="ant-layout-main">
                     <div className="ant-layout-header">
-                        <span style={{float: 'right'}}>{userName} <a href="#" onClick={this.handleLogout}>登出</a>  </span>
+                        <span style={{float: 'right'}}>{userName}
+                            <Popconfirm placement="bottomRight" title="确定要退出登录?" onConfirm={this.handleLogout}  okText="确定" cancelText="取消">
+                                 <a href="#" >登出</a>
+                            </Popconfirm>
+                          </span>
                     </div>
                     <div className="ant-layout-breadcrumb">
                         <Breadcrumb>

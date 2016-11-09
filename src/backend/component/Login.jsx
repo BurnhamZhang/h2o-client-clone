@@ -42,7 +42,6 @@ class Login extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        console.log('shouldComponentUpdate',nextProps)
         if (nextProps.data.account) {
             const {location} = nextProps;
             if (location.state && location.state.nextPathname) {
@@ -58,7 +57,6 @@ class Login extends Component {
     render() {
         const {getFieldDecorator, getFieldError} = this.props.form;
         const {isFetching,remoteMsg} = this.props;
-        console.log(this.props)
 
 
         const formItemLayout = {

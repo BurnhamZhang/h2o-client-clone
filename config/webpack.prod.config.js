@@ -5,12 +5,12 @@ import autoprefixer from 'autoprefixer';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 
-const extractBackendCss = new ExtractTextPlugin('backend.css');
-const extractFrontendCss = new ExtractTextPlugin('frontend.css');
+const extractBackendCss = new ExtractTextPlugin('backend.[contenthash].css');
+const extractFrontendCss = new ExtractTextPlugin('frontend.[contenthash].css');
 // const extractCss = new ExtractTextPlugin('app.[contenthash].css');
-const extractAntd = new ExtractTextPlugin('antd.css');
-const extractAntdMobile = new ExtractTextPlugin('antd.mobile.css');
-const extractNormalizeMobile = new ExtractTextPlugin('normalize.css');
+const extractAntd = new ExtractTextPlugin('antd.[contenthash].css');
+const extractAntdMobile = new ExtractTextPlugin('antd.mobile.[contenthash].css');
+const extractNormalizeMobile = new ExtractTextPlugin('normalize.[contenthash].css');
 // const extractAntd = new ExtractTextPlugin('antd.[contenthash].css');
 
 module.exports = {
