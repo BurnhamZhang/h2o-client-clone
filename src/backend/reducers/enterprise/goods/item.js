@@ -11,6 +11,7 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: true,
                 didUpdate:false,
+                ...action.payload
             })
             break;
         case ENTERPRISE_GOODS_REQUEST:
@@ -34,6 +35,7 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: true,
                 didUpdate:false,
+                ...action.payload
             })
             break;
         case ENTERPRISE_GOODS_UPDATE_REQUEST:
@@ -48,7 +50,8 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
-                ...action.payload
+                ...action.payload,
+                data:null,
             })
             break;
 
@@ -58,6 +61,7 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: true,
                 didUpdate:false,
+                ...action.payload
             })
             break;
         case ENTERPRISE_GOODS_CREATE_REQUEST:
@@ -72,7 +76,8 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
-                ...action.payload
+                ...action.payload,
+                data:null,
             })
             break;
 
@@ -83,6 +88,7 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: true,
                 didUpdate:false,
+                ...action.payload
             })
             break;
         case ENTERPRISE_GOODS_DELETE_REQUEST:
@@ -97,7 +103,8 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
-                ...action.payload
+                ...action.payload,
+                data:null,
             })
             break;
 

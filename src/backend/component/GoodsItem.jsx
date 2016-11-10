@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router';
+import {Link,withRouter} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchGoodsIfNeeded,fetchGoodsListIfNeeded,createGoods,deleteGoodsById,updateGoodsById} from '../actions/goods';
-import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber} from 'antd';
+import {fetchGoodsIfNeeded,fetchAvailableGoodsListIfNeeded,createGoods,deleteGoodsById,updateGoodsById} from '../actions/goods';
+import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber,Popconfirm,message} from 'antd';
 import Block from './Block';
 const ButtonGroup = Button.Group;
 const Option = Select.Option;
@@ -13,86 +13,12 @@ const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 import {itemLayout, actionLayout} from '../constants/formLayout';
 
-const itemList = [{
-    "goodsId": 7201,
-    "name": "名称wowd7lka0xq2",
-    "images": ["http://temp.im/144x144/FF9500/000", "http://temp.im/144x144/FF9500/000"],
-    "memo": "描述介绍XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "price": "81.56",
-    "scale": "20L",
-    "stock": 6737,
-    "depositType": 0,
-    "depositMoney": "14.27",
-    "shelves": 0
-}, {
-    "goodsId": 9772,
-    "name": "名称z45r4bbzv",
-    "images": ["http://temp.im/144x144/FF9500/000", "http://temp.im/144x144/FF9500/000"],
-    "memo": "描述介绍XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "price": "16.16",
-    "scale": "20L",
-    "stock": 3761,
-    "depositType": 0,
-    "depositMoney": "1.91",
-    "shelves": 1
-}, {
-    "goodsId": 2162,
-    "name": "名称58kg036q",
-    "images": ["http://temp.im/144x144/FF9500/000", "http://temp.im/144x144/FF9500/000"],
-    "memo": "描述介绍XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "price": "96.33",
-    "scale": "10L",
-    "stock": 8296,
-    "depositType": 1,
-    "depositMoney": "41.41",
-    "shelves": 0
-}, {
-    "goodsId": 4685,
-    "name": "名称b1meuaso",
-    "images": ["http://temp.im/144x144/FF9500/000", "http://temp.im/144x144/FF9500/000"],
-    "memo": "描述介绍XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "price": "15.33",
-    "scale": "15L",
-    "stock": 8072,
-    "depositType": 0,
-    "depositMoney": "20.98",
-    "shelves": 1
-}, {
-    "goodsId": 9679,
-    "name": "名称ihd77jcy",
-    "images": ["http://temp.im/144x144/FF9500/000", "http://temp.im/144x144/FF9500/000"],
-    "memo": "描述介绍XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "price": "59.02",
-    "scale": "15L",
-    "stock": 908,
-    "depositType": 0,
-    "depositMoney": "24.17",
-    "shelves": 1
-}, {
-    "goodsId": 4979,
-    "name": "名称rf1qhqav3",
-    "images": ["http://temp.im/144x144/FF9500/000", "http://temp.im/144x144/FF9500/000"],
-    "memo": "描述介绍XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "price": "43.98",
-    "scale": "10L",
-    "stock": 1640,
-    "depositType": 1,
-    "depositMoney": "10.01",
-    "shelves": 0
-}, {
-    "goodsId": 3286,
-    "name": "名称8or4fefv52g",
-    "images": ["http://temp.im/144x144/FF9500/000", "http://temp.im/144x144/FF9500/000"],
-    "memo": "描述介绍XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
-    "price": "90.45",
-    "scale": "20L",
-    "stock": 5566,
-    "depositType": 1,
-    "depositMoney": "97.09",
-    "shelves": 1
-}];
-
-
+@connect((state, ownProps)=>({
+}), (dispatch, ownProps)=>({
+    createGoods: (payload)=>dispatch(createGoods(payload)),
+    deleteGoodsById:(id)=>dispatch(deleteGoodsById(id)),
+    updateGoodsById:(id,values)=>dispatch(updateGoodsById(id,values)),
+}))
 @createForm({
     mapPropsToFields: ({payload})=> {
         const fields = {};
@@ -116,8 +42,8 @@ class GoodsItem extends Component {
 
     onChooseItem(value) {
 
-
-        const item = itemList.find((item)=>(value == item.goodsId));
+        const {available} = this.props;
+        const item = available.find((item)=>(value == item.goodsId));
         console.log('onChooseItem', value, item)
         this.props.form.setFieldsValue({
             goodsId: item.goodsId,
@@ -127,28 +53,36 @@ class GoodsItem extends Component {
         });
     }
 
-
+    handleDelete(){
+        const {type,deleteGoodsById} = this.props;
+        deleteGoodsById(type);
+    }
     handleSubmit() {
         console.log('handleSubmit');
+        const {type,createGoods,updateGoodsById} = this.props;
         this.props.form.validateFields((errors, values) => {
             if (errors) {
                 console.log('Errors in form!!!');
                 return;
             }
             console.log('values', values)
-            return
+            if(type =='create'){
+                createGoods(values)
+            }
+            else {
+                updateGoodsById(type,values)
+            }
         });
 
     }
 
     render() {
         const {getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
-        const {type, payload} = this.props;
+        const {type, payload,available} = this.props;
 
 
         const item = Object.assign({}, payload, getFieldsValue());
 
-        console.warn('render', item);
 
 
         return (<div className="ant-layout-content">
@@ -161,7 +95,7 @@ class GoodsItem extends Component {
                                     this.onChooseItem(value)
                                 }}>
                                     {
-                                        itemList.map((item, index)=>(
+                                        available.map((item, index)=>(
                                             <Option value={item.goodsId + ''} key={item.goodsId}>{item.name}</Option>))
                                     }
                                 </Select>
@@ -247,6 +181,16 @@ class GoodsItem extends Component {
                 <FormItem  {...actionLayout}  >
                     <Button type="primary" htmlType="button" style={{margin: ' 0 10px'}}
                             onClick={()=>(this.handleSubmit())}>确定</Button>
+                    {
+                        type!='create' ?
+
+                            <Popconfirm title="确定要删除吗？" okText="确定" cancelText="不了" onConfirm={()=>(this.handleDelete())}>
+                                <Button type="dashed" htmlType="button" style={{margin: ' 0 10px'}}
+                                >删除</Button>
+                            </Popconfirm>
+
+                            :null
+                    }
                 </FormItem>
             </Form>
         </div>)
@@ -254,50 +198,64 @@ class GoodsItem extends Component {
 }
 
 @connect((state, ownProps)=>({
-    ...state.goods.item
+    ...state.goods
 }), (dispatch, ownProps)=>({
     fetchGoodsIfNeeded: (payload)=>dispatch(fetchGoodsIfNeeded(payload)),
-    fetchGoodsListIfNeeded:(payload)=>dispatch(fetchGoodsIfNeeded(payload)),
+    fetchAvailableGoodsListIfNeeded:(payload)=>dispatch(fetchAvailableGoodsListIfNeeded(payload)),
 }))
+@withRouter
 class GoodsForm extends Component {
 
     componentWillMount() {
         console.warn('componentWillMount'.toLocaleUpperCase());
         const id = this.props.params.id;
-        if (id != 'create') {
-            this.props.fetchGoodsIfNeeded(id);
-        }
-        this.props.fetchGoodsIfNeeded()
+        this.props.fetchGoodsIfNeeded(id);
+        this.props.fetchAvailableGoodsListIfNeeded()
     }
 
     componentWillReceiveProps(nextProps) {
 
         const id = nextProps.params.id;
-        console.warn('componentWillReceiveProps', this.props, nextProps)
         if (this.props.params.id !== id) {
-            if (id != 'create') {
-                this.props.fetchGoodsIfNeeded(id);
-            }
-            this.props.fetchGoodsIfNeeded()
+            this.props.fetchGoodsIfNeeded(id);
+            this.props.fetchAvailableGoodsListIfNeeded()
         }
     }
+    shouldComponentUpdate(nextProps) {
+        if (nextProps.item.didUpdate) {
+            this.props.router.push('/goods')
+            return false
+        }
+        return true
+    }
+    componentDidUpdate(){
+        const  {didInvalidate,remoteMsg} = this.props.item;
 
+        console.warn('componentDidUpdate',didInvalidate,remoteMsg)
+        if(didInvalidate && remoteMsg){
+            message.warn(remoteMsg)
+        }
+    }
     render() {
         const {id} = this.props.params;
-        let data = this.props.data;
+        let data = this.props.item.data;
+        const available = this.props.available.data;
 
-        if (id == 'create') {
-            data = Object.assign({}, itemList[0], {
+
+
+
+        if (id == 'create' && Array.isArray(available)) {
+            data = Object.assign({}, available[0], {
                 shelves: 1,
                 depositMoney: 1,
                 depositType: 0,
                 stock: 0,
                 price: 1,
             });
-            delete data.goodsId;
         }
 
-        return  data ? <GoodsItem type={id} payload={data} ></GoodsItem> : <Block spinning/>
+        console.log('render',available,data)
+        return  (data && Array.isArray(available)) ? <GoodsItem type={id} payload={data} available={available}></GoodsItem> : <Block spinning/>
     }
 }
 

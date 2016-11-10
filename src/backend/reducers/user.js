@@ -14,7 +14,8 @@ export default function user(state = {
         case INVALIDATE_USER:
             return Object.assign({}, state, {
                 isFetching: false,
-                didInvalidate: true
+                didInvalidate: true,
+                ...action.payload
             })
             break;
         case REQUEST_USER:

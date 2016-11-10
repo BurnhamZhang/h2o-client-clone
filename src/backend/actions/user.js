@@ -21,9 +21,10 @@ export function auth_logout() {
         type: AUTH_LOGOUT,
     };
 }
-export function invalidateUser() {
+export function invalidateUser(payload) {
     return {
         type: INVALIDATE_USER,
+        payload
     };
 }
 

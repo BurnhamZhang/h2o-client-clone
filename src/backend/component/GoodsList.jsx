@@ -65,11 +65,11 @@ class GoodsList extends Component {
 
     render() {
         const pagination = {
-            pageSize: this.props.pagination.pageSize,
-            current: this.props.pagination.pageNum,
-            total: this.props.pagination.totalCount,
-            defaultPageSize: this.props.pagination.pageSize,
-            defaultCurrent: this.props.pageNum,
+            pageSize:this.props.pagination.pageSize*1,
+            current	: this.props.pagination.pageNum*1,
+            total: this.props.pagination.totalCount*1,
+            defaultPageSize: this.props.pagination.pageSize*1,
+            defaultCurrent: this.props.pageNum*1,
             showQuickJumper: true,
             showSizeChanger: true,
             onShowSizeChange: this.handleSubmit,

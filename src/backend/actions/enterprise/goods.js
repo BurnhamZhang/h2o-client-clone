@@ -27,9 +27,10 @@ export const ENTERPRISE_GOODS_DELETE_FAILURE = 'ENTERPRISE_GOODS_DELETE_FAILURE'
 
 
 
-function goods_failure() {
+function goods_failure(payload) {
     return {
         type: ENTERPRISE_GOODS_FAILURE,
+        payload
     };
 }
 
@@ -89,9 +90,10 @@ function shouldFetchData(goods) {
 
 
 
-function goods_list_failure() {
+function goods_list_failure(payload) {
     return {
         type: ENTERPRISE_GOODS_LIST_FAILURE,
+        payload
     };
 }
 
@@ -145,9 +147,10 @@ export function fetchGoodsListIfNeeded(data) {
 
 
 
-function goods_update_failure() {
+function goods_update_failure(payload) {
     return {
         type: ENTERPRISE_GOODS_UPDATE_FAILURE,
+        payload
     };
 }
 
@@ -186,9 +189,10 @@ export function updateGoodsById(id ,data) {
 
 
 
-function goods_create_failure() {
+function goods_create_failure(payload) {
     return {
         type: ENTERPRISE_GOODS_CREATE_FAILURE,
+        payload
     };
 }
 
@@ -225,9 +229,10 @@ export function createGoods(payload) {
 }
 
 
-function goods_delete_failure() {
+function goods_delete_failure(payload) {
     return {
         type: ENTERPRISE_GOODS_DELETE_FAILURE,
+        payload
     };
 }
 

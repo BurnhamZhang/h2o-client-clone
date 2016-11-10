@@ -36,8 +36,8 @@ export default function (url,options = {}) {
     }
 
     return fetch(url,options).then((req) => req.json()).then((res)=>{
-        if (res.code !='A00000' && res.code!='A00002') {
-            return Promise.reject(res)
+        if (res.code !='A00000') {
+            return Promise.reject(res.response)
         }
         return res.response
     })

@@ -28,17 +28,18 @@ export const GOODS_DELETE_FAILURE = 'GOODS_DELETE_FAILURE';
 
 
 
-export const AVAILABLE_GOODS_LIST_REQUEST = 'AVAILABLE_GOODS_DELETE_REQUEST';
-export const AVAILABLE_GOODS_DELETE_SUCCESS = 'AVAILABLE_GOODS_DELETE_SUCCESS';
-export const AVAILABLE_GOODS_DELETE_FAILURE = 'AVAILABLE_GOODS_DELETE_FAILURE';
+export const AVAILABLE_GOODS_LIST_REQUEST = 'AVAILABLE_GOODS_LIST_REQUEST';
+export const AVAILABLE_GOODS_LIST_SUCCESS = 'AVAILABLE_GOODS_LIST_SUCCESS';
+export const AVAILABLE_GOODS_LIST_FAILURE = 'AVAILABLE_GOODS_LIST_FAILURE';
 
 
 //商品详情
 
 
-function goods_failure() {
+function goods_failure(payload) {
     return {
         type: GOODS_FAILURE,
+        payload
     };
 }
 
@@ -73,19 +74,21 @@ function fetchGoods(data) {
 
 export function fetchGoodsIfNeeded(id) {
 
-    if (id == 'create') {
-        return false
-    }
-
     return (dispatch, getState) => {
         const {list,item} = getState().goods;
-        const goods = list.data && list.data.find(item => item.goodsId == id);
-        if (goods) {
-            return dispatch(goods_success({data:goods}));
-        }
+        // 跳过选取列表中的商品
+        // const goods = list.data && list.data.find(item => item.goodsId == id);
+        // if (goods) {
+        //     return dispatch(goods_success({data:goods}));
+        // }
 
-        if (shouldFetchData(item)) {
+        if (id != 'create' && shouldFetchData(item)) {
             return dispatch(fetchGoods(id));
+        }
+        else {
+            return dispatch(goods_success({
+                data:null
+            }));
         }
     };
 }
@@ -103,9 +106,10 @@ function shouldFetchData(goods) {
 
 
 
-function goods_list_failure() {
+function goods_list_failure(payload) {
     return {
         type: GOODS_LIST_FAILURE,
+        payload
     };
 }
 
@@ -159,9 +163,10 @@ export function fetchGoodsListIfNeeded(data) {
 //编辑商品
 
 
-function goods_update_failure() {
+function goods_update_failure(payload) {
     return {
         type: GOODS_UPDATE_FAILURE,
+        payload
     };
 }
 
@@ -200,9 +205,10 @@ export function updateGoodsById(id ,data) {
 
 //新建商品
 
-function goods_create_failure() {
+function goods_create_failure(payload) {
     return {
         type: GOODS_CREATE_FAILURE,
+        payload
     };
 }
 
@@ -239,9 +245,10 @@ export function createGoods(payload) {
 }
 
 //删除商品
-function goods_delete_failure() {
+function goods_delete_failure(payload) {
     return {
         type: GOODS_DELETE_FAILURE,
+        payload
     };
 }
 
@@ -281,31 +288,29 @@ export function deleteGoodsById(id) {
 
 function available_goods_list_failure() {
     return {
-        type: GOODS_LIST_FAILURE,
+        type: AVAILABLE_GOODS_LIST_FAILURE,
     };
 }
 
 function available_goods_list_request(payload) {
     return {
-        type: GOODS_LIST_REQUEST,
+        type: AVAILABLE_GOODS_LIST_REQUEST,
         payload
     };
 }
 
 function available_goods_list_success(json) {
     return {
-        type: GOODS_LIST_SUCCESS,
+        type: AVAILABLE_GOODS_LIST_SUCCESS,
         receiveAt: Date.now(),
         payload: json
     };
 }
 
-function fetchAvailableGoodsList(data) {
+function fetchAvailableGoodsList() {
     return dispatch => {
-        dispatch(available_goods_list_request(data));
-        return fetch('/api/shop/goods', {
-            data
-        })
+        dispatch(available_goods_list_request());
+        return fetch('/api/shop/goods')
             .then((json) => {
                 dispatch(available_goods_list_success(json));
             }).catch(error => {

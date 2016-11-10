@@ -9,19 +9,24 @@ export default function (state = {
         case GOODS_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
-                didInvalidate: true
+                didInvalidate: true,
+                didUpdate: false,
+                ...action.payload
             })
             break;
         case GOODS_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
+                didUpdate: false,
+                data:null,
             })
             break;
         case GOODS_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
+                didUpdate: false,
                 ...action.payload
             })
             break;
@@ -31,6 +36,7 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: true,
                 didUpdate:false,
+                ...action.payload
             })
             break;
         case GOODS_UPDATE_REQUEST:
@@ -45,7 +51,8 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
-                ...action.payload
+                ...action.payload,
+                data:null,
             })
             break;
 
@@ -55,6 +62,7 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: true,
                 didUpdate:false,
+                ...action.payload
             })
             break;
         case GOODS_CREATE_REQUEST:
@@ -69,7 +77,8 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
-                ...action.payload
+                ...action.payload,
+                data:null,
             })
             break;
 
@@ -80,6 +89,7 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: true,
                 didUpdate:false,
+                ...action.payload
             })
             break;
         case GOODS_DELETE_REQUEST:
@@ -94,7 +104,8 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
-                ...action.payload
+                ...action.payload,
+                data:null,
             })
             break;
         

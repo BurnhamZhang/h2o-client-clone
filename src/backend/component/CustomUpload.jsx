@@ -1,5 +1,5 @@
 import React, {Component,PropTypes} from 'react';
-import {Button, Upload, Icon} from 'antd';
+import {Button, Upload, Icon,message} from 'antd';
 
 
 class CustomUpload extends Component {
@@ -49,18 +49,24 @@ class CustomUpload extends Component {
 
         let fileList = e.fileList;
 
-        if(this.state.isList){
-            fileList = fileList.map((file) => {
-                if (file.response) {
-                    // Component will show file.url as link
-                    file.url = file.response.response.data.url;
-                    file.thumbUrl = file.url;
-                    file.name = file.url;
-                    file.uid = file.url;
+        fileList = fileList.filter((file) => {
+            if (file.response) {
+                if(file.response.code!='A00000'){
+                    message.warn(file.response.response.remoteMsg||file.response.msg)
+                    return false
                 }
-                return file;
-            });
+                // Component will show file.url as link
+                file.url = file.response.response.data.url;
+                file.thumbUrl = file.url;
+                file.name = file.url;
+                delete  file.response
+                // file.uid = file.url;
+            }
+            return true;
+        });
 
+        console.warn('fileList',fileList,e)
+        if(this.state.isList){
 
             if(e.file.status == 'removed'){
                 this.props.onChange(null)

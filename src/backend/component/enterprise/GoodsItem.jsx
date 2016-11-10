@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import {withRouter, Link} from 'react-router';
 import {connect} from 'react-redux';
 import {fetchGoodsIfNeeded,updateGoodsById,createGoods,deleteGoodsById} from '../../actions/enterprise/goods';
-import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber,Popconfirm} from 'antd';
+import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber,Popconfirm,message} from 'antd';
 import Block from '../Block';
 const ButtonGroup = Button.Group;
 const Option = Select.Option;
@@ -191,7 +191,14 @@ class GoodsForm extends Component {
         }
         return true
     }
+    componentDidUpdate(){
+        const  {didInvalidate,remoteMsg} = this.props;
 
+        console.warn('componentDidUpdate',didInvalidate,remoteMsg)
+        if(didInvalidate && remoteMsg){
+            message.warn(remoteMsg)
+        }
+    }
     render() {
         const {id} = this.props.params;
         let data = this.props.data;
