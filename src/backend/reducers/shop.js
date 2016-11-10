@@ -1,4 +1,4 @@
-import {SHOP_REQUEST, SHOP_SUCCESS, SHOP_FAILURE} from '../actions/shop';
+import {SHOP_REQUEST, SHOP_SUCCESS, SHOP_FAILURE,SHOP_UPDATE_FAILURE,SHOP_UPDATE_REQUEST,SHOP_UPDATE_SUCCESS} from '../actions/shop';
 
 export default function (state = {
     isFetching: false,
@@ -9,22 +9,49 @@ export default function (state = {
         case SHOP_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
-                didInvalidate: true
+                didInvalidate: true,
+                didUpdate:false,
             })
             break;
         case SHOP_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
+                didUpdate:false,
             })
             break;
         case SHOP_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
+                didUpdate:false,
                 ...action.payload
             })
             break;
+
+        case SHOP_UPDATE_FAILURE:
+            return Object.assign({}, state, {
+                isFetching: false,
+                didInvalidate: true,
+                didUpdate:false,
+            })
+            break;
+        case SHOP_UPDATE_REQUEST:
+            return Object.assign({}, state, {
+                isFetching: true,
+                didInvalidate: false,
+                didUpdate:false,
+            })
+            break;
+        case SHOP_UPDATE_SUCCESS:
+            return Object.assign({}, state, {
+                isFetching: false,
+                didInvalidate: false,
+                didUpdate:true,
+                ...action.payload
+            })
+            break;
+
         default:
             return state
     }

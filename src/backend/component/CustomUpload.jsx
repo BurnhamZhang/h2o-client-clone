@@ -64,20 +64,18 @@ class CustomUpload extends Component {
             }
             return true;
         });
+        this.setState({
+            fileList
+        })
 
-        console.warn('fileList',fileList,e)
+
         if(this.state.isList){
-
-            if(e.file.status == 'removed'){
-                this.props.onChange(null)
-            }
-            else if(e.file.status == 'done'){
+            if(/^(remove|done)$/.test(e.file.status)){
                 this.props.onChange(fileList.map((item)=>item.url))
             }
         }
         else {
             fileList = fileList.slice(-1);
-
             if(e.file.status == 'removed'){
                 this.props.onChange(null)
             }
@@ -86,9 +84,7 @@ class CustomUpload extends Component {
             }
         }
 
-        this.setState({
-            fileList
-        })
+
 
 
     }

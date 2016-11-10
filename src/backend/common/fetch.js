@@ -15,8 +15,8 @@ export default function (url,options = {}) {
             'Content-Type': 'application/json'
         },
     }, options)
-
-    if(options.method !='GET'){
+    options.method=options.method.toUpperCase();
+    if(!/^(GET|DELETE)$/.test(options.method)){
         if(options.data){
             options.body  = typeof options.data =='object'?JSON.stringify(options.data):options.data;
             delete options.data;

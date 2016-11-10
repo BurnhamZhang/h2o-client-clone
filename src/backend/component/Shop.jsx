@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchShopIfNeeded} from '../actions/shop';
-import {fetchStreetIfNeeded} from '../actions/street';
-import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon ,Switch,TimePicker,Checkbox } from 'antd';
+import {fetchShopIfNeeded,updateShopIfNeeded} from '../actions/shop';
+import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon ,Switch,TimePicker,Checkbox,message } from 'antd';
 import Block from './Block';
 import CustomUpload from './CustomUpload';
 import moment from 'moment';
@@ -17,7 +16,9 @@ const RadioGroup = Radio.Group;
 import {itemLayout, actionLayout} from '../constants/formLayout';
 import RegionPicker from './RegionPicker';
 
-
+@connect(null, (dispatch, ownProps)=>({
+    updateShopIfNeeded: (payload)=>dispatch(updateShopIfNeeded(payload)),
+}))
 @createForm({
     mapPropsToFields: ({payload = {}})=> ({
         id:{
@@ -72,6 +73,7 @@ class ShopForm extends Component {
                 return;
             }
             console.log('values', values)
+            this.props.updateShopIfNeeded(values);
             return
         });
 
@@ -79,10 +81,7 @@ class ShopForm extends Component {
 
     render() {
         const {getFieldDecorator, getFieldsValue} = this.props.form;
-        const street = this.props.street;
 
-
-        console.warn('render',street);
 
 
         return (<div className="ant-layout-content">
@@ -143,7 +142,12 @@ class ShopForm extends Component {
 
                 </FormItem>
                 <FormItem label="配送范围"  {...itemLayout} >
-                    <RegionPicker/>
+                    {
+                        getFieldDecorator('shopRegions')(
+                            <RegionPicker/>
+                        )
+                    }
+
                 </FormItem>
                 <FormItem     {...actionLayout}     >
                     <Button type="primary" htmlType="button" style={{margin: ' 0 10px'}}
@@ -156,23 +160,33 @@ class ShopForm extends Component {
 
 @connect((state, ownProps)=>({
     ...state.shop,
-    street :state.courier.street.data
 }), (dispatch, ownProps)=>({
     fetchShopIfNeeded: (payload)=>dispatch(fetchShopIfNeeded()),
-    fetchStreetIfNeeded: (payload)=>dispatch(fetchStreetIfNeeded()),
 }))
 class ShopLayout extends Component {
 
     componentWillMount() {
         console.warn('componentWillMount'.toLocaleUpperCase());
         this.props.fetchShopIfNeeded();
-        this.props.fetchStreetIfNeeded();
+    }
+
+    componentDidUpdate(){
+        const  {didInvalidate,remoteMsg,didUpdate} = this.props;
+
+        console.warn('componentDidUpdate',didInvalidate,remoteMsg)
+        if(didInvalidate && remoteMsg){
+            message.warn(remoteMsg)
+        }
+
+        if(didUpdate){
+            message.success('更新成功')
+        }
     }
 
     render() {
-        const {data,street} = this.props;
+        const {data} = this.props;
         return (
-            (data && street) ? <ShopForm payload={data} street={street} /> : <Block spinning/>
+            (data) ? <ShopForm payload={data} /> : <Block spinning/>
         )
     }
 }

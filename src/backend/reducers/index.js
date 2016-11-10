@@ -7,6 +7,7 @@ import courier from './courier';
 import order from './order/index';
 import enterprise from './enterprise/index';
 import shop from './shop';
+import region from './region';
 
 
 
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   order,
   shop,
   enterprise,
-  courier
+  courier,
+  region
 });
 
 export default rootReducer;
