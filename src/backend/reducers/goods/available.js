@@ -1,25 +1,23 @@
-import {GOODS_LIST_REQUEST, GOODS_LIST_SUCCESS, GOODS_LIST_FAILURE} from '../../actions/goods';
+import {AVAILABLE_GOODS_DELETE_FAILURE,AVAILABLE_GOODS_DELETE_SUCCESS,AVAILABLE_GOODS_LIST_REQUEST} from '../../actions/goods';
 
 export default function (state = {
     isFetching: false,
     didInvalidate: true,
-    pagination:{
-    }
 }, action) {
     switch (action.type) {
-        case GOODS_LIST_FAILURE:
+        case AVAILABLE_GOODS_DELETE_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true
             })
             break;
-        case GOODS_LIST_REQUEST:
+        case AVAILABLE_GOODS_LIST_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
             })
             break;
-        case GOODS_LIST_SUCCESS:
+        case AVAILABLE_GOODS_DELETE_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,

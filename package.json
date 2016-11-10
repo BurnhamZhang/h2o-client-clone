@@ -46,21 +46,21 @@
       }
     },
     "dev": {
-      "command": "nodemon --exec 'babel-node src/server/app.js'",
+      "command": "babel-node src/server/app.js",
       "env": {
         "NODE_ENV": "development",
         "DATABASE": "dev"
       }
     },
     "dev:prod": {
-      "command": "nodemon --exec 'babel-node src/server/app.js'",
+      "command": "babel-node src/server/app.js",
       "env": {
         "NODE_ENV": "development",
         "DATABASE": "prod"
       }
     },
     "dev:mock": {
-      "command": "nodemon --exec 'babel-node src/server/app.js'",
+      "command": "babel-node src/server/app.js",
       "env": {
         "NODE_ENV": "development",
         "DATABASE": "mock"

@@ -110,13 +110,7 @@ class GoodsItem extends Component {
                         )
                     }
                 </FormItem>
-                <FormItem label="库存"  {...itemLayout}  >
-                    {
-                        getFieldDecorator('stock', {})(
-                            <InputNumber min={0} step="1" size="120"/>
-                        )
-                    }
-                </FormItem>
+
                 <FormItem   label="押金费" {...itemLayout}   >
                     {
                         getFieldDecorator('depositType', {})(
@@ -132,16 +126,7 @@ class GoodsItem extends Component {
                             <InputNumber min={0.01} step="0.01" size="120" style={{display:getFieldValue('depositType') == 1?'inline-block':'none'}} />)
                     }
                 </FormItem>
-                <FormItem   label="是否上架" {...itemLayout}  >
-                    {
-                        getFieldDecorator('shelves', {})(
-                            <RadioGroup>
-                                <Radio key="a" value={1}>上架</Radio>
-                                <Radio key="b" value={0}>下架</Radio>
-                            </RadioGroup>
-                        )
-                    }
-                </FormItem>
+
 
                 <FormItem label="图片" {...itemLayout}>
                     {

@@ -2,11 +2,11 @@
  * Created by zhangbohan on 16/11/3.
  */
 import React, {Component} from 'react';
-import {Link} from 'react-router';
+import {Link,withRouter} from 'react-router';
 import {connect} from 'react-redux';
 import {fetchShopIfNeeded,updateShopById,createShop,deleteShopById} from '../../actions/enterprise/shop';
 
-import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon ,Switch,TimePicker,Checkbox } from 'antd';
+import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon ,Switch,TimePicker,Checkbox,Popconfirm } from 'antd';
 import Block from '../Block';
 import moment from 'moment';
 const ButtonGroup = Button.Group;
@@ -62,7 +62,9 @@ class ShopForm extends Component {
                 console.log('Errors in form!!!');
                 return;
             }
+            values.status = values.status?'1':'0';
             console.log('values', values)
+
             if(type =='create'){
                 createShop(values)
             }
@@ -82,6 +84,7 @@ class ShopForm extends Component {
     }
 
     render() {
+        const {type} = this.props;
         const {getFieldDecorator, getFieldsValue} = this.props.form;
 
         return (<div className="ant-layout-content">
@@ -117,7 +120,7 @@ class ShopForm extends Component {
                 <FormItem label="密码"   {...itemLayout}    >
                     {
                         getFieldDecorator('password', {})(
-                            <Input/>
+                            <Input type="password"/>
                         )
                     }
 
@@ -131,16 +134,15 @@ class ShopForm extends Component {
                 </FormItem>
                 <FormItem     {...actionLayout}     >
                     <Button type="primary" htmlType="submit" >确定</Button>
-                    {
-                        type!='create' ?
-
-                            <Popconfirm title="确定要删除吗？" okText="确定" cancelText="不了" onConfirm={()=>(this.handleDelete())}>
-                                <Button type="dashed" htmlType="button" style={{margin: ' 0 10px'}}
-                                >删除</Button>
-                            </Popconfirm>
-
-                            :null
-                    }
+                    {/*{*/}
+                        {/*type!='create' ?*/}
+                            {/*<Popconfirm title="确定要删除吗？" okText="确定" cancelText="不了" onConfirm={()=>(this.handleDelete())}>*/}
+                                {/*<Button type="dashed" htmlType="button" style={{margin: ' 0 10px'}}*/}
+                                {/*>删除</Button>*/}
+                            {/*</Popconfirm>*/}
+                        {/**/}
+                            {/*:null*/}
+                    {/*}*/}
 
                 </FormItem>
             </Form>
@@ -153,6 +155,7 @@ class ShopForm extends Component {
 }), (dispatch, ownProps)=>({
     fetchShopIfNeeded: (payload)=>dispatch(fetchShopIfNeeded(payload)),
 }))
+@withRouter
 class ShopLayout extends Component {
 
     componentWillMount() {
@@ -193,7 +196,7 @@ class ShopLayout extends Component {
         }
 
         return (
-            data ? <ShopForm payload={data}  /> : <Block spinning/>
+            data ? <ShopForm payload={data} type={id}  /> : <Block spinning/>
         )
     }
 }

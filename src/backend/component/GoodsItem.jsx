@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchGoodsIfNeeded} from '../actions/goods';
+import {fetchGoodsIfNeeded,fetchGoodsListIfNeeded,createGoods,deleteGoodsById,updateGoodsById} from '../actions/goods';
 import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber} from 'antd';
 import Block from './Block';
 const ButtonGroup = Button.Group;
@@ -256,7 +256,8 @@ class GoodsItem extends Component {
 @connect((state, ownProps)=>({
     ...state.goods.item
 }), (dispatch, ownProps)=>({
-    fetchGoodsIfNeeded: (payload)=>dispatch(fetchGoodsIfNeeded(payload))
+    fetchGoodsIfNeeded: (payload)=>dispatch(fetchGoodsIfNeeded(payload)),
+    fetchGoodsListIfNeeded:(payload)=>dispatch(fetchGoodsIfNeeded(payload)),
 }))
 class GoodsForm extends Component {
 
@@ -266,6 +267,7 @@ class GoodsForm extends Component {
         if (id != 'create') {
             this.props.fetchGoodsIfNeeded(id);
         }
+        this.props.fetchGoodsIfNeeded()
     }
 
     componentWillReceiveProps(nextProps) {
@@ -276,6 +278,7 @@ class GoodsForm extends Component {
             if (id != 'create') {
                 this.props.fetchGoodsIfNeeded(id);
             }
+            this.props.fetchGoodsIfNeeded()
         }
     }
 

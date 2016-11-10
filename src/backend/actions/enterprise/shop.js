@@ -170,7 +170,7 @@ function shop_update_success(json) {
 export function updateShopById(id ,data) {
     return (dispatch, getState) => {
         dispatch(shop_update_request(id));
-        return fetch('/api/shop/' + id,{
+        return fetch('/api/shop/account/' + id,{
             method:'PUT',
             data:data
         })
@@ -209,7 +209,7 @@ function shop_create_success(json) {
 export function createShop(payload) {
     return (dispatch, getState) => {
         dispatch(shop_create_request());
-        return fetch('/api/shop/',{
+        return fetch('/api/shop/account',{
             method:'POST',
             data:payload
         })
@@ -248,7 +248,7 @@ function shop_delete_success(json) {
 export function deleteShopById(id) {
     return (dispatch, getState) => {
         dispatch(shop_delete_request());
-        return fetch('/api/shop/'+id,{
+        return fetch('/api/shop/account/'+id,{
             method:'DELETE',
         })
             .then((json) => {
