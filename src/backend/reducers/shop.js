@@ -11,6 +11,7 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: true,
                 didUpdate:false,
+                ...action.payload
             })
             break;
         case SHOP_REQUEST:
@@ -34,6 +35,7 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: true,
                 didUpdate:false,
+                remoteMsg:action.payload.remoteMsg,
             })
             break;
         case SHOP_UPDATE_REQUEST:
@@ -41,6 +43,7 @@ export default function (state = {
                 isFetching: true,
                 didInvalidate: false,
                 didUpdate:false,
+                remoteMsg:null
             })
             break;
         case SHOP_UPDATE_SUCCESS:
@@ -48,7 +51,7 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
-                ...action.payload
+                remoteMsg:null
             })
             break;
 

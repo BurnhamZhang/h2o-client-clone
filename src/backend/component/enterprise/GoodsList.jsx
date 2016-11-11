@@ -20,16 +20,9 @@ const columns = [
     },
     {title: '商品描述', dataIndex: 'memo', key: '3'},
     {title: '单价', dataIndex: 'price', key: '4'},
-    {title: '库存', dataIndex: 'stock', key: '5'},
-    {
-        title: '状态', dataIndex: 'shelves', key: '6',
-        render: (text, record, index) => (
-            text == 0 ? '已下架' : '销售中'
-        )
-    },
     {
         title: '操作',
-        key: '7',
+        key: '5',
         fixed: 'right',
         width: 100,
         render: (text, record, index) => (

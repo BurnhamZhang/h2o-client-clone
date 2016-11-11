@@ -55,7 +55,7 @@ import RegionPicker from './RegionPicker';
             value:payload.deliveryType=='1'
         },
         shopRegions:{
-            value:payload.shopRegions.map(item => item.streetId)
+            value:payload.shopRegions
         }
     })
 })
@@ -72,6 +72,10 @@ class ShopForm extends Component {
                 console.log('Errors in form!!!');
                 return;
             }
+            values.deliveryType=values.deliveryType?'1':'0';
+            values.status=values.status?'1':'0';
+            values.deliveryStart =values.deliveryStart.format('HH:mm:ss')
+            values.deliveryEnd =values.deliveryEnd.format('HH:mm:ss')
             console.log('values', values)
             this.props.updateShopIfNeeded(values);
             return
@@ -173,7 +177,7 @@ class ShopLayout extends Component {
     componentDidUpdate(){
         const  {didInvalidate,remoteMsg,didUpdate} = this.props;
 
-        console.warn('componentDidUpdate',didInvalidate,remoteMsg)
+        console.warn('componentDidUpdate',didUpdate,didInvalidate,remoteMsg)
         if(didInvalidate && remoteMsg){
             message.warn(remoteMsg)
         }
@@ -185,6 +189,8 @@ class ShopLayout extends Component {
 
     render() {
         const {data} = this.props;
+
+        console.warn('>>>>>>>>>>>>>>>>成功',data);
         return (
             (data) ? <ShopForm payload={data} /> : <Block spinning/>
         )

@@ -1,23 +1,28 @@
 import React, {Component,PropTypes} from 'react';
 import {Button, Upload, Icon,message} from 'antd';
 
-
 class CustomUpload extends Component {
     constructor(props){
         super(props);
+        this.onChange = this.onChange.bind(this);
         this.state = this.mapValueToFileList(props.value);
+    }
+
+    static defaultProps = {
+        onChange:(e)=>(e),
+        value:null,
+        maxLength:5
     }
     static propTypes = {
         onChange: PropTypes.func,
+        maxLength:PropTypes.number,
     }
     componentWillReceiveProps(nextProps){
-
         this.setState(this.mapValueToFileList(nextProps.value));
 
     }
     mapValueToFileList(value){
         let fileList = [];
-        let isList = false;
         if(Array.isArray(value)){
              value.forEach((item,index)=>{
                 fileList.push({
@@ -27,27 +32,14 @@ class CustomUpload extends Component {
                     url: item,
                 })
             })
-            isList = true;
-
-        }
-        else if(value){
-            fileList.push({
-                uid: -1,
-                name: value,
-                status: 'done',
-                url: value,
-            });
-
         }
         return {
             fileList,
-            isList
         }
     }
     onChange(e){
-        console.log('onChange',e);
 
-        let fileList = e.fileList;
+        let fileList = e.fileList.concat([]);
 
         fileList = fileList.filter((file) => {
             if (file.response) {
@@ -64,27 +56,19 @@ class CustomUpload extends Component {
             }
             return true;
         });
-        this.setState({
-            fileList
-        })
 
 
-        if(this.state.isList){
-            if(/^(remove|done)$/.test(e.file.status)){
+        fileList = fileList.slice(-this.props.maxLength);
+        if(/^(removed|done)$/.test(e.file.status)){
+            console.warn('onChange>>>>>>>>>>>');
+            if(this.props.onChange){
                 this.props.onChange(fileList.map((item)=>item.url))
             }
         }
-        else {
-            fileList = fileList.slice(-1);
-            if(e.file.status == 'removed'){
-                this.props.onChange(null)
-            }
-            else if(e.file.status == 'done'){
-                this.props.onChange(e.file.response.response.data.url)
-            }
-        }
 
-
+        this.setState({
+            fileList
+        })
 
 
     }
@@ -99,7 +83,7 @@ class CustomUpload extends Component {
         };
 
         return (
-            <Upload {...props} className="upload-list-inline" onChange={(e)=>this.onChange.call(this,e)}>
+            <Upload {...props} className="upload-list-inline" onChange={this.onChange}>
                 <Button type="ghost">
                     <Icon type="upload"/> 上传图片
                 </Button>

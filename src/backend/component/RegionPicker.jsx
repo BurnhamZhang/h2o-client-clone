@@ -20,12 +20,20 @@ class RegionPicker extends Component {
     }
     constructor(props) {
         super(props)
+
+        const map = {};
+        props.value.forEach(({streetId})=>{
+            map[streetId]=true;
+        })
         this.state = {
-            value: props.value.concat(),
-            tags: [],
+            value: [],
+            tags: props.value.map(({streetName,streetId})=>({value: streetId,label:streetName})),
             options: [],
-            map: {}
+            map:map
         }
+
+        console.warn('constructor>>>>>>>>',this.state,props)
+
         this.onChange = this.onChange.bind(this);
         this.onClose = this.onClose.bind(this);
         this.loadData = this.loadData.bind(this);
@@ -51,6 +59,9 @@ class RegionPicker extends Component {
                 value:item.id,
                 code:item.code,
                 isLeaf:item.level=='4'
+            }
+            if(this.state.map[item.id]){
+                data.disabled = true;
             }
 
             if(region[item.code]){
@@ -129,7 +140,7 @@ class RegionPicker extends Component {
         console.warn('render', options, value, tags)
         return (
             <div>
-                <Cascader options={options} value={value} onChange={this.onChange} popupPlacement="topLeft" loadData={this.loadData}>
+                <Cascader options={options} value={value} onChange={this.onChange} popupPlacement="topLeft" loadData={this.loadData} placeholder="请选择支持配送的地址">
                     {/*<Button type={'primary'} size="small" htmlType={'button'} style={{display:'inline-block',marginRight:10}}>选择地址</Button>*/}
                 </Cascader>
                 {
