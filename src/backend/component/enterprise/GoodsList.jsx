@@ -84,7 +84,6 @@ class GoodsList extends Component {
                     <h3>商品管理</h3>
                 </div>
             )} columns={columns}  bordered dataSource={this.props.data} bgoodsed
-                   loading={this.props.isFetching}
                    pagination={pagination}/>
         </div>)
     }

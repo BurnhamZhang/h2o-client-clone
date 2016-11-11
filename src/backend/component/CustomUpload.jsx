@@ -1,36 +1,37 @@
-import React, {Component,PropTypes} from 'react';
-import {Button, Upload, Icon,message} from 'antd';
+import React, {Component, PropTypes} from 'react';
+import {Button, Upload, Icon, message} from 'antd';
 
 class CustomUpload extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.onChange = this.onChange.bind(this);
-        const value = props.value||props.defaultValue;
+        const value = props.value || props.defaultData;
         this.state = this.mapValueToFileList(value.concat([]));
     }
 
     static defaultProps = {
-        value:[],
-        defaultValue:[],
-        maxLength:5
+        defaultData: [],
+        maxLength: 5
     }
     static propTypes = {
         onChange: PropTypes.func,
-        maxLength:PropTypes.number,
-        value:PropTypes.array,
-        defaultValue:PropTypes.array
+        maxLength: PropTypes.number,
+        value: PropTypes.array,
+        defaultData: PropTypes.array
     }
-    componentWillReceiveProps(nextProps){
-        const value = nextProps.value||nextProps.defaultValue;
+
+    componentWillReceiveProps(nextProps) {
+        const value = nextProps.value || nextProps.defaultData;
         this.setState(this.mapValueToFileList(value.concat([])));
 
     }
-    mapValueToFileList(value){
+
+    mapValueToFileList(value) {
         let fileList = [];
-        if(Array.isArray(value)){
-             value.forEach((item,index)=>{
+        if (Array.isArray(value)) {
+            value.forEach((item, index)=> {
                 fileList.push({
-                    uid: (-index)+'',
+                    uid: (-index) + '',
                     name: item,
                     status: 'done',
                     url: item,
@@ -41,14 +42,15 @@ class CustomUpload extends Component {
             fileList,
         }
     }
-    onChange(e){
+
+    onChange(e) {
 
         let fileList = e.fileList.concat([]);
 
         fileList = fileList.filter((file) => {
             if (file.response) {
-                if(file.response.code!='A00000'){
-                    message.warn(file.response.response.remoteMsg||file.response.msg)
+                if (file.response.code != 'A00000') {
+                    message.warn(file.response.response.remoteMsg || file.response.msg)
                     return false
                 }
                 // Component will show file.url as link
@@ -63,9 +65,9 @@ class CustomUpload extends Component {
 
 
         fileList = fileList.slice(-this.props.maxLength);
-        if(/^(removed|done)$/.test(e.file.status)){
+        if (/^(removed|done)$/.test(e.file.status)) {
             console.warn('onChange>>>>>>>>>>>');
-            if(this.props.onChange){
+            if (this.props.onChange) {
                 this.props.onChange(fileList.map((item)=>item.url))
             }
         }
@@ -76,10 +78,12 @@ class CustomUpload extends Component {
 
 
     }
-    render(){
-        const { fileList } = this.state;
+
+    render() {
+        const {fileList} = this.state;
+        const {maxLength} = this.props;
         const props = {
-            name:'image',
+            name: 'image',
             action: '/api/upload',
             listType: 'picture',
             // listType: 'picture-card',
@@ -88,7 +92,7 @@ class CustomUpload extends Component {
 
         return (
             <Upload {...props} className="upload-list-inline" onChange={this.onChange}>
-                <Button type="ghost">
+                <Button type="ghost" style={{display: fileList.length == maxLength ?'none':'inline-block'}}>
                     <Icon type="upload"/> 上传图片
                 </Button>
             </Upload>

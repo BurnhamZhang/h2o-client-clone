@@ -4,8 +4,8 @@
 import React, {Component} from 'react';
 import {withRouter, Link} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchGoodsIfNeeded,updateGoodsById,createGoods,deleteGoodsById} from '../../actions/enterprise/goods';
-import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber,Popconfirm,message} from 'antd';
+import {fetchGoodsIfNeeded, updateGoodsById, createGoods, deleteGoodsById} from '../../actions/enterprise/goods';
+import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Popconfirm, message} from 'antd';
 import Block from '../Block';
 const ButtonGroup = Button.Group;
 const Option = Select.Option;
@@ -17,11 +17,19 @@ const RadioGroup = Radio.Group;
 import {itemLayout, actionLayout} from '../../constants/formLayout';
 import CustomUpload from '../CustomUpload';
 
-@connect(null, (dispatch, ownProps)=>({
-    updateGoodsById: (id,data)=>dispatch(updateGoodsById(id,data)),
-    createGoods: (data)=>dispatch(createGoods(data)),
-    deleteGoodsById: (id)=>dispatch(deleteGoodsById(id)),
+import Action from '../Action';
+
+@connect((state, ownProps)=>({
+    nextRoute: '/goods',
+    remoteMsg: state.enterprise.goods.item.remoteMsg,
+    didInvalidate: state.enterprise.goods.item.didInvalidate,
+    didUpdate: state.enterprise.goods.item.didUpdate,
 }))
+class GoodsAction extends Action {
+
+}
+
+
 @createForm({
     mapPropsToFields: ({payload})=> {
         const fields = {};
@@ -30,9 +38,9 @@ import CustomUpload from '../CustomUpload';
                 value: payload[a]
             }
         }
-        fields.shelves && (fields.shelves.value*=1);
-        fields.stock && (fields.stock.value*=1);
-        fields.depositType && (fields.depositType.value*=1);
+        fields.shelves && (fields.shelves.value *= 1);
+        fields.stock && (fields.stock.value *= 1);
+        fields.depositType && (fields.depositType.value *= 1);
         console.log('mapPropsToFields', fields);
         return fields;
     }
@@ -42,8 +50,10 @@ class GoodsItem extends Component {
         super(props)
     }
 
-    handleSubmit() {
-        const {type,updateGoodsById,createGoods} = this.props;
+    handleSubmit(e) {
+        e.preventDefault();
+
+        const {type, updateItem, createItem} = this.props;
         this.props.form.validateFields((errors, values) => {
             if (errors) {
                 console.log('Errors in form!!!');
@@ -51,23 +61,24 @@ class GoodsItem extends Component {
             }
             console.log('values', JSON.stringify(values))
 
-            values.price+='';
+            values.price += '';
 
-            if(type =='create'){
-                createGoods(values)
+            if (type == 'create') {
+                createItem(values)
             }
             else {
-                updateGoodsById(type,values)
+                updateItem(type, values)
             }
 
-            return
         });
+
+        return false
 
     }
 
-    handleDelete(){
-        const {type,deleteGoodsById} = this.props;
-        deleteGoodsById(type);
+    handleDelete() {
+        const {type, deleteItem} = this.props;
+        deleteItem(type);
     }
 
     render() {
@@ -78,42 +89,62 @@ class GoodsItem extends Component {
         const item = Object.assign({}, payload, getFieldsValue());
 
 
-        return (<div className="ant-layout-content">
-            <Form horizontal>
-                <FormItem  label="商品名称" {...itemLayout} >
+        return (
+            <Form horizontal onSubmit={(e)=>(this.handleSubmit(e))}>
+                <FormItem label="商品名称" {...itemLayout} hasFeedback>
                     {
-                        getFieldDecorator('name', {})(
+                        getFieldDecorator('name', {
+                            rules: [
+                                {required: true, max: 40},
+                            ],
+                        })(
                             <Input />
                         )
                     }
                 </FormItem>
-                <FormItem  label="描述" {...itemLayout}  >
+                <FormItem label="描述" {...itemLayout} hasFeedback>
                     {
 
-                        getFieldDecorator('memo', {})(
+                        getFieldDecorator('memo', {
+                            rules: [
+                                {required: true, max: 40},
+                            ],
+                        })(
                             <Input />
                         )
                     }
                 </FormItem>
-                <FormItem label="规格"  {...itemLayout}    >
+                <FormItem label="规格"  {...itemLayout} hasFeedback>
                     {
 
-                        getFieldDecorator('scale', {})(
+                        getFieldDecorator('scale', {
+                            rules: [
+                                {required: true, max: 40},
+                            ],
+                        })(
                             <Input />
                         )
                     }
                 </FormItem>
                 <FormItem label="价格" {...itemLayout}   >
                     {
-                        getFieldDecorator('price', {})(
+                        getFieldDecorator('price', {
+                            rules: [
+                                {required: true},
+                            ],
+                        })(
                             <InputNumber min={0.01} step="0.01" size="120"/>
                         )
                     }
                 </FormItem>
 
-                <FormItem   label="押金费" {...itemLayout}   >
+                <FormItem label="押金费" {...itemLayout}   >
                     {
-                        getFieldDecorator('depositType', {})(
+                        getFieldDecorator('depositType', {
+                            rules: [
+                                {required: true},
+                            ],
+                        })(
                             <RadioGroup>
                                 <Radio key="a" value={0}>无押金</Radio>
                                 <Radio key="b" value={1}>有押金</Radio>
@@ -122,15 +153,27 @@ class GoodsItem extends Component {
 
                     }
                     {
-                        getFieldDecorator('depositMoney', {})(
-                            <InputNumber min={0.01} step="0.01" size="120" style={{display:getFieldValue('depositType') == 1?'inline-block':'none'}} />)
+                        getFieldValue('depositType') == 1 ? getFieldDecorator('depositMoney', {})(
+                            <InputNumber min={0.01} step="0.01" size="120"/>) : null
                     }
                 </FormItem>
 
 
-                <FormItem label="图片" {...itemLayout}>
+                <FormItem label="图片" {...itemLayout} hasFeedback>
                     {
-                        getFieldDecorator('images', {})(
+                        getFieldDecorator('images', {
+                            rules: [{
+                                type: "array", required: true, min: 1, max: 5,
+                                fields: {
+                                    0: {type: "string", required: true},
+                                    1: {type: "string"},
+                                    2: {type: "string"},
+                                    3: {type: "string"},
+                                    4: {type: "string"},
+                                },
+                                message: '请至少上传一张图片'
+                            }]
+                        })(
                             <CustomUpload />
                         )
                     }
@@ -138,32 +181,42 @@ class GoodsItem extends Component {
                 </FormItem>
 
                 <FormItem  {...actionLayout}  >
-                    <Button type="primary" htmlType="button" style={{margin: ' 0 10px'}}
-                            onClick={()=>(this.handleSubmit())}>确定</Button>
+                    <Button type="primary" htmlType="submit" style={{margin: ' 0 10px'}}
+                    >确定</Button>
 
                     {
-                        type!='create' ?
+                        type != 'create' ?
 
-                        <Popconfirm title="确定要删除吗？" okText="确定" cancelText="不了" onConfirm={()=>(this.handleDelete())}>
-                            <Button type="dashed" htmlType="button" style={{margin: ' 0 10px'}}
-                                    >删除</Button>
-                        </Popconfirm>
+                            <Popconfirm title="确定要删除吗？" okText="确定" cancelText="不了"
+                                        onConfirm={()=>(this.handleDelete())}>
+                                <Button type="dashed" htmlType="button" style={{margin: ' 0 10px'}}
+                                >删除</Button>
+                            </Popconfirm>
 
-                            :null
+                            : null
                     }
                 </FormItem>
             </Form>
-        </div>)
+        )
     }
 }
 
 @connect((state, ownProps)=>({
-    ...state.enterprise.goods.item
+    data: state.enterprise.goods.item.data
 }), (dispatch, ownProps)=>({
     fetchGoodsIfNeeded: (payload)=>dispatch(fetchGoodsIfNeeded(payload)),
+    updateGoodsById: (id, data)=>dispatch(updateGoodsById(id, data)),
+    createGoods: (data)=>dispatch(createGoods(data)),
+    deleteGoodsById: (id)=>dispatch(deleteGoodsById(id)),
 }))
 @withRouter
 class GoodsForm extends Component {
+    constructor(props) {
+        super(props);
+        this.updateItem = this.updateItem.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
+        this.createItem = this.createItem.bind(this);
+    }
 
     componentWillMount() {
         const id = this.props.params.id;
@@ -182,23 +235,18 @@ class GoodsForm extends Component {
         }
     }
 
-
-    shouldComponentUpdate(nextProps) {
-        if (nextProps.didUpdate) {
-            console.warn(this.props.router);
-            this.props.router.push('/goods')
-            return false
-        }
-        return true
+    updateItem(id, data) {
+        this.props.updateGoodsById(id, data)
     }
-    componentDidUpdate(){
-        const  {didInvalidate,remoteMsg} = this.props;
 
-        console.warn('componentDidUpdate',didInvalidate,remoteMsg)
-        if(didInvalidate && remoteMsg){
-            message.warn(remoteMsg)
-        }
+    deleteItem(id) {
+        this.props.deleteGoodsById(id)
     }
+
+    createItem(payload) {
+        this.props.createGoods(payload)
+    }
+
     render() {
         const {id} = this.props.params;
         let data = this.props.data;
@@ -206,16 +254,20 @@ class GoodsForm extends Component {
         if (id == 'create') {
             data = {
                 shelves: 1,
-                depositMoney: 1,
                 depositType: 0,
                 stock: 0,
                 price: 1,
-                images:[]
+                images: []
             }
-            delete data.goodsId;
         }
 
-        return  data ? <GoodsItem type={id} payload={data} ></GoodsItem> : <Block spinning/>
+        return (
+            <div className="ant-layout-content">
+                <GoodsAction/>
+                {data ? <GoodsItem type={id} payload={data} updateItem={this.updateItem} deleteItem={this.deleteItem}
+                                   createItem={this.createItem}></GoodsItem> : <Block spinning/>}
+            </div>
+        )
     }
 }
 

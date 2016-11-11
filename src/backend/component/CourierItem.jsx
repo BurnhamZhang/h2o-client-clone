@@ -56,7 +56,7 @@ class CourierItem extends Component {
                 console.log('Errors in form!!!');
                 return;
             }
-
+            values.image = values.image[0]
             values.region = region.filter( r => {
                 return values.region.some(item => item == r.streetId)
             })
@@ -166,7 +166,7 @@ class CourierItem extends Component {
                 </FormItem>
                 <FormItem label="配送范围"  {...itemLayout} hasFeedback >
                     {
-                        getFieldDecorator('region', {
+                        getFieldDecorator('regions', {
                             rules:[{
                                 type: "array", required: true, min: 1,
                                 fields: {
@@ -279,6 +279,7 @@ class CourierForm extends Component {
         if (id == 'create') {
             data = {
                 status: '1',
+                regions:[]
             }
         }
         console.warn('render CourierForm>>>>>>>>>>',data)
