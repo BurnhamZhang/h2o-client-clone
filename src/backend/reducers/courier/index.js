@@ -1,14 +1,14 @@
 import { combineReducers } from 'redux';
 import item from './item';
 import list from './list';
-import street from './street';
+import region from './region';
 
 
 
 const courierReducer = combineReducers({
   item,
   list,
-  street
+  region
 });
 
 export default courierReducer;

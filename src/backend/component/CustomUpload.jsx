@@ -5,20 +5,24 @@ class CustomUpload extends Component {
     constructor(props){
         super(props);
         this.onChange = this.onChange.bind(this);
-        this.state = this.mapValueToFileList(props.value);
+        const value = props.value||props.defaultValue;
+        this.state = this.mapValueToFileList(value.concat([]));
     }
 
     static defaultProps = {
-        onChange:(e)=>(e),
-        value:null,
+        value:[],
+        defaultValue:[],
         maxLength:5
     }
     static propTypes = {
         onChange: PropTypes.func,
         maxLength:PropTypes.number,
+        value:PropTypes.array,
+        defaultValue:PropTypes.array
     }
     componentWillReceiveProps(nextProps){
-        this.setState(this.mapValueToFileList(nextProps.value));
+        const value = nextProps.value||nextProps.defaultValue;
+        this.setState(this.mapValueToFileList(value.concat([])));
 
     }
     mapValueToFileList(value){

@@ -61,3 +61,66 @@ function shouldFetchData(region,id) {
     }
     return true;
 }
+
+
+
+export const SHOP_REGION_REQUEST = 'SHOP_REGION_REQUEST';
+export const SHOP_REGION_SUCCESS = 'SHOP_REGION_SUCCESS';
+export const SHOP_REGION_FAILURE = 'SHOP_REGION_FAILURE';
+
+
+function shop_region_failure(payload) {
+    return {
+        type: SHOP_REGION_FAILURE,
+        payload
+    };
+}
+
+function shop_region_request(payload) {
+    return {
+        type: SHOP_REGION_REQUEST,
+        payload
+    };
+}
+
+function shop_region_success(json) {
+    return {
+        type: SHOP_REGION_SUCCESS,
+        receiveAt: Date.now(),
+        payload: json
+    };
+}
+
+
+function fetchShopRegion(data) {
+    return dispatch => {
+        dispatch(shop_region_request(data));
+        return fetch('/api/shop/region')
+            .then((json) => {
+                dispatch(shop_region_success(json));
+            }).catch(error => {
+                dispatch(shop_region_failure(error))
+            });
+    };
+}
+
+
+export function fetchShopRegionIfNeeded() {
+    return (dispatch, getState) => {
+        const {region} = getState().courier;
+        if (shouldFetchRegion(region)) {
+            return dispatch(fetchShopRegion());
+        }
+    };
+}
+
+
+function shouldFetchRegion(region) {
+    if (region.data) {
+        return false;
+    }
+    if (region.isFetching) {
+        return false;
+    }
+    return true;
+}

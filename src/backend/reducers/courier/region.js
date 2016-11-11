@@ -1,4 +1,4 @@
-import {STREET_REQUEST, STREET_SUCCESS, STREET_FAILURE} from '../../actions/street';
+import {SHOP_REGION_FAILURE, SHOP_REGION_REQUEST, SHOP_REGION_SUCCESS} from '../../actions/region';
 
 export default function (state = {
     isFetching: false,
@@ -6,19 +6,19 @@ export default function (state = {
     data:null
 }, action) {
     switch (action.type) {
-        case STREET_FAILURE:
+        case SHOP_REGION_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true
             })
             break;
-        case STREET_REQUEST:
+        case SHOP_REGION_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
             })
             break;
-        case STREET_SUCCESS:
+        case SHOP_REGION_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
