@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {Link} from 'react-router';
+import {Link,withRouter} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchCourierIfNeeded} from '../actions/courier';
+import {fetchCourierIfNeeded,updateCourierById,createCourier,deleteCourierById} from '../actions/courier';
 import {fetchShopRegionIfNeeded} from '../actions/region';
-import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon} from 'antd';
+import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon,Popconfirm,message} from 'antd';
 import Block from './Block';
 import CustomUpload from './CustomUpload';
 const ButtonGroup = Button.Group;
@@ -44,30 +44,47 @@ import {itemLayout, actionLayout} from '../constants/formLayout';
 class CourierItem extends Component {
     constructor(props) {
         super(props)
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
     handleSubmit() {
         console.log('handleSubmit');
+        const {type,updateItem,createItem ,region} = this.props;
         this.props.form.validateFields((errors, values) => {
             if (errors) {
                 console.log('Errors in form!!!');
                 return;
             }
+
+            values.region = region.filter( r => {
+                return values.region.some(item => item == r.streetId)
+            })
             console.log('values', values)
-            return
+
+            if(type =='create'){
+                updateItem(type,values);
+            }
+            else{
+                createItem(values);
+            }
         });
 
+    }
+    handleDelete(){
+        const {type,deleteItem} = this.props;
+        deleteItem(type);
     }
 
     render() {
         const {getFieldDecorator} = this.props.form;
 
-        const  region = this.props.region;
+        const  {type,region} = this.props;
 
         console.warn('render', region);
 
         return (<div className="ant-layout-content">
-            <Form horizontal>
+            <Form horizontal onSubmit={this.handleSubmit}>
                 <FormItem label="配送员姓名"   {...itemLayout} hasFeedback >
                     {
                         getFieldDecorator('name', {
@@ -167,8 +184,19 @@ class CourierItem extends Component {
                     }
                 </FormItem>
                 <FormItem     {...actionLayout}     >
-                    <Button type="primary" htmlType="button" style={{margin: ' 0 10px'}}
-                            onClick={()=>(this.handleSubmit())}>确定</Button>
+                    <Button type="primary" htmlType="submit" style={{margin: ' 0 10px'}}
+                            >确定</Button>
+
+                    {
+                        type!='create' ?
+
+                            <Popconfirm title="确定要删除吗？" okText="确定" cancelText="不了" onConfirm={()=>(this.handleDelete())}>
+                                <Button type="dashed" htmlType="button" style={{margin: ' 0 10px'}}
+                                >删除</Button>
+                            </Popconfirm>
+
+                            :null
+                    }
                 </FormItem>
             </Form>
         </div>)
@@ -180,10 +208,19 @@ class CourierItem extends Component {
     region: state.courier.region.data
 }), (dispatch, ownProps)=>({
     fetchCourierIfNeeded: (payload)=>dispatch(fetchCourierIfNeeded(payload)),
-    fetchShopRegionIfNeeded: ()=>dispatch(fetchShopRegionIfNeeded())
+    fetchShopRegionIfNeeded: ()=>dispatch(fetchShopRegionIfNeeded()),
+    updateCourierById:(id,data)=>dispatch(updateCourierById(id,data)),
+    createCourier:(payload)=>dispatch(createCourier(payload)),
+    deleteCourierById:(id)=>dispatch(deleteCourierById(id))
 }))
+@withRouter
 class CourierForm extends Component {
-
+    constructor(props){
+        super(props);
+        this.updateItem= this.updateItem.bind(this);
+        this.deleteItem= this.deleteItem.bind(this);
+        this.createItem= this.createItem.bind(this);
+    }
     componentWillMount() {
         console.warn('componentWillMount'.toLocaleUpperCase());
         const id = this.props.params.id;
@@ -206,6 +243,34 @@ class CourierForm extends Component {
         }
     }
 
+    shouldComponentUpdate(nextProps) {
+        if (nextProps.didUpdate) {
+            this.props.router.push('/courier')
+            return false
+        }
+        return true
+    }
+    componentDidUpdate(){
+        const  {didInvalidate,remoteMsg} = this.props;
+
+        console.warn('componentDidUpdate',didInvalidate,remoteMsg)
+        if(didInvalidate && remoteMsg){
+            message.warn(remoteMsg)
+        }
+    }
+
+    updateItem(id,data){
+        this.props.updateCourierById(id,data)
+    }
+
+    deleteItem(id){
+        this.props.deleteCourierById(id)
+    }
+
+    createItem(payload){
+        this.props.createCourier(payload)
+    }
+
     render() {
         const {id} = this.props.params;
         const region = this.props.region;
@@ -219,7 +284,7 @@ class CourierForm extends Component {
         console.warn('render CourierForm>>>>>>>>>>',data)
 
         return (
-            (data && region) ? <CourierItem type={id} payload={data} region={region}></CourierItem> : <Block spinning/>
+            (data && region) ? <CourierItem type={id} payload={data} region={region}  updateItem={this.updateItem} deleteItem={this.deleteItem} createItem={this.createItem}></CourierItem> : <Block spinning/>
         )
     }
 }
