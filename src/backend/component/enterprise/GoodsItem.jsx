@@ -45,7 +45,7 @@ class GoodsAction extends Action {
         return fields;
     }
 })
-class GoodsItem extends Component {
+class GoodsForm extends Component {
     constructor(props) {
         super(props)
     }
@@ -210,7 +210,7 @@ class GoodsItem extends Component {
     deleteGoodsById: (id)=>dispatch(deleteGoodsById(id)),
 }))
 @withRouter
-class GoodsForm extends Component {
+class GoodsItem extends Component {
     constructor(props) {
         super(props);
         this.updateItem = this.updateItem.bind(this);
@@ -264,11 +264,11 @@ class GoodsForm extends Component {
         return (
             <div className="ant-layout-content">
                 <GoodsAction/>
-                {data ? <GoodsItem type={id} payload={data} updateItem={this.updateItem} deleteItem={this.deleteItem}
-                                   createItem={this.createItem}></GoodsItem> : <Block spinning/>}
+                {data ? <GoodsForm type={id} payload={data} updateItem={this.updateItem} deleteItem={this.deleteItem}
+                                   createItem={this.createItem}></GoodsForm> : <Block spinning/>}
             </div>
         )
     }
 }
 
-export default GoodsForm;
+export default GoodsItem;
