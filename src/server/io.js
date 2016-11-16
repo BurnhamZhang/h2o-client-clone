@@ -3,9 +3,10 @@
  */
 import koa from 'koa.io';
 import Router from 'koa-router';
+import bodyParser from 'koa-bodyparser';
 
 const  app = koa();
-
+app.use(bodyParser());
 const router = new Router();
 
 
@@ -23,23 +24,25 @@ app.io.use(function* (next) {
 app.io.route('new message', function* () {
     // we tell the client to execute 'new message'
     var message = this.args[0];
-    this.broadcast.emit('new message', message);
+    this.emit('new message', message);
 });
 
 // router for socket event
-app.io.route('get message', function* () {
+app.io.route('get orders', function* () {
     // we tell the client to execute 'new message'
     var message = this.args[0];
-    console.log('message',message);
-    this.broadcast.emit('new message', message);
+    console.log('get orders',message);
+    this.emit('login', message);
 });
 
 
 router.post('/order/new',function *(data) {
-    console.log('broadcast',this.broadcast);
+    console.log('new',this.request.body);
+    app.io.sockets.emit('new message', [{
+        a:1
+    }]);
     this.body = this.request.body;
 })
-
 
 app.use(router.routes());
 

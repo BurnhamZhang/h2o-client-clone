@@ -1,4 +1,4 @@
-import {ORDERS_REQUEST, ORDERS_SUCCESS, ORDERS_FAILURE} from '../../actions/order';
+import {ORDER_REQUEST, ORDER_SUCCESS, ORDER_FAILURE} from '../../actions/order';
 
 export default function (state = {
     isFetching: false,
@@ -7,19 +7,19 @@ export default function (state = {
     }
 }, action) {
     switch (action.type) {
-        case ORDERS_FAILURE:
+        case ORDER_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true
             })
             break;
-        case ORDERS_REQUEST:
+        case ORDER_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
             })
             break;
-        case ORDERS_SUCCESS:
+        case ORDER_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,

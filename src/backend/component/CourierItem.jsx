@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {Link,withRouter} from 'react-router';
+import {Link, withRouter} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchCourierIfNeeded,updateCourierById,createCourier,deleteCourierById} from '../actions/courier';
+import {fetchCourierIfNeeded, updateCourierById, createCourier, deleteCourierById} from '../actions/courier';
 import {fetchShopRegionIfNeeded} from '../actions/region';
-import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon,Popconfirm,message} from 'antd';
+import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon, Popconfirm, message} from 'antd';
 import Block from './Block';
 import CustomUpload from './CustomUpload';
 const ButtonGroup = Button.Group;
@@ -14,6 +14,18 @@ const RangePicker = DatePicker.RangePicker;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 import {itemLayout, actionLayout} from '../constants/formLayout';
+import Action from './Action';
+
+
+@connect((state, ownProps)=>({
+    nextRoute: '/courier',
+    remoteMsg: state.courier.item.remoteMsg,
+    didInvalidate: state.courier.item.didInvalidate,
+    didUpdate: state.courier.item.didUpdate,
+}))
+class CourierAction extends Action {
+
+}
 
 
 @createForm({
@@ -25,9 +37,9 @@ import {itemLayout, actionLayout} from '../constants/formLayout';
                     value: payload[a].streetId
                 }
             }
-            else if(a=='image'){
+            else if (a == 'image') {
                 fields[a] = {
-                    value: payload[a]?[payload[a]]:[]
+                    value: payload[a] ? [payload[a]] : []
                 }
             }
             else {
@@ -50,57 +62,62 @@ class CourierItem extends Component {
 
     handleSubmit() {
         console.log('handleSubmit');
-        const {type,updateItem,createItem ,region} = this.props;
+        const {type, updateItem, createItem, region} = this.props;
         this.props.form.validateFields((errors, values) => {
             if (errors) {
                 console.log('Errors in form!!!');
                 return;
             }
-            values.image = values.image[0]
-            values.region = region.filter( r => {
-                return values.region.some(item => item == r.streetId)
-            })
             console.log('values', values)
 
-            if(type =='create'){
-                updateItem(type,values);
+            values.image = values.image[0]
+            values.regions = region.filter(r => {
+                return values.regions.some(item => item == r.streetId)
+            })
+
+            console.log('values after', values)
+
+
+            if (type == 'create') {
+                updateItem(type, values);
             }
-            else{
+            else {
                 createItem(values);
             }
         });
 
     }
-    handleDelete(){
-        const {type,deleteItem} = this.props;
+
+    handleDelete() {
+        const {type, deleteItem} = this.props;
         deleteItem(type);
     }
 
     render() {
         const {getFieldDecorator} = this.props.form;
 
-        const  {type,region} = this.props;
+        const {type, region} = this.props;
 
         console.warn('render', region);
 
-        return (<div className="ant-layout-content">
+        return (
             <Form horizontal onSubmit={this.handleSubmit}>
-                <FormItem label="配送员姓名"   {...itemLayout} hasFeedback >
+                <FormItem label="配送员姓名"   {...itemLayout} hasFeedback>
                     {
                         getFieldDecorator('name', {
                             rules: [
-                                {required: true ,max:40},
+                                {required: true, max: 40},
                             ],
                         })(
                             <Input />
                         )
                     }
                 </FormItem>
-                <FormItem label="手机号"  {...itemLayout} hasFeedback >
+                <FormItem label="手机号"  {...itemLayout} hasFeedback>
                     {
                         getFieldDecorator('phone', {
                             rules: [
-                                { required: true, len:11,message:'请输入11位数字'},
+                                {required: true, len: 11, message: '请输入11位数字'},
                             ],
                         })(
                             <Input type="number" maxLength="11"/>
@@ -110,24 +127,24 @@ class CourierItem extends Component {
 
 
                 </FormItem>
-                <FormItem label="登录账号"  {...itemLayout} hasFeedback >
+                <FormItem label="登录账号"  {...itemLayout} hasFeedback>
                     {
 
                         getFieldDecorator('account', {
                             rules: [
-                                {required: true,max:40},
+                                {required: true, max: 40},
                             ],
                         })(
                             <Input placeholder="手机或邮箱"/>
                         )
                     }
                 </FormItem>
-                <FormItem label="密码"  {...itemLayout} hasFeedback  >
+                <FormItem label="密码"  {...itemLayout} hasFeedback>
                     {
 
                         getFieldDecorator('password', {
                             rules: [
-                                {required: true,max:40},
+                                {required: true, max: 40},
                             ],
                         })(
                             <Input type="password" placeholder="6位以上数字或组合"/>
@@ -149,35 +166,36 @@ class CourierItem extends Component {
                         )
                     }
                 </FormItem>
-                <FormItem label="上传照片"   {...itemLayout}  hasFeedback   >
+                <FormItem label="上传照片"   {...itemLayout} hasFeedback>
                     {
                         getFieldDecorator('image', {
-                            rules:[{
+                            rules: [{
                                 type: "array", required: true, len: 1,
                                 fields: {
                                     0: {type: "string", required: true},
                                 },
-                                message:'请上传一张图片'
+                                message: '请上传一张图片'
                             }]
                         })(
                             <CustomUpload />
                         )
                     }
                 </FormItem>
-                <FormItem label="配送范围"  {...itemLayout} hasFeedback >
+                <FormItem label="配送范围"  {...itemLayout} hasFeedback>
                     {
                         getFieldDecorator('regions', {
-                            rules:[{
+                            rules: [{
                                 type: "array", required: true, min: 1,
                                 fields: {
                                     0: {type: "string", required: true},
                                 },
-                                message:'请至少选择一个地址'
+                                message: '请至少选择一个地址'
                             }]
                         })(
                             <Select multiple placeholder="请选择街区">
                                 {
-                                    region.map((item)=>  <Option value={item.streetId} key={item.streetId}>{item.streetName}</Option>)
+                                    region.map((item)=> <Option value={item.streetId}
+                                                                key={item.streetId}>{item.streetName}</Option>)
                                 }
                             </Select>
                         )
@@ -185,42 +203,44 @@ class CourierItem extends Component {
                 </FormItem>
                 <FormItem     {...actionLayout}     >
                     <Button type="primary" htmlType="submit" style={{margin: ' 0 10px'}}
-                            >确定</Button>
+                    >确定</Button>
 
                     {
-                        type!='create' ?
+                        type != 'create' ?
 
-                            <Popconfirm title="确定要删除吗？" okText="确定" cancelText="不了" onConfirm={()=>(this.handleDelete())}>
+                            <Popconfirm title="确定要删除吗？" okText="确定" cancelText="不了"
+                                        onConfirm={()=>(this.handleDelete())}>
                                 <Button type="dashed" htmlType="button" style={{margin: ' 0 10px'}}
                                 >删除</Button>
                             </Popconfirm>
 
-                            :null
+                            : null
                     }
                 </FormItem>
             </Form>
-        </div>)
+        )
     }
 }
 
 @connect((state, ownProps)=>({
-    ...state.courier.item,
+    data:state.courier.item.data,
     region: state.courier.region.data
 }), (dispatch, ownProps)=>({
     fetchCourierIfNeeded: (payload)=>dispatch(fetchCourierIfNeeded(payload)),
     fetchShopRegionIfNeeded: ()=>dispatch(fetchShopRegionIfNeeded()),
-    updateCourierById:(id,data)=>dispatch(updateCourierById(id,data)),
-    createCourier:(payload)=>dispatch(createCourier(payload)),
-    deleteCourierById:(id)=>dispatch(deleteCourierById(id))
+    updateCourierById: (id, data)=>dispatch(updateCourierById(id, data)),
+    createCourier: (payload)=>dispatch(createCourier(payload)),
+    deleteCourierById: (id)=>dispatch(deleteCourierById(id))
 }))
 @withRouter
 class CourierForm extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.updateItem= this.updateItem.bind(this);
-        this.deleteItem= this.deleteItem.bind(this);
-        this.createItem= this.createItem.bind(this);
+        this.updateItem = this.updateItem.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
+        this.createItem = this.createItem.bind(this);
     }
+
     componentWillMount() {
         console.warn('componentWillMount'.toLocaleUpperCase());
         const id = this.props.params.id;
@@ -243,31 +263,15 @@ class CourierForm extends Component {
         }
     }
 
-    shouldComponentUpdate(nextProps) {
-        if (nextProps.didUpdate) {
-            this.props.router.push('/courier')
-            return false
-        }
-        return true
-    }
-    componentDidUpdate(){
-        const  {didInvalidate,remoteMsg} = this.props;
-
-        console.warn('componentDidUpdate',didInvalidate,remoteMsg)
-        if(didInvalidate && remoteMsg){
-            message.warn(remoteMsg)
-        }
+    updateItem(id, data) {
+        this.props.updateCourierById(id, data)
     }
 
-    updateItem(id,data){
-        this.props.updateCourierById(id,data)
-    }
-
-    deleteItem(id){
+    deleteItem(id) {
         this.props.deleteCourierById(id)
     }
 
-    createItem(payload){
+    createItem(payload) {
         this.props.createCourier(payload)
     }
 
@@ -279,13 +283,17 @@ class CourierForm extends Component {
         if (id == 'create') {
             data = {
                 status: '1',
-                regions:[]
+                regions: []
             }
         }
-        console.warn('render CourierForm>>>>>>>>>>',data)
+        console.warn('render CourierForm>>>>>>>>>>', data)
 
         return (
-            (data && region) ? <CourierItem type={id} payload={data} region={region}  updateItem={this.updateItem} deleteItem={this.deleteItem} createItem={this.createItem}></CourierItem> : <Block spinning/>
+            <div className="ant-layout-content">
+                <CourierAction/>
+                {(data && region) ? <CourierItem type={id} payload={data} region={region} updateItem={this.updateItem}
+                                                 deleteItem={this.deleteItem}   createItem={this.createItem}></CourierItem> : <Block spinning/>}
+            </div>
         )
     }
 }

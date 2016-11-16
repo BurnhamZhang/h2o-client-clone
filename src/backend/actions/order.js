@@ -85,7 +85,8 @@ function order_list_success(json) {
 function fetchOrderList(data) {
   return dispatch => {
     dispatch(order_list_request(data));
-    return fetch('/api/order',{
+    return fetch('/api/order/list',{
+      data:data
     })
         .then((json) => {
           dispatch(order_list_success(json));

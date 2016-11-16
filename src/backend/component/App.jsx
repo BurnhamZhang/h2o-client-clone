@@ -7,18 +7,7 @@ import {connect} from 'react-redux';
 import '../assets/scss/app.scss';
 import Sidebar from './Sidebar';
 import {auth_logout} from '../actions/user'
-import io from 'socket.io-client';
 
-// const socket = io();
-// console.log('socket',socket);
-
-// socket.on('new message',function (data) {
-//   console.warn('new message',data);
-// })
-// socket.emit('get message', {
-//   test:1,
-//   name:'dsd'
-// });
 
 @connect((state, ownProps)=>({
     user: state.user

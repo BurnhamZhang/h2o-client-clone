@@ -125,7 +125,11 @@ export default (store) => {
                 path: '/',
                 component: App,
                 onEnter: requireAuth,
-                indexRoute: {onEnter: (nextState, replace) => replace('/login')},
+                indexRoute: {onEnter: (nextState, replace) =>{
+                    const state = store.getState();
+                    const loginType = state.user.data.loginType;
+                    replace(loginType == 1 ? '/shop' :'/manage')
+                }},
                 getChildRoutes: (partialNextState, callback)=> {
                     const state = store.getState();
                     const loginType = state.user.data.loginType;
