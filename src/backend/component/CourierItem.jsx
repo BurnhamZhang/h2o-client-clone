@@ -32,9 +32,9 @@ class CourierAction extends Action {
     mapPropsToFields: ({payload = {}})=> {
         const fields = {};
         for (var a in payload) {
-            if (a == 'region') {
+            if (a == 'regions') {
                 fields[a] = {
-                    value: payload[a].streetId
+                    value: payload[a].map((value)=>value.streetId)
                 }
             }
             else if (a == 'image') {
@@ -70,7 +70,13 @@ class CourierItem extends Component {
             }
             console.log('values', values)
 
-            values.image = values.image[0]
+            if(values.image && values.image.length){
+                values.image =values.image[0]
+            }
+            else {
+                delete  values.image
+            }
+
             values.regions = region.filter(r => {
                 return values.regions.some(item => item == r.streetId)
             })
@@ -79,10 +85,10 @@ class CourierItem extends Component {
 
 
             if (type == 'create') {
-                updateItem(type, values);
+                createItem(values);
             }
             else {
-                createItem(values);
+                updateItem(type, values);
             }
         });
 
@@ -159,9 +165,10 @@ class CourierItem extends Component {
                             ],
                         })(
                             <Select>
-                                <Option value='0'>休息</Option>
-                                <Option value='1'>正常</Option>
-                                <Option value='2'>停用</Option>
+                                <Option value='0'>正常</Option>
+                                <Option value='1'>休息</Option>
+                                <Option value='2'>休假</Option>
+                                <Option value='3'>停用</Option>
                             </Select>
                         )
                     }
@@ -170,7 +177,7 @@ class CourierItem extends Component {
                     {
                         getFieldDecorator('image', {
                             rules: [{
-                                type: "array", required: true, len: 1,
+                                type: "array",  len: 1,
                                 fields: {
                                     0: {type: "string", required: true},
                                 },
@@ -282,7 +289,7 @@ class CourierForm extends Component {
 
         if (id == 'create') {
             data = {
-                status: '1',
+                status: '0',
                 regions: []
             }
         }

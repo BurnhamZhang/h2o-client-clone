@@ -4,7 +4,7 @@
 import koa from 'koa.io';
 import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
-
+import proxy from './proxy';
 const  app = koa();
 app.use(bodyParser());
 const router = new Router();
@@ -27,14 +27,30 @@ app.io.route('new message', function* () {
     this.emit('new message', message);
 });
 
-// router for socket event
-app.io.route('get orders', function* () {
-    // we tell the client to execute 'new message'
-    var message = this.args[0];
-    console.log('get orders',message);
-    this.emit('login', message);
-});
 
+
+app.io.route('login', function* (a,b,c) {
+    console.log('login',b)
+    this.token = b.token;
+
+
+    const headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    }
+
+    if (this.token) {
+        headers.token = this.token
+    }
+
+    proxy('/order/overtime?pageSize=1&pageNum=999999',{
+        method:'GET',
+        headers:headers
+    }).then((data)=>{
+        this.emit('receive orders',data);
+    })
+
+});
 
 router.post('/order/new',function *(data) {
     console.log('new',this.request.body);

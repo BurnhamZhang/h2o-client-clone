@@ -190,7 +190,7 @@ function goods_update_success(json) {
 export function updateGoodsById(id ,data) {
     return (dispatch, getState) => {
         dispatch(goods_update_request(id));
-        return fetch('/api/goods/' + id,{
+        return fetch('/api/shop/goods/' + id,{
             method:'PUT',
             data:data
         })
@@ -232,7 +232,7 @@ function goods_create_success(json) {
 export function createGoods(payload) {
     return (dispatch, getState) => {
         dispatch(goods_create_request());
-        return fetch('/api/goods/',{
+        return fetch('/api/shop/goods/',{
             method:'POST',
             data:payload
         })

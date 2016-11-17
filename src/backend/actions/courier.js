@@ -13,6 +13,9 @@ export const COURIER_LIST_REQUEST = 'COURIER_LIST_REQUEST';
 export const COURIER_LIST_SUCCESS = 'COURIER_LIST_SUCCESS';
 export const COURIER_LIST_FAILURE = 'COURIER_LIST_FAILURE';
 
+export const CANDIDATE_COURIER_LIST_REQUEST = 'CANDIDATE_COURIER_LIST_REQUEST';
+export const CANDIDATE_COURIER_LIST_SUCCESS = 'CANDIDATE_COURIER_LIST_SUCCESS';
+export const CANDIDATE_COURIER_LIST_FAILURE = 'CANDIDATE_COURIER_LIST_FAILURE';
 
 
 
@@ -149,6 +152,60 @@ export function fetchCourierListIfNeeded(data) {
     };
 }
 
+//调度页查询配送员列表
+
+function candidate_courier_list_failure() {
+    return {
+        type: CANDIDATE_COURIER_LIST_FAILURE,
+    };
+}
+
+function candidate_courier_list_request(payload) {
+    return {
+        type: CANDIDATE_COURIER_LIST_REQUEST,
+        payload
+    };
+}
+
+function candidate_courier_list_success(json) {
+    return {
+        type: CANDIDATE_COURIER_LIST_SUCCESS,
+        receiveAt: Date.now(),
+        payload: json
+    };
+}
+
+function fetchCandidateCourierList(data) {
+    return dispatch => {
+        dispatch(candidate_courier_list_request(data));
+        return fetch('/api/courier/candidate', {
+            data
+        })
+            .then((json) => {
+                dispatch(candidate_courier_list_success(json));
+            }).catch(error => {
+                dispatch(candidate_courier_list_failure(error))
+            });
+    };
+}
+
+
+function shouldFetchCandidateCourierList(state) {
+    if (state.courier.candidate.isFetching) {
+        return false;
+    }
+    return true;
+}
+
+
+export function fetchCandidateCourierListIfNeeded(data) {
+    return (dispatch, getState) => {
+        if (shouldFetchCandidateCourierList(getState())) {
+            return dispatch(fetchCandidateCourierList(data));
+        }
+    };
+}
+
 
 //编辑配送员
 
@@ -222,7 +279,7 @@ function courier_create_success(json) {
 export function createCourier(payload) {
     return (dispatch, getState) => {
         dispatch(courier_create_request());
-        return fetch('/api/courier/',{
+        return fetch('/api/courier',{
             method:'POST',
             data:payload
         })
