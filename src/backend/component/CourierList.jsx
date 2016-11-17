@@ -5,7 +5,7 @@ import {fetchCourierListIfNeeded} from '../actions/courier';
 import {Table, DatePicker, Radio, Form, Button, Select, Input, Row, Col} from 'antd';
 const ButtonGroup = Button.Group;
 
-const statusList = {'0': '休息', '1': '正常', '2': '停用'};
+const statusList = {'0':'正常','1': '休息', '2': '休假', '3': '停用'};
 
 const columns = [
     {

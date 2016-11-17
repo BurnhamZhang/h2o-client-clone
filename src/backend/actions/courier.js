@@ -78,11 +78,7 @@ export function fetchCourierIfNeeded(id) {
     }
 
     return (dispatch, getState) => {
-        const {list,item} = getState().courier;
-        const courier = list.data && list.data.find(item => item.id == id);
-        if (courier) {
-            return dispatch(courier_success({data:courier}));
-        }
+        const {item} = getState().courier;
 
         if (shouldFetchData(item)) {
             return dispatch(fetchCourier(id));
