@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import {fetchOrderIfNeeded} from '../actions/order';
-import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon ,Row,Col } from 'antd';
+import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon, Row, Col, Card} from 'antd';
 import Block from './Block';
 const FormItem = Form.Item;
 
@@ -19,34 +19,37 @@ const columns = [
     {
         title: '数量', dataIndex: 'count', key: '4',
     },
-    {   title: '商品金额', dataIndex: 'money',
+    {
+        title: '商品金额', dataIndex: 'money',
         fixed: 'right',
         width: 100,
-        key: '5', render: (money,data)=>{
-           return (<div>
-               {money} { data.goodsId ? '' :'(押金)' }
-           </div>)
-        }
+        key: '5', render: (money, data)=> {
+        return (<div>
+            {money} { data.goodsId ? '' : '(押金)' }
+        </div>)
+    }
     },
 
 ];
 const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 14 },
+    labelCol: {span: 6},
+    wrapperCol: {span: 14},
 };
-const payTypeMap ={
-    1:'线上付款',
-    2:'货到付款'
+const payTypeMap = {
+    1: '线上付款',
+    2: '货到付款'
 }
 
+//1,2,5,6取消订单
+
 const deliveryStatusMap = {
-    0:'待接单',
-    1:'已接单',
-    2:'配送中',
-    3:'换人',
-    4:'申请取消',
-    5:'已取消',
-    6:'配送完成',
+    0: '待接单',
+    1: '已接单',
+    2: '配送中',
+    3: '换人',
+    4: '申请取消',
+    5: '已取消',
+    6: '配送完成',
 }
 
 const statusMap = {
@@ -57,7 +60,7 @@ const statusMap = {
     5: '申请取消',
     6: '已支付',
     7: '已完成',
-    8:'超时完成'
+    8: '超时完成'
 }
 class OrderItem extends Component {
     constructor(props) {
@@ -73,106 +76,91 @@ class OrderItem extends Component {
         const list = data.orderDetails.concat(data.buckets);
 
 
-
         console.warn('render', data);
 
 
-
         return (<div className="ant-layout-content">
-            <Table footer={()=>{
+            <Table footer={()=> {
                 return (<div>
-                    <span style={{display:'inline-block',float:'right','width':100}}>{data.showMoney}</span>
+                    <span style={{display: 'inline-block', float: 'right', 'width': 100}}>{data.showMoney}</span>
                     <h4>共计</h4>
-                    </div>)
-            }} columns={columns} bordered dataSource={list} bgoodsed  />
-            <Form horizontal >
-            <Row gutter={16}>
-                <Col className="gutter-row" span={8}>
-                    <div className="gutter-box">
-                        <h3 style={{}}>收货人/配送员信息</h3>
-                        <FormItem
-                            {...formItemLayout}
-                            label="收货人："
-                        >
-                            <p>{ data.userName }</p>
-                        </FormItem>
-                        <FormItem
-                            {...formItemLayout}
-                            label="电话："
-                        >
-                            <p>{ data.userPhone }</p>
-                        </FormItem>
-                        <FormItem
-                            {...formItemLayout}
-                            label="收货地址："
-                        >
-                            <p>{ data.userHouseNumber }</p>
-                        </FormItem>
-                    </div>
-                </Col>
-                <Col className="gutter-row" span={8}>
-                    <div className="gutter-box">
-                        <h3>订单信息</h3>
-                        <FormItem
-                            {...formItemLayout}
-                            label="订单号："
-                        >
-                            <p>{ data.orderNo }</p>
-                        </FormItem>
-                        <FormItem
-                            {...formItemLayout}
-                            label="下单时间："
-                        >
-                            <p>{ data.createdDate }</p>
-                        </FormItem>
-                        <FormItem
-                            {...formItemLayout}
-                            label="付款时间："
-                        >
-                            <p>{ data.payTime }</p>
-                        </FormItem>
-                        <FormItem
-                            {...formItemLayout}
-                            label="完成时间："
-                        >
-                            <p>{ data.modifiedDate }</p>
-                        </FormItem>
-                    </div>
-                </Col>
-                <Col className="gutter-row" span={8}>
-                    <div className="gutter-box">
-                        <h3>付款信息</h3>
-                        <FormItem
-                            {...formItemLayout}
-                            label="付款方式："
-                        >
-                            <p>{ payTypeMap[data.payType]  }</p>
-                        </FormItem>
-                        <FormItem
-                            {...formItemLayout}
-                            label="商品总额："
-                        >
-                            <p>{ data.showMoney }</p>
-                        </FormItem>
-                        <FormItem
-                            {...formItemLayout}
-                            label="满减："
-                        >
-                            <p>0.00</p>
-                        </FormItem>
-                        <FormItem
-                            {...formItemLayout}
-                            label="配送费："
-                        >
-                            <p>0.00</p>
-                        </FormItem>
-                    </div>
-                </Col>
-
-            </Row>
+                </div>)
+            }} columns={columns} bordered dataSource={list} bgoodsed/>
+            <Form horizontal>
                 <Row gutter={16}>
                     <Col className="gutter-row" span={8}>
-                        <div className="gutter-box">
+                        <Card title="收货人/配送员信息">
+                            <FormItem
+                                {...formItemLayout}
+                                label="收货人："
+                            >
+                                <p>{ data.userName }</p>
+                            </FormItem>
+                            <FormItem
+                                {...formItemLayout}
+                                label="电话："
+                            >
+                                <p>{ data.userPhone }</p>
+                            </FormItem>
+                            <FormItem
+                                {...formItemLayout}
+                                label="收货地址："
+                            >
+                                <p>{ data.userHouseNumber }</p>
+                            </FormItem>
+                        </Card>
+
+                    </Col>
+                    <Col className="gutter-row" span={8}>
+                        <Card title="订单信息">
+                            <FormItem
+                                {...formItemLayout}
+                                label="订单号："
+                            >
+                                <p>{ data.orderNo }</p>
+                            </FormItem>
+                            <FormItem
+                                {...formItemLayout}
+                                label="下单时间："
+                            >
+                                <p>{ data.createdDate }</p>
+                            </FormItem>
+                            <FormItem
+                                {...formItemLayout}
+                                label="付款时间："
+                            >
+                                <p>{ data.payTime }</p>
+                            </FormItem>
+                            <FormItem
+                                {...formItemLayout}
+                                label="完成时间："
+                            >
+                                <p>{ data.modifiedDate }</p>
+                            </FormItem>
+                        </Card>
+
+                    </Col>
+                    <Col className="gutter-row" span={8}>
+                        <Card title="付款信息">
+                            <FormItem
+                                {...formItemLayout}
+                                label="付款方式："
+                            >
+                                <p>{ payTypeMap[data.payType]  }</p>
+                            </FormItem>
+                            <FormItem
+                                {...formItemLayout}
+                                label="商品总额："
+                            >
+                                <p>{ data.showMoney }</p>
+                            </FormItem>
+                        </Card>
+
+                    </Col>
+                </Row>
+                <Row gutter={16} style={{marginTop:20}}>
+                    <Col className="gutter-row" span={8}>
+                        <Card>
                             <FormItem
                                 {...formItemLayout}
                                 label="配送员："
@@ -191,10 +179,10 @@ class OrderItem extends Component {
                             >
                                 <p>{  deliveryStatusMap[data.deliveryStatus] }</p>
                             </FormItem>
-                        </div>
+                        </Card>
                     </Col>
                     <Col className="gutter-row" span={8}>
-                        <div className="gutter-box">
+                        <Card>
                             <FormItem
                                 {...formItemLayout}
                                 label="订单状态："
@@ -219,38 +207,25 @@ class OrderItem extends Component {
                             >
                                 <p>{ data.modifiedDate }</p>
                             </FormItem>
-                        </div>
+                        </Card>
                     </Col>
                     <Col className="gutter-row" span={8}>
-                        <div className="gutter-box">
-                            <h3>付款信息</h3>
+                        <Card>
                             <FormItem
                                 {...formItemLayout}
-                                label="付款方式："
+                                label="订单总额："
                             >
-                                <p>{ payTypeMap[data.payType]  }</p>
+                                <p>{ data.tradeMoney  }</p>
                             </FormItem>
                             <FormItem
                                 {...formItemLayout}
-                                label="商品总额："
+                                label="发票&抬头："
                             >
-                                <p>{ data.showMoney }</p>
+                                <p>{ (data.invoiceType == '1' ? '不' : '') + '需要' + data.invoiceTitle }</p>
                             </FormItem>
-                            <FormItem
-                                {...formItemLayout}
-                                label="满减："
-                            >
-                                <p>0.00</p>
-                            </FormItem>
-                            <FormItem
-                                {...formItemLayout}
-                                label="配送费："
-                            >
-                                <p>0.00</p>
-                            </FormItem>
-                        </div>
-                    </Col>
 
+                        </Card>
+                    </Col>
                 </Row>
             </Form>
         </div>)
@@ -258,7 +233,7 @@ class OrderItem extends Component {
 }
 
 @connect((state, ownProps)=>({
-    data:state.order.item.data,
+    data: state.order.item.data,
 }), (dispatch, ownProps)=>({
     fetchOrderIfNeeded: (payload)=>dispatch(fetchOrderIfNeeded(payload)),
 }))
@@ -282,7 +257,7 @@ class OrderForm extends Component {
     render() {
         const data = this.props.data;
         return (
-            data  ? <OrderItem  payload={data} ></OrderItem> : <Block spinning/>
+            data ? <OrderItem payload={data}></OrderItem> : <Block spinning/>
         )
     }
 }

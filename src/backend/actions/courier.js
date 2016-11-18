@@ -34,6 +34,11 @@ export const COURIER_DELETE_SUCCESS = 'COURIER_DELETE_SUCCESS';
 export const COURIER_DELETE_FAILURE = 'COURIER_DELETE_FAILURE';
 
 
+export const COURIER_STATUS_UPDATE_REQUEST = 'COURIER_STATUS_UPDATE_REQUEST';
+export const COURIER_STATUS_UPDATE_SUCCESS = 'COURIER_STATUS_UPDATE_SUCCESS';
+export const COURIER_STATUS_UPDATE_FAILURE = 'COURIER_STATUS_UPDATE_FAILURE';
+
+
 //查询配送员详情
 
 function courier_failure() {
@@ -323,6 +328,50 @@ export function deleteCourierById(id) {
                 dispatch(courier_delete_success(json));
             }).catch(error => {
                 dispatch(courier_delete_failure(error))
+            });
+    };
+}
+
+
+
+//批量修改配送员状态
+
+
+function courier_status_update_failure(payload) {
+    return {
+        type: COURIER_STATUS_UPDATE_FAILURE,
+        payload
+    };
+}
+
+function courier_status_update_request(payload) {
+    return {
+        type: COURIER_STATUS_UPDATE_REQUEST,
+        payload
+    };
+}
+
+function courier_status_update_success(json) {
+    return {
+        type: COURIER_STATUS_UPDATE_SUCCESS,
+        receiveAt: Date.now(),
+        payload: json
+    };
+}
+
+
+
+export function updateCourierStatus(payload) {
+    return (dispatch, getState) => {
+        dispatch(courier_status_update_request(payload));
+        return fetch('/api/courier/status',{
+            method:'PUT',
+            data:payload
+        })
+            .then((json) => {
+                dispatch(courier_status_update_success(payload));
+            }).catch(error => {
+                dispatch(courier_status_update_failure(error))
             });
     };
 }

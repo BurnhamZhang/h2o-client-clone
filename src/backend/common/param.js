@@ -7,7 +7,14 @@ export default (a)=>{
     var prefix,
         s = [];
     for ( prefix in a ) {
-        s.push(prefix+'='+a[prefix])
+        if(a[prefix] instanceof  Array){
+            a[prefix].forEach(item=>{
+                s.push(prefix+'='+item)
+            })
+        }
+        else {
+            s.push(prefix+'='+a[prefix])
+        }
     }
     return s.join('&')
 }

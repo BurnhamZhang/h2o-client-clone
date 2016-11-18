@@ -1,61 +1,33 @@
 import React, {Component} from 'react';
-import {Menu, Breadcrumb, Icon, Button, Card, Col, Row, Popover, Tag, Checkbox, Modal} from 'antd';
+import {Menu, Breadcrumb, Icon, Button, Card, Col, Row, Popover, Tag, Checkbox, Modal, Form,message} from 'antd';
 import {DragSource, DragDropContext, DropTarget} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 const CheckboxGroup = Checkbox.Group;
 import {Link} from 'react-router';
+const createForm = Form.create;
 import {connect} from 'react-redux';
 import {manage_login} from '../actions/manage';
-import {fetchCandidateCourierListIfNeeded} from '../actions/courier';
+import {fetchCandidateCourierListIfNeeded, updateCourierStatus} from '../actions/courier';
+import {createDelivery} from '../actions/delivery';
 import Delivery from './Delivery';
+import Action from './Action';
 
-const courierData = [{
-    id: 1,
-    name: '张三',
-    image: 'http://placeholder.qiniudn.com/80x80/4CD964/fff',
-    has: 5,
-    all: 10
-}, {
-    id: 2,
-    name: '李四',
-    image: 'http://placeholder.qiniudn.com/80x80/4CD964/fff',
-    has: 3,
-    all: 4
-}, {
-    id: 3,
-    name: '王五',
-    image: 'http://placeholder.qiniudn.com/80x80/4CD964/fff',
-    has: 5,
-    all: 23
-}, {
-    id: 4,
-    name: '唐僧',
-    image: 'http://placeholder.qiniudn.com/80x80/4CD964/fff',
-    has: 9,
-    all: 10
-}, {
-    id: 5,
-    name: '孙悟空',
-    image: 'http://placeholder.qiniudn.com/80x80/4CD964/fff',
-    has: 25,
-    all: 53
-}, {
-    id: 6,
-    name: '猪八戒',
-    image: 'http://placeholder.qiniudn.com/80x80/4CD964/fff',
-    has: 4,
-    all: 5
-}, {
-    id: 7,
-    name: '沙悟净',
-    image: 'http://placeholder.qiniudn.com/80x80/4CD964/fff',
-    has: 5,
-    all: 18
-}]
+
+@connect((state, ownProps)=>({
+    remoteMsg: state.delivery.item.remoteMsg,
+    didInvalidate: state.delivery.item.didInvalidate,
+    didUpdate: state.delivery.item.didUpdate,
+    updateHandle:function (component) {
+        message.success('订单指派成功！');
+    }
+}))
+class DeliveryAction extends Action {
+
+}
 
 const Types = {
     ORDER: 'order',
-    COURIER:'courier'
+    COURIER: 'courier'
 };
 
 class Courier extends Component {
@@ -69,7 +41,6 @@ class Courier extends Component {
         )
     }
 }
-
 
 
 class Order extends Component {
@@ -121,15 +92,14 @@ class Order extends Component {
 }))
 class OrderBox extends Component {
 
-    render(){
+    render() {
         const {orderMap, data} = this.props;
-        console.warn('render OrderBox',data);
 
         const Orders = data ? data.map((item, index)=> {
-            return <DragOrder data={item} key={index} chosen={orderMap[item.id]}/>
+            return <DragOrder data={item} key={index} chosen={orderMap[item.orderNo]}/>
         }) : '';
         return (
-            <Card title="最新订单" extra={'共'+(data?data.length:0)+'条待处理'} bodyStyle={{padding: 0}}>
+            <Card title="最新订单" extra={'共' + (data ? data.length : 0) + '条待处理'} bodyStyle={{padding: 0}}>
                 <div style={{height: 400, overflowY: 'scroll'}}>
                     { Orders }
                 </div>
@@ -138,40 +108,79 @@ class OrderBox extends Component {
     }
 }
 
+
+const stautsMap = {
+    0: '',
+    1: ' (休息)',
+    2: ' (休假)',
+    3: ' (停用)',
+}
+@createForm()
 @connect((state, ownProps)=>({
-    data:state.courier.candidate.data
-}),(dispatch, ownProps)=>({
-    fetchCandidateCourierListIfNeeded: ()=>dispatch(fetchCandidateCourierListIfNeeded())
+    data: state.courier.candidate.data
+}), (dispatch, ownProps)=>({
+    fetchCandidateCourierListIfNeeded: ()=>dispatch(fetchCandidateCourierListIfNeeded()),
+    updateCourierStatus: (payload)=>dispatch(updateCourierStatus(payload)),
 }))
 class CourierBox extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            visible:false,
+            visible: false,
         }
     }
-    componentWillMount(){
+
+    componentWillMount() {
         this.props.fetchCandidateCourierListIfNeeded()
     }
+
     setVisible(visible) {
         this.setState({visible});
     }
-    render(){
+
+    handleSubmit() {
+        const {data, updateCourierStatus} = this.props;
+        this.props.form.validateFields((errors, values) => {
+            if (errors) {
+                console.log('Errors in form!!!');
+                return;
+            }
+
+            const map = {};
+
+            values.courierStatus.forEach(id=> {
+                map[id] = true
+            })
+
+            values.courierStatus = data.map(item=> {
+                return {
+                    id: item.id,
+                    status: map[item.id] ? '0' : '1'
+                }
+            })
+
+            updateCourierStatus(values);
+            this.setVisible(false)
+        });
+    }
+
+    render() {
+        const {getFieldDecorator} = this.props.form;
         const {data} = this.props;
 
         let count = '0/0';
         let options = [];
         let defaultValue = [];
         let available = [];
-        if(data){
-            available = data.filter((item)=>item==0);
-            count =  available.length +'/' +data.length;
-            options = data.map((item)=>({value:item.id,label:item.name}))
-            defaultValue =  available.map((item)=>item.id)
+        if (data) {
+            available = data.filter((item)=>item.status == '0');
+            count = available.length + '/' + data.length;
+            options = data.map((item)=>({value: item.id, label: item.name + stautsMap[item.status]}))
+            defaultValue = available.map((item)=>item.id)
         }
 
         return (
-            <Card title={ '候选配送员（'+count+'）' } extra={<a href="#" onClick={()=>this.setVisible(true)}>修改</a>}
+            <Card title={ '候选配送员（' + count + '）' } extra={<a href="#" onClick={()=>this.setVisible(true)}>修改</a>}
                   bodyStyle={{padding: 0}}>
                 <div style={{height: 400, overflowY: 'scroll'}}>
                     {
@@ -184,16 +193,22 @@ class CourierBox extends Component {
                     title="调整候选配送员"
                     wrapClassName="vertical-center-modal"
                     visible={this.state.visible}
-                    onOk={() => this.setVisible(false)}
+                    onOk={() =>this.handleSubmit() }
                     onCancel={() => this.setVisible(false)}
                 >
-                    <CheckboxGroup options={options} defaultValue={defaultValue}/>
+                    {
+                        getFieldDecorator('courierStatus', {
+                            initialValue: defaultValue
+                        })(
+                            <CheckboxGroup options={options}/>
+                        )
+                    }
+
                 </Modal>
             </Card>
         )
     }
 }
-
 
 
 @DragSource(Types.COURIER, {
@@ -228,7 +243,7 @@ class CourierBox extends Component {
 }))
 class DragCourier extends Component {
     render() {
-        const {isDragging, connectDragSource,data} = this.props;
+        const {isDragging, connectDragSource, data} = this.props;
         const opacity = isDragging ? 0.4 : 1;
 
 
@@ -277,8 +292,8 @@ class DragCourier extends Component {
 }))
 class DragOrder extends Component {
     render() {
-        const {isDragging, connectDragSource,chosen} = this.props;
-        const opacity = chosen|| isDragging ? 0.4 : 1;
+        const {isDragging, connectDragSource, chosen} = this.props;
+        const opacity = chosen || isDragging ? 0.4 : 1;
 
 
         return connectDragSource(
@@ -303,7 +318,7 @@ class DragOrder extends Component {
 }))
 class ChosenOrderBox extends Component {
     render() {
-        const {canDrop, isOver, connectDropTarget,orders} = this.props;
+        const {canDrop, isOver, connectDropTarget, orders} = this.props;
         const isActive = canDrop && isOver;
         let content;
         let backgroundColor = 'transparent';
@@ -313,13 +328,13 @@ class ChosenOrderBox extends Component {
             backgroundColor = 'yellow';
         }
 
-        if(orders.length ==0){
-            content =(<div style={{lineHeight:'200px',textAlign:'center'}}>{ isActive ?
+        if (orders.length == 0) {
+            content = (<div style={{lineHeight: '200px', textAlign: 'center'}}>{ isActive ?
                 '松开鼠标以放置订单' :
                 '将订单拖拽至此'}</div>)
         }
         else {
-            content = orders.map((item,index)=><Order key={index} {...item}></Order>)
+            content = orders.map((item, index)=><Order key={index} {...item}></Order>)
         }
         return connectDropTarget(
             <div style={{height: 200, overflowY: 'scroll', backgroundColor}}>
@@ -345,7 +360,7 @@ class ChosenOrderBox extends Component {
 class ChosenCourierBox extends Component {
 
     render() {
-        const {canDrop, isOver, connectDropTarget,courier} = this.props;
+        const {canDrop, isOver, connectDropTarget, courier} = this.props;
         const isActive = canDrop && isOver;
         let content;
         let backgroundColor = 'transparent';
@@ -356,8 +371,8 @@ class ChosenCourierBox extends Component {
         }
 
 
-        if(!courier){
-            content =(<div style={{lineHeight:'200px',textAlign:'center'}}>{ isActive ?
+        if (!courier) {
+            content = (<div style={{lineHeight: '200px', textAlign: 'center'}}>{ isActive ?
                 '松开鼠标以放置配送员' :
                 '将配送员拖拽至此'}</div>)
         }
@@ -375,29 +390,32 @@ class ChosenCourierBox extends Component {
 }
 
 
-
-
+@connect(null, (dispatch, ownProps)=>({
+    createDelivery: (payload)=>dispatch(createDelivery(payload))
+}))
 @DragDropContext(HTML5Backend)
 class DeliveryController extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            chosenOrders:[],
-            orderMap:{},
-            courier:null
+            chosenOrders: [],
+            orderMap: {},
+            courier: null
         }
     }
-    setCourier(courier){
+
+    setCourier(courier) {
         this.setState({
             courier
         })
     }
-    addOrder(order){
+
+    addOrder(order) {
 
         const chosenOrders = this.state.chosenOrders.concat([]);
-        const orderMap = Object.assign({},this.state.orderMap);
+        const orderMap = Object.assign({}, this.state.orderMap);
 
-        orderMap[order.id]=true;
+        orderMap[order.orderNo] = true;
         chosenOrders.push(order);
 
         this.setState({
@@ -406,38 +424,52 @@ class DeliveryController extends Component {
         })
     }
 
-    handleSubmit(){
-        console.log('handleSubmit',this.state);
+    handleSubmit() {
+        const {chosenOrders, courier} = this.state
+        const payload = {
+            courierId: courier.id,
+            orderNoArray: chosenOrders.map(item=>item.orderNo),
+            assignType: 1
+        }
+
+        console.log('handleSubmit', payload);
+
+        this.props.createDelivery(payload);
+
+        this.handleCancel()
     }
-    handleCancel(){
+
+    handleCancel() {
         this.setState({
-            chosenOrders:[],
-            orderMap:{},
-            courier:null
+            chosenOrders: [],
+            orderMap: {},
+            courier: null
         });
     }
+
     render() {
 
-        const { chosenOrders ,orderMap ,courier } = this.state
+        const {chosenOrders, orderMap, courier} = this.state
 
-
+        const disabled = chosenOrders.length == 0 || !courier;
 
         return (
             <div>
+                <DeliveryAction/>
                 <Row>
                     <Col span={12}>
                         <OrderBox orderMap={orderMap}/>
                     </Col>
                     <Col span={1}/>
                     <Col span={11}>
-                         <CourierBox/>
+                        <CourierBox/>
                     </Col>
                 </Row>
                 <div style={{margin: '10px 0 '}}>
                     <Row type="flex" justify="space-around" align="middle">
                         <Col span={12}>
                             <Card bodyStyle={{padding: 0}}>
-                                <ChosenOrderBox addOrder={(order)=>this.addOrder(order)} orders={chosenOrders} />
+                                <ChosenOrderBox addOrder={(order)=>this.addOrder(order)} orders={chosenOrders}/>
                             </Card>
                         </Col>
                         <Col span={1}>
@@ -449,7 +481,7 @@ class DeliveryController extends Component {
                             </Card>
                         </Col>
                         <Col span={5} style={{textAlign: 'center'}}>
-                            <Button type="primary" onClick={()=>this.handleSubmit()}>确认</Button>
+                            <Button type="primary" onClick={()=>this.handleSubmit()} disabled={disabled}>确认</Button>
                             <br/>
                             <Button type="dashed" onClick={()=>this.handleCancel()}>清除</Button>
                         </Col>
@@ -460,9 +492,6 @@ class DeliveryController extends Component {
         )
     }
 }
-
-
-
 
 
 @connect(null, (dispatch, ownProps)=>({
@@ -477,7 +506,7 @@ class Manage extends Component {
     render() {
         return (
             <div className="ant-layout-content">
-                 <DeliveryController/>
+                <DeliveryController/>
                 <Delivery/>
             </div>
         )

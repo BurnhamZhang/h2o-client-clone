@@ -5,6 +5,7 @@
 
 import io from 'socket.io-client';
 import {getStore} from '../index';
+import {notification} from 'antd';
 
 export const MANAGE_LOGIN = 'MANAGE_LOGIN';
 export const MANAGE_LEAVE = 'MANAGE_LEAVE';
@@ -24,6 +25,11 @@ socket.on('disconnect', function() {
 
 socket.on('new message',function (data) {
     console.warn('new message',data);
+    const {userHouseNumber, userName, userPhone} = data;
+    notification['info']({
+        message: '您有新的订单啦！！请及时处理～～',
+        description: `${userHouseNumber}/${userName}/${userPhone}`,
+    })
 })
 
 
@@ -56,6 +62,10 @@ export function manage_login() {
     };
 }
 
+
+export function get_orders() {
+    socket.emit('get orders')
+}
 
 function receive_orders(payload) {
     return {

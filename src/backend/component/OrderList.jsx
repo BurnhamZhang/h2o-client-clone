@@ -68,9 +68,6 @@ const statusList = [{
 for (var a in statusMap) {
     statusList.push({k: a, v: statusMap[a]})
 }
-const orderStatus = [{label: '全部', value: 'all'},
-    {label: 'Pear', value: 'Pear'},
-    {label: 'Orange', value: 'Orange'}]
 
 @connect((state, ownProps)=>({
     pagination: state.order.list.pagination

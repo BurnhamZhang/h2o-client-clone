@@ -8,7 +8,7 @@ import order from './order/index';
 import enterprise from './enterprise/index';
 import shop from './shop';
 import region from './region';
-import delivery from './delivery';
+import delivery from './delivery/index';
 
 
 

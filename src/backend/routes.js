@@ -18,22 +18,27 @@ import Enterprise from './component/enterprise'
 const enterprise = [
     {
         path: 'shop',
+        title:'门店账号管理',
         component: Enterprise.ShopList
     },
     {
         path: 'shop/:id',
+        title:'商品详情',
         component: Enterprise.ShopItem
     },
     {
         path: 'achievement',
+        title:'业绩管理',
         component: Enterprise.Achievement
     },
     {
         path: 'goods',
+        title:'商品管理',
         component: Enterprise.GoodsList
     },
     {
         path: 'goods/:id',
+        title:'商品详情',
         component: Enterprise.GoodsItem
     },
     {
@@ -45,39 +50,48 @@ const enterprise = [
 const shop = [
     {
         path: 'manage',
+        title:'调度管理',
         component: Manage
     },
     {
         path: 'order',
+        title:'订单管理',
         component: OrderList
     },
     {
         path: 'order/:id',
+        title:'订单详情',
         component: OrderItem
     },
     {
         path: 'courier',
+        title:'配送员管理',
         component: CourierList
     },
     {
         path: 'courier/:id',
+        title:'配送员详情',
         component: CourierItem
     },
 
     {
         path: 'goods',
+        title:'商品管理',
         component: GoodsList
     },
     {
         path: 'goods/:id',
+        title:'商品详情',
         component: GoodsItem
     },
     {
         path: 'shop',
+        title:'门店管理',
         component: Shop
     },
     {
         path: 'records',
+        title:'配送记录',
         component: Records
     },
     {
@@ -124,6 +138,7 @@ export default (store) => {
             {
                 path: '/',
                 component: App,
+                title:'首页',
                 onEnter: requireAuth,
                 indexRoute: {onEnter: (nextState, replace) =>{
                     const state = store.getState();

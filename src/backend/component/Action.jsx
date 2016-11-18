@@ -8,7 +8,7 @@ import {withRouter} from 'react-router';
 class Action extends Component {
 
     static defaultProps = {
-        nextRoute:'/',
+        nextRoute:'',
         remoteMsg:'',
         didInvalidate:false,
         didUpdate:false,
@@ -20,10 +20,14 @@ class Action extends Component {
     }
 
     componentDidUpdate(){
-        const  {didInvalidate,remoteMsg,didUpdate,router,nextRoute} = this.props;
+        const  {didInvalidate,remoteMsg,didUpdate,router,nextRoute,updateHandle} = this.props;
 
+        if (didUpdate && typeof updateHandle =='function') {
+            updateHandle(this)
+            return false
+        }
 
-        if (didUpdate) {
+        if (didUpdate && nextRoute) {
              router.push(nextRoute)
             return false
         }

@@ -41,7 +41,7 @@ const columns = [
 
 
 @connect((state, ownProps)=>({
-    ...state.delivery
+    ...state.delivery.list
 }), (dispatch, ownProps)=>({
     fetchDeliveryListIfNeeded: (payload)=>dispatch(fetchDeliveryListIfNeeded(payload))
 }))
@@ -60,9 +60,12 @@ class DeliveryList extends Component {
 
     handleSubmit(pageNum = this.props.pagination.pageNum, pageSize = this.props.pagination.pageSize) {
         console.log('handleSubmit', pageNum, pageSize);
+
+
         this.props.fetchDeliveryListIfNeeded({
             pageNum,
             pageSize,
+            status:[0,1],
         });
     }
 

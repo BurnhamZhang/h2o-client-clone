@@ -1,4 +1,4 @@
-import {DELIVERY_LIST_FAILURE,DELIVERY_LIST_REQUEST,DELIVERY_LIST_SUCCESS} from '../actions/delivery';
+import {DELIVERY_LIST_FAILURE,DELIVERY_LIST_REQUEST,DELIVERY_LIST_SUCCESS} from '../../actions/delivery';
 
 export default function (state = {
     isFetching: false,

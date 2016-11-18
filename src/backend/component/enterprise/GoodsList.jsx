@@ -10,7 +10,7 @@ const ButtonGroup = Button.Group;
 const columns = [
     {title: '商品名', dataIndex: 'name', key: '1'},
     {
-        title: '商品图片', dataIndex: 'images', key: '2',
+        title: '商品图片', dataIndex: 'imagesArray', key: '2',
         render: (text, record, index) => (
             <div>
                 { text.map((item)=>(<img src={item} style={{width: 60, height: 60}} key={item}/>))}
@@ -19,7 +19,7 @@ const columns = [
         ),
     },
     {title: '商品描述', dataIndex: 'memo', key: '3'},
-    {title: '单价', dataIndex: 'price', key: '4'},
+    {title: '单价', dataIndex: 'priceYuan', key: '4'},
     {
         title: '操作',
         key: '5',

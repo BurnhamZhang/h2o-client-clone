@@ -28,6 +28,26 @@ app.io.route('new message', function* () {
 });
 
 
+app.io.route('get orders', function* () {
+    const headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+    }
+    console.log('token',this.token)
+    if (this.token) {
+        headers.token = this.token
+    }
+
+    proxy('/order/overtime?pageSize=1&pageNum=999999',{
+        method:'GET',
+        headers:headers
+    }).then((data)=>{
+        this.emit('receive orders',data);
+    })
+
+});
+
+
 
 app.io.route('login', function* (a,b,c) {
     console.log('login',b)
@@ -54,9 +74,7 @@ app.io.route('login', function* (a,b,c) {
 
 router.post('/order/new',function *(data) {
     console.log('new',this.request.body);
-    app.io.sockets.emit('new message', [{
-        a:1
-    }]);
+    app.io.sockets.emit('new message', this.request.body);
     this.body = this.request.body;
 })
 

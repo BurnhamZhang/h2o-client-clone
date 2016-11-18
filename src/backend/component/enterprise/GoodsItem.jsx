@@ -61,7 +61,7 @@ class GoodsForm extends Component {
             }
             console.log('values', JSON.stringify(values))
 
-            values.price += '';
+            values.priceYuan += '';
 
             if (type == 'create') {
                 createItem(values)
@@ -128,7 +128,7 @@ class GoodsForm extends Component {
                 </FormItem>
                 <FormItem label="价格" {...itemLayout}   >
                     {
-                        getFieldDecorator('price', {
+                        getFieldDecorator('priceYuan', {
                             rules: [
                                 {required: true},
                             ],
@@ -153,7 +153,7 @@ class GoodsForm extends Component {
 
                     }
                     {
-                        getFieldValue('depositType') == 1 ? getFieldDecorator('depositMoney', {})(
+                        getFieldValue('depositType') == 1 ? getFieldDecorator('depositMoneyYuan', {})(
                             <InputNumber min={0.01} step="0.01" size="120"/>) : null
                     }
                 </FormItem>
@@ -161,7 +161,7 @@ class GoodsForm extends Component {
 
                 <FormItem label="图片" {...itemLayout} hasFeedback>
                     {
-                        getFieldDecorator('images', {
+                        getFieldDecorator('imagesArray', {
                             rules: [{
                                 type: "array", required: true, min: 1, max: 5,
                                 fields: {
@@ -256,8 +256,8 @@ class GoodsItem extends Component {
                 shelves: 1,
                 depositType: 0,
                 stock: 0,
-                price: 1,
-                images: []
+                priceYuan: 1,
+                imagesArray: []
             }
         }
 

@@ -38,6 +38,8 @@ class App extends Component {
     }
 
     render() {
+        const routes = this.props.routes.filter(item=>item.title);
+
         const collapse = this.state.collapse;
         const key = this.props.location.pathname.split('/')[1] || 'root';
         const userName = this.props.user.data.account;
@@ -50,18 +52,20 @@ class App extends Component {
                 </Sidebar>
                 <div className="ant-layout-main">
                     <div className="ant-layout-header">
+
                         <span style={{float: 'right'}}>{userName}
                             <Popconfirm placement="bottomRight" title="确定要退出登录?" onConfirm={this.handleLogout}  okText="确定" cancelText="取消">
                                  <a href="#" >登出</a>
                             </Popconfirm>
                           </span>
-                    </div>
-                    <div className="ant-layout-breadcrumb">
-                        <Breadcrumb>
-                            <Breadcrumb.Item>首页</Breadcrumb.Item>
-                            <Breadcrumb.Item>应用列表</Breadcrumb.Item>
-                            <Breadcrumb.Item>某应用</Breadcrumb.Item>
-                        </Breadcrumb>
+                        <div className="ant-layout-breadcrumb">
+                            <Breadcrumb>
+                                {  routes.map((item,index)=>{
+                                    return   (<Breadcrumb.Item key={index}>{item.title}</Breadcrumb.Item>)
+                                })
+                                }
+                            </Breadcrumb>
+                        </div>
                     </div>
                     <ReactCSSTransitionGroup className="ant-layout-container"
                                              component="div" transitionName="swap"
