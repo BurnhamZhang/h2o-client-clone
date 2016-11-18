@@ -8,7 +8,9 @@ export const ORDER_LIST_REQUEST = 'ORDER_LIST_REQUEST';
 export const ORDER_LIST_SUCCESS = 'ORDER_LIST_SUCCESS';
 export const ORDER_LIST_FAILURE = 'ORDER_LIST_FAILURE';
 
-
+export const ORDER_CANCEL_REQUEST = 'ORDER_CANCEL_REQUEST';
+export const ORDER_CANCEL_SUCCESS = 'ORDER_CANCEL_SUCCESS';
+export const ORDER_CANCEL_FAILURE = 'ORDER_CANCEL_FAILURE';
 
 function order_failure() {
   return {
@@ -109,5 +111,49 @@ export function fetchOrderListIfNeeded(data) {
     if (shouldFetchOrderList(getState())) {
       return dispatch(fetchOrderList(data));
     }
+  };
+}
+
+
+//确认取消订单
+
+
+function order_cancel_failure(payload) {
+  return {
+    type: ORDER_CANCEL_FAILURE,
+    payload
+  };
+}
+
+function order_cancel_request(payload) {
+  return {
+    type: ORDER_CANCEL_REQUEST,
+    payload
+  };
+}
+
+function order_cancel_success(json) {
+  return {
+    type: ORDER_CANCEL_SUCCESS,
+    receiveAt: Date.now(),
+    payload: json
+  };
+}
+
+
+
+export function orderCancelConfirm(orderNo,payload) {
+  return (dispatch, getState) => {
+    dispatch(order_cancel_request(orderNo));
+    return fetch(`/order/complete/${orderNo}`,{
+      method:'PUT',
+      data:payload
+    })
+        .then((json) => {
+          dispatch(order_cancel_success(json));
+          dispatch(fetchOrderIfNeeded(orderNo));
+        }).catch(error => {
+          dispatch(order_cancel_failure(error))
+        });
   };
 }

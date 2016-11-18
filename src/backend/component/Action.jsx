@@ -19,8 +19,8 @@ class Action extends Component {
         remoteMsg:PropTypes.string,
     }
 
-    componentDidUpdate(){
-        const  {didInvalidate,remoteMsg,didUpdate,router,nextRoute,updateHandle} = this.props;
+    componentWillReceiveProps(nextProps){
+        const  {didInvalidate,remoteMsg,didUpdate,router,nextRoute,updateHandle} = nextProps;
 
         if (didUpdate && typeof updateHandle =='function') {
             updateHandle(this)

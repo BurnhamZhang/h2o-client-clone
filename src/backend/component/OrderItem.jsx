@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchOrderIfNeeded} from '../actions/order';
-import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon, Row, Col, Card} from 'antd';
+import {fetchOrderIfNeeded,orderCancelConfirm} from '../actions/order';
+import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon, Row, Col, Card,Popconfirm} from 'antd';
 import Block from './Block';
 const FormItem = Form.Item;
 
@@ -62,11 +62,17 @@ const statusMap = {
     7: '已完成',
     8: '超时完成'
 }
+
 class OrderItem extends Component {
     constructor(props) {
         super(props)
+        this.cancelOrder = this.cancelOrder.bind(this);
     }
+    cancelOrder(){
 
+        const {orderNo,version} = this.props.payload;
+        this.props.cancelOrder(orderNo,{version});
+    }
 
     render() {
 
@@ -187,6 +193,13 @@ class OrderItem extends Component {
                                 {...formItemLayout}
                                 label="订单状态："
                             >
+
+                                { /^(1|2|4|6)$/.test(data.status+'') ?
+                                ( <Popconfirm title="确定要取消订单吗？" okText="是的" cancelText="不是" onConfirm={this.props.cancelOrder}>
+                                    <Button type='primary' htmlType='button'>取消订单</Button>
+                                </Popconfirm>)
+                                 :null
+                                }
                                 <p>{ statusMap[data.status] }</p>
                             </FormItem>
                             <FormItem
@@ -236,6 +249,7 @@ class OrderItem extends Component {
     data: state.order.item.data,
 }), (dispatch, ownProps)=>({
     fetchOrderIfNeeded: (payload)=>dispatch(fetchOrderIfNeeded(payload)),
+    orderCancelConfirm: (payload)=>dispatch(orderCancelConfirm(payload))
 }))
 class OrderForm extends Component {
 
@@ -254,10 +268,14 @@ class OrderForm extends Component {
         }
     }
 
+    cancelOrder(...data){
+        this.props.orderCancelConfirm(...data);
+    }
+
     render() {
         const data = this.props.data;
         return (
-            data ? <OrderItem payload={data}></OrderItem> : <Block spinning/>
+            data ? <OrderItem payload={data} cancelOrder={(...data)=>this.cancelOrder(...data)}></OrderItem> : <Block spinning/>
         )
     }
 }

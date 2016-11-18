@@ -4,48 +4,13 @@ import {connect} from 'react-redux';
 import moment from 'moment';
 import {fetchDeliveryListIfNeeded} from '../actions/delivery';
 import {Table, DatePicker, Radio, Form, Button, Select, Input, Tag, Popover} from 'antd';
+import columns from  '../common/DeliveryColumns';
 const Option = Select.Option;
 const createForm = Form.create;
 const FormItem = Form.Item;
 const RangePicker = DatePicker.RangePicker;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
-
-const columns = [
-    {title: '指派时间', dataIndex: 'deliveryCreatedDate', key: '1'},
-    {
-        title: '下单时间', dataIndex: 'orderCreatedDate', key: '2',
-    },
-    {
-        title: '商品/数量', dataIndex: 'goods', key: '3', render: (items, record, index) => {
-        if (items.length == 1) {
-            return items[0].goodsName + '/' + items[0].count
-        }
-        const content = items.map((item, index)=> (<p key={index}>{item.goodsName + '/' + item.count}</p>))
-
-        return (<Popover content={content} trigger="hover">
-            <a>{ items.length }样商品</a>
-        </Popover>)
-    }
-    },
-    {
-        title: '地址/收货人/电话', key: '4', render: (v, {userAddress, userName, userPhone})=> {
-        return `${userAddress}/${userName}/${userPhone}`
-    }
-    },
-    {
-        title: '配送人/电话', key: '5', render: (v, {courierName, courierPhone})=> {
-        return `${courierName}/${courierPhone}`
-    }
-    },
-    {
-        title: '状态/时间', dataIndex: 'shelves', key: '6',
-        render: (v, {status, date})=> {
-            return `${status}\n${date}`
-
-        }
-    }
-];
 
 
 
