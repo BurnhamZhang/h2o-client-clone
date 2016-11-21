@@ -232,7 +232,7 @@ function goods_create_success(json) {
 export function createGoods(payload) {
     return (dispatch, getState) => {
         dispatch(goods_create_request());
-        return fetch('/api/shop/goods/',{
+        return fetch('/api/shop/goods',{
             method:'POST',
             data:payload
         })

@@ -58,8 +58,9 @@ const columns = [
     },
     {
         title: '状态/时间', dataIndex: 'logs', key: '6',
-        render: (logs)=> {
+        render: (logs,{status,modifiedDate})=> {
 
+            console.warn('logs>>>>>>>>>>',logs)
             const content = logs.map((item, index)=> {
                 return (<Timeline.Item key={index} color={colorMap[item.status]}>
                     <p>{statusMap[item.status]}</p>
@@ -71,8 +72,8 @@ const columns = [
                     {content}
                 </Timeline>} trigger="hover">
                     <div>
-                        <p>{ statusMap[logs[0].status]}</p>
-                        <p>{ moment(logs[0].date).format('YYYY.MM.DD HH:mm:ss') }</p>
+                        <p>{ statusMap[status]}</p>
+                        <p>{ moment(modifiedDate).format('YYYY.MM.DD HH:mm:ss') }</p>
                     </div>
                 </Popover>
             )

@@ -9,7 +9,7 @@ const ButtonGroup = Button.Group;
 const columns = [
     {title: '商品名', dataIndex: 'name', key: '1'},
     {
-        title: '商品图片', dataIndex: 'images', key: '2',
+        title: '商品图片', dataIndex: 'imagesArray', key: '2',
         render: (text, record, index) => (
             <img src={text[0]} style={{width: 60, height: 60}}/>
         ),

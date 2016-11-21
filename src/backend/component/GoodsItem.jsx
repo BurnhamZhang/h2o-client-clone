@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link,withRouter} from 'react-router';
 import {connect} from 'react-redux';
 import {fetchGoodsIfNeeded,fetchAvailableGoodsListIfNeeded,createGoods,deleteGoodsById,updateGoodsById} from '../actions/goods';
-import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber,Popconfirm,message} from 'antd';
+import {Table, Alert,DatePicker, Radio, Form, Button, Select, Input, InputNumber,Popconfirm,message} from 'antd';
 import Block from './Block';
 const ButtonGroup = Button.Group;
 const Option = Select.Option;
@@ -84,6 +84,8 @@ class GoodsItem extends Component {
         const item = Object.assign({}, payload, getFieldsValue());
 
 
+        console.warn('available',available)
+        console.warn('imagesArray',item.imagesArray)
 
         return (<div className="ant-layout-content">
             <Form horizontal>
@@ -109,7 +111,7 @@ class GoodsItem extends Component {
                         getFieldDecorator('images', {})(
                             <div>
                                 {
-                                    item.images.map((item, index)=>(
+                                    item.imagesArray.map((item, index)=>(
                                         <img src={item} key={index}
                                              style={{width: 144, height: 144, margin: '0 5px 5px 0'}}
                                              alt={item}/>
@@ -242,10 +244,19 @@ class GoodsForm extends Component {
         const available = this.props.available.data;
 
 
-
+        if(Array.isArray(available) && available.length ==0){
+            return ( <Alert
+                message="错误"
+                description="没有可选择的商品"
+                type="error"
+                showIcon
+            />)
+        }
 
         if (id == 'create' && Array.isArray(available)) {
-            data = Object.assign({}, available[0], {
+            data = Object.assign({
+                imagesArray:[]
+            }, available[0], {
                 shelves: 1,
                 depositMoney: 1,
                 depositType: 0,

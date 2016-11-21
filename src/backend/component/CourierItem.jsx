@@ -239,7 +239,6 @@ class CourierItem extends Component {
     createCourier: (payload)=>dispatch(createCourier(payload)),
     deleteCourierById: (id)=>dispatch(deleteCourierById(id))
 }))
-@withRouter
 class CourierForm extends Component {
     constructor(props) {
         super(props);

@@ -1,28 +1,27 @@
-import '../assets/base.scss';
 import { TabBar } from 'antd-mobile';
 import {withRouter} from 'react-router';
 
 import React, {Component} from 'react';
 
-
-const Hello = withRouter(React.createClass({
-    getInitialState() {
-        return {
-            selectedTab: 'main',
-            hidden: false,
-        };
-    },
+@withRouter
+class Tab  extends Component {
     renderContent(isRender) {
         return isRender && this.props.children
-    },
+    }
+    onPress(route){
+        this.props.router.push(route);
+    }
     render() {
-        console.log(this.props)
+
+        const selectedTab ='/'+ this.props.routes[2].path;
+
+        console.log('selectedTab',selectedTab)
+
         return (
             <TabBar
                 unselectedTintColor="#949494"
                 tintColor="#33A3F4"
                 barTintColor="white"
-                hidden={this.state.hidden}
             >
                 <TabBar.Item
                     icon={{ uri: 'https://zos.alipayobjects.com/rmsportal/UNQhIatjpNZHjVf.png' }}
@@ -30,47 +29,41 @@ const Hello = withRouter(React.createClass({
                     title="首页"
                     key="首页"
                     badge={1}
-                    selected={this.state.selectedTab === 'main'}
+                    selected={selectedTab === '/main'}
                     onPress={() => {
-                        this.setState({
-                            selectedTab: 'main',
-                        });
+                        this.onPress('/main')
                     }}
                     data-seed="logId1"
                 >
-                    {this.renderContent(this.state.selectedTab === 'main')}
+                    {this.renderContent(selectedTab === '/main')}
                 </TabBar.Item>
                 <TabBar.Item
                     icon={{ uri: 'https://zos.alipayobjects.com/rmsportal/EljxLrJEShWZObW.png' }}
                     selectedIcon={{ uri: 'https://zos.alipayobjects.com/rmsportal/LWNaMdwAFSmYBFw.png' }}
                     title="购物车"
                     key="购物车"
-                    selected={this.state.selectedTab === 'cart'}
+                    selected={selectedTab === '/cart'}
                     onPress={() => {
-                        this.setState({
-                            selectedTab: 'cart',
-                        });
+                        this.onPress('/cart')
                     }}
                 >
-                    {this.renderContent(this.state.selectedTab === 'cart')}
+                    {this.renderContent(selectedTab === '/cart')}
                 </TabBar.Item>
                 <TabBar.Item
                     icon={{ uri: 'https://zos.alipayobjects.com/rmsportal/YWpPVCVOnJoCYhs.png' }}
                     selectedIcon={{ uri: 'https://zos.alipayobjects.com/rmsportal/WadBBxOIZtDzsgP.png' }}
                     title="我的"
                     key="我的"
-                    selected={this.state.selectedTab === 'user'}
+                    selected={selectedTab === '/user'}
                     onPress={() => {
-                        this.setState({
-                            selectedTab: 'user',
-                        });
+                        this.onPress('/user')
                     }}
                 >
-                    {this.renderContent(this.state.selectedTab === 'user')}
+                    {this.renderContent(selectedTab === '/user')}
                 </TabBar.Item>
             </TabBar>
         );
-    },
-}));
+    }
+};
 
-export default Hello;
+export default Tab;

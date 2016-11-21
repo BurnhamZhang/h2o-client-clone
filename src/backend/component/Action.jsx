@@ -22,18 +22,24 @@ class Action extends Component {
     componentWillReceiveProps(nextProps){
         const  {didInvalidate,remoteMsg,didUpdate,router,nextRoute,updateHandle} = nextProps;
 
-        if (didUpdate && typeof updateHandle =='function') {
+        if (didUpdate && didUpdate!=this.props.didUpdate  && typeof updateHandle =='function') {
             updateHandle(this)
             return false
         }
 
-        if (didUpdate && nextRoute) {
-             router.push(nextRoute)
-            return false
+        if(didUpdate!=this.props.didUpdate || nextRoute!=this.props.nextRoute){
+            if (didUpdate && nextRoute) {
+                console.warn('router>>>>>>>>>>>>',nextRoute);
+                router.push(nextRoute)
+                return false
+            }
         }
-        if(didInvalidate && remoteMsg){
-            message.warn(remoteMsg)
+        if(didInvalidate!=this.props.didInvalidate || remoteMsg!=this.props.remoteMsg){
+            if(didInvalidate && remoteMsg){
+                message.warn(remoteMsg)
+            }
         }
+
     }
 
     render() {
