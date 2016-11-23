@@ -63,7 +63,7 @@ app.io.route('login', function* (a,b,c) {
         headers.token = this.token
     }
 
-    proxy('/order/overtime?pageSize=1&pageNum=999999',{
+    proxy('/order/assign?pageSize=99999&pageNum=1',{
         method:'GET',
         headers:headers
     }).then((data)=>{

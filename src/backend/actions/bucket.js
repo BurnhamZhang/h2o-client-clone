@@ -103,11 +103,11 @@ function bucket_update_success(json) {
 
 
 
-export function updateBucketById(id ,data) {
+export function updateBucket(data) {
     return (dispatch, getState) => {
-        dispatch(bucket_update_request(id));
-        return fetch('/api/shop/bucket/' + id,{
-            method:'PUT',
+        dispatch(bucket_update_request());
+        return fetch('/api/bucket/order/offline',{
+            method:'POST',
             data:data
         })
             .then((json) => {

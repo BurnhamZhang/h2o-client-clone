@@ -34,7 +34,7 @@ class Courier extends Component {
     render() {
         return (
             <div style={{margin: '10px 10px 10px 0', float: 'left', width: 100, textAlign: 'center'}}>
-                <img src={this.props.image} alt=""/>
+                <img src={this.props.image} alt="" style={{width:80,height:80}}/>
                 <h3>{this.props.name}</h3>
                 <h3>({this.props.doing}/{this.props.done})</h3>
             </div>

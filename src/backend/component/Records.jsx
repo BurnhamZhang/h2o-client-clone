@@ -2,17 +2,30 @@ import React, {Component} from 'react';
 import {Link} from 'react-router';
 import {connect} from 'react-redux';
 import moment from 'moment';
-import {fetchDeliveryListIfNeeded} from '../actions/delivery';
-import {Table, DatePicker, Radio, Form, Button, Select, Input, Tag, Popover} from 'antd';
+import {fetchDeliveryListIfNeeded,updateDeliveryCourier} from '../actions/delivery';
+import {fetchCandidateCourierListIfNeeded} from '../actions/courier';
+import {Table, DatePicker, Radio, Form, Button, Select, Input, Tag, Popover,Modal ,Checkbox,message} from 'antd';
 import columns from  '../common/DeliveryColumns';
+import Action from './Action';
+
 const Option = Select.Option;
 const createForm = Form.create;
 const FormItem = Form.Item;
 const RangePicker = DatePicker.RangePicker;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
+const CheckboxGroup = Checkbox.Group;
 
 
+
+@connect((state, ownProps)=>({
+    remoteMsg: state.delivery.courier.remoteMsg,
+    didInvalidate: state.delivery.courier.didInvalidate,
+    didUpdate: state.delivery.courier.didUpdate,
+}))
+class CourierAction extends Action {
+
+}
 
 const orderTypeList = [{
     k: 'all', v: '全部',
@@ -30,6 +43,65 @@ const status = [{label: '全部', value: 'all'},
     {label: '申请取消', value: '4'},
     {label: '已取消', value: '5'},
     ]
+
+
+
+@createForm({
+})
+@connect((state, ownProps)=>({
+    data: state.courier.candidate.data
+}), (dispatch, ownProps)=>({
+    fetchCandidateCourierListIfNeeded: ()=>dispatch(fetchCandidateCourierListIfNeeded()),
+}))
+class CourierModal extends Component {
+    handleCancel() {
+        this.props.onCancel()
+    }
+    componentWillMount(){
+        this.props.fetchCandidateCourierListIfNeeded()
+    }
+    handleOk(){
+        const {deliveryNo} = this.props.payload;
+        this.props.form.validateFields((errors, values) => {
+            if (errors) {
+                console.log('Errors in form!!!');
+                return;
+            }
+            values.deliveryNo = deliveryNo
+            this.props.onOk(values)
+
+        });
+    }
+    render(){
+        const payload = this.props.payload;
+        const {getFieldDecorator} = this.props.form;
+
+        const data =this.props.data||[];
+
+
+        const options = data.filter(item=>item.status=='0');
+
+        return (<Modal title="调整配送员" visible={!!payload}
+                       onOk={()=>this.handleOk()} onCancel={()=>this.handleCancel()}
+        >
+            {
+                getFieldDecorator('courierId', {
+                    rules:[{
+                        required:true,
+                    }]
+                })(
+                    <RadioGroup >
+                        {
+                            options.map(item=> <Radio key={item.id} value={item.id}>{item.name}</Radio>)
+                        }
+                    </RadioGroup>
+                )
+            }
+        </Modal>)
+    }
+}
+
+
 
 @connect((state, ownProps)=>({
     pagination: state.order.list.pagination
@@ -158,22 +230,30 @@ class RecordsForm extends Component {
     data: state.delivery.list.data,
     pagination: state.delivery.list.pagination
 }), (dispatch, ownProps)=>({
-    fetchDeliveryListIfNeeded: (payload)=>dispatch(fetchDeliveryListIfNeeded(payload))
+    fetchDeliveryListIfNeeded: (payload)=>dispatch(fetchDeliveryListIfNeeded(payload)),
+    updateDeliveryCourier: (payload)=>dispatch(updateDeliveryCourier(payload))
 }))
 class Records extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            range: [moment().subtract(7, 'days'), moment()],
-            orderType: 'all',
-            status: 'all',
+           param:{
+               range: [moment().subtract(7, 'days'), moment()],
+               orderType: 'all',
+               status: 'all',
+           },
+           chosen:undefined
         }
         this.fetchData = this.fetchData.bind(this);
+        this.onCancel = this.onCancel.bind(this);
+        this.updateHandle = this.updateHandle.bind(this);
+        this.onOk = this.onOk.bind(this);
+        this.onClick = this.onClick.bind(this);
     }
 
     fetchData(pageNum = this.props.pagination.pageNum, pageSize = this.props.pagination.pageSize, data) {
         if (!data) {
-            data = this.state;
+            data = Object.assign({},this.state.param);
         }
         this.setState(data);
 
@@ -201,6 +281,31 @@ class Records extends Component {
         this.props.fetchDeliveryListIfNeeded(values);
     }
 
+    onClick(chosen){
+
+        this.setState({
+            chosen
+        });
+
+    }
+
+    onCancel(){
+        this.setState({
+            chosen:undefined
+        });
+    }
+
+    onOk(payload){
+        this.props.updateDeliveryCourier(payload);
+        this.setState({
+            chosen:undefined
+        });
+    }
+
+    updateHandle(){
+        message.success('调整配送员成功')
+        this.fetchData()
+    }
     render() {
         const pagination = {
             pageSize: this.props.pagination.pageSize * 1,
@@ -210,13 +315,24 @@ class Records extends Component {
             defaultCurrent: this.props.pageNum * 1,
             showQuickJumper: true,
             showSizeChanger: true,
-            onShowSizeChange: this.handleSubmit,
-            onChange: this.handleSubmit
+            onShowSizeChange: this.fetchData,
+            onChange: this.fetchData
         }
 
+        columns[4] = {
+            title: '配送人/电话', key: '5', render: (v, value)=> {
+                const  {courierName, courierPhone} = value;
+                if(!/^(1|0)$/.test(value.status)){
+                    return `${courierName}/${courierPhone}`
+                }
+                return <a onClick={()=>this.onClick(value)}>{`${courierName}/${courierPhone}`}</a>
+            }
+        }
 
         return (<div className="ant-layout-content">
-            <Table columns={columns} title={()=><RecordsForm payload={this.state} fetchData={this.fetchData}/>}
+            <CourierAction updateHandle={this.updateHandle}/>
+            <CourierModal payload={this.state.chosen} onCancel={this.onCancel} onOk={this.onOk} />
+            <Table columns={columns} title={()=><RecordsForm payload={this.state.param} fetchData={this.fetchData}/>}
                    dataSource={this.props.data} bordered
                    pagination={pagination}/>
         </div>)

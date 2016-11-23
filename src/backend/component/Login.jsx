@@ -69,7 +69,7 @@ class Login extends Component {
                 <FormItem   {...formItemLayout} hasFeedback help={help} validateStatus={help?'error':null} >
                     {getFieldDecorator('account', {
                         rules: [
-                            {required: true, min: 2, message: '请至少输入两个字符'},
+                            {required: true,  message: '请输入您的用户名'},
                         ],
                     })(
                         <Input addonBefore={<Icon type="user"/>} placeholder="用户名"/>

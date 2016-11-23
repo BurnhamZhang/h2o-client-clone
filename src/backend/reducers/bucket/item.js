@@ -9,11 +9,12 @@ export default function (state = {
 
 
         case BUCKET_UPDATE_FAILURE:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
                 didUpdate:false,
-                remoteMsg:action.payload.remoteMsg
+                ...action.payload
             })
             break;
         case BUCKET_UPDATE_REQUEST:
@@ -24,12 +25,12 @@ export default function (state = {
             })
             break;
         case BUCKET_UPDATE_SUCCESS:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
-                ...action.payload,
-                data:null,
+                ...action.payload
             })
             break;
 

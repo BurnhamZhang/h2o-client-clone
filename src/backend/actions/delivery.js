@@ -20,6 +20,10 @@ export const DELIVERY_UPDATE_SUCCESS = 'DELIVERY_UPDATE_SUCCESS';
 export const DELIVERY_UPDATE_FAILURE = 'DELIVERY_UPDATE_FAILURE';
 
 
+export const DELIVERY_UPDATE_COURIER_REQUEST = 'DELIVERY_UPDATE_COURIER_REQUEST';
+export const DELIVERY_UPDATE_COURIER_SUCCESS = 'DELIVERY_UPDATE_COURIER_SUCCESS';
+export const DELIVERY_UPDATE_COURIER_FAILURE = 'DELIVERY_UPDATE_COURIER_FAILURE';
+
 //查询配送订单列表
 
 function delivery_list_failure(payload) {
@@ -157,6 +161,51 @@ export function updateDeliveryById(id ,data) {
                 dispatch(delivery_update_success(json));
             }).catch(error => {
                 dispatch(delivery_update_failure(error))
+            });
+    };
+}
+
+
+//更改配送员
+
+
+
+
+function delivery_update_courier_failure(payload) {
+    return {
+        type: DELIVERY_UPDATE_COURIER_FAILURE,
+        payload
+    };
+}
+
+function delivery_update_courier_request(payload) {
+    return {
+        type: DELIVERY_UPDATE_COURIER_REQUEST,
+        payload
+    };
+}
+
+function delivery_update_courier_success(json) {
+    return {
+        type: DELIVERY_UPDATE_COURIER_SUCCESS,
+        receiveAt: Date.now(),
+        payload: json
+    };
+}
+
+
+
+export function updateDeliveryCourier(data) {
+    return (dispatch, getState) => {
+        dispatch(delivery_update_courier_request());
+        return fetch('/api/delivery',{
+            method:'PUT',
+            data:data
+        })
+            .then((json) => {
+                dispatch(delivery_update_courier_success(json));
+            }).catch(error => {
+                dispatch(delivery_update_courier_failure(error))
             });
     };
 }
