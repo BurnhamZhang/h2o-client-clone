@@ -1,4 +1,4 @@
-import {ENTERPRISE_SHOP_LIST_REQUEST, ENTERPRISE_SHOP_LIST_SUCCESS, ENTERPRISE_SHOP_LIST_FAILURE} from '../../../actions/enterprise/shop';
+import {BUCKET_LIST_FAILURE,BUCKET_LIST_REQUEST,BUCKET_LIST_SUCCESS} from '../../actions/bucket';
 
 export default function (state = {
     isFetching: false,
@@ -7,19 +7,20 @@ export default function (state = {
     }
 }, action) {
     switch (action.type) {
-        case ENTERPRISE_SHOP_LIST_FAILURE:
+        case BUCKET_LIST_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
-                didInvalidate: true,
+                didInvalidate: true
             })
             break;
-        case ENTERPRISE_SHOP_LIST_REQUEST:
+        case BUCKET_LIST_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
+                data:null,
             })
             break;
-        case ENTERPRISE_SHOP_LIST_SUCCESS:
+        case BUCKET_LIST_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,

@@ -59,8 +59,6 @@ const columns = [
     {
         title: '状态/时间', dataIndex: 'logs', key: '6',
         render: (logs,{status,modifiedDate})=> {
-
-            console.warn('logs>>>>>>>>>>',logs)
             const content = logs.map((item, index)=> {
                 return (<Timeline.Item key={index} color={colorMap[item.status]}>
                     <p>{statusMap[item.status]}</p>

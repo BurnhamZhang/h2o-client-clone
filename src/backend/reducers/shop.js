@@ -19,6 +19,7 @@ export default function (state = {
                 isFetching: true,
                 didInvalidate: false,
                 didUpdate:false,
+                data:null,
             })
             break;
         case SHOP_SUCCESS:

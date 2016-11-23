@@ -7,6 +7,7 @@ export default function (state = {
 }, action) {
     switch (action.type) {
         case ENTERPRISE_GOODS_FAILURE:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
@@ -31,6 +32,7 @@ export default function (state = {
             break;
 
         case ENTERPRISE_GOODS_UPDATE_FAILURE:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
@@ -46,17 +48,18 @@ export default function (state = {
             })
             break;
         case ENTERPRISE_GOODS_UPDATE_SUCCESS:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
                 ...action.payload,
-                data:null,
             })
             break;
 
 
         case ENTERPRISE_GOODS_CREATE_FAILURE:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
@@ -72,18 +75,19 @@ export default function (state = {
             })
             break;
         case ENTERPRISE_GOODS_CREATE_SUCCESS:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
                 ...action.payload,
-                data:null,
             })
             break;
 
 
 
         case ENTERPRISE_GOODS_DELETE_FAILURE:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
@@ -99,12 +103,12 @@ export default function (state = {
             })
             break;
         case ENTERPRISE_GOODS_DELETE_SUCCESS:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
                 ...action.payload,
-                data:null,
             })
             break;
 

@@ -16,6 +16,22 @@ const RadioGroup = Radio.Group;
 import {itemLayout, actionLayout} from '../constants/formLayout';
 import RegionPicker from './RegionPicker';
 
+import Action from './Action';
+
+
+@connect((state, ownProps)=>({
+    remoteMsg: state.shop.remoteMsg,
+    didInvalidate: state.shop.didInvalidate,
+    didUpdate: state.shop.didUpdate,
+    updateHandle:()=>{
+        message.success('更新成功')
+    }
+}))
+class ShopAction extends Action {
+
+}
+
+
 @connect(null, (dispatch, ownProps)=>({
     updateShopIfNeeded: (payload)=>dispatch(updateShopIfNeeded(payload)),
 }))
@@ -163,36 +179,28 @@ class ShopForm extends Component {
 }
 
 @connect((state, ownProps)=>({
-    ...state.shop,
+    data:state.shop.data,
 }), (dispatch, ownProps)=>({
     fetchShopIfNeeded: (payload)=>dispatch(fetchShopIfNeeded()),
 }))
 class ShopLayout extends Component {
+    componentDidMount(){
+        console.warn('componentDidMount'.toLocaleUpperCase());
 
+    }
     componentWillMount() {
         console.warn('componentWillMount'.toLocaleUpperCase());
         this.props.fetchShopIfNeeded();
     }
-
-    componentDidUpdate(){
-        const  {didInvalidate,remoteMsg,didUpdate} = this.props;
-
-        console.warn('componentDidUpdate',didUpdate,didInvalidate,remoteMsg)
-        if(didInvalidate && remoteMsg){
-            message.warn(remoteMsg)
-        }
-
-        if(didUpdate){
-            message.success('更新成功')
-        }
-    }
-
     render() {
         const {data} = this.props;
-
-        console.warn('>>>>>>>>>>>>>>>>成功',data);
         return (
-            (data) ? <ShopForm payload={data} /> : <Block spinning/>
+            <div>
+                <ShopAction />
+                {
+                    (data) ? <ShopForm payload={data} /> : <Block spinning/>
+                }
+            </div>
         )
     }
 }

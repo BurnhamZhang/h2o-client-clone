@@ -1,4 +1,4 @@
-import {ENTERPRISE_SHOP_LIST_REQUEST, ENTERPRISE_SHOP_LIST_SUCCESS, ENTERPRISE_SHOP_LIST_FAILURE} from '../../../actions/enterprise/shop';
+import {ADDRESS_LIST_REQUEST, ADDRESS_LIST_SUCCESS, ADDRESS_LIST_FAILURE} from '../../actions/address';
 
 export default function (state = {
     isFetching: false,
@@ -7,19 +7,19 @@ export default function (state = {
     }
 }, action) {
     switch (action.type) {
-        case ENTERPRISE_SHOP_LIST_FAILURE:
+        case ADDRESS_LIST_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
-                didInvalidate: true,
+                didInvalidate: true
             })
             break;
-        case ENTERPRISE_SHOP_LIST_REQUEST:
+        case ADDRESS_LIST_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
             })
             break;
-        case ENTERPRISE_SHOP_LIST_SUCCESS:
+        case ADDRESS_LIST_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,

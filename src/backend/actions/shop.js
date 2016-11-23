@@ -61,9 +61,6 @@ export function fetchShopIfNeeded() {
 
 
 function shouldFetchData(shop) {
-    if (shop.data) {
-        return false;
-    }
     if (shop.isFetching) {
         return false;
     }

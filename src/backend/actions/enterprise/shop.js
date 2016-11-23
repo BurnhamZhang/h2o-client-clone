@@ -29,9 +29,10 @@ export const ENTERPRISE_SHOP_DELETE_SUCCESS = 'ENTERPRISE_SHOP_DELETE_SUCCESS';
 export const ENTERPRISE_SHOP_DELETE_FAILURE = 'ENTERPRISE_SHOP_DELETE_FAILURE';
 
 
-function shop_failure() {
+function shop_failure(payload) {
     return {
         type: ENTERPRISE_SHOP_FAILURE,
+        payload
     };
 }
 
@@ -92,9 +93,10 @@ function shouldFetchData(shop) {
 }
 
 
-function shop_list_failure() {
+function shop_list_failure(payload) {
     return {
         type: ENTERPRISE_SHOP_LIST_FAILURE,
+        payload
     };
 }
 
@@ -144,9 +146,10 @@ export function fetchShopListIfNeeded(data) {
     };
 }
 
-function shop_update_failure() {
+function shop_update_failure(payload) {
     return {
         type: ENTERPRISE_SHOP_UPDATE_FAILURE,
+        payload
     };
 }
 
@@ -183,9 +186,10 @@ export function updateShopById(id ,data) {
 }
 
 
-function shop_create_failure() {
+function shop_create_failure(payload) {
     return {
         type: ENTERPRISE_SHOP_CREATE_FAILURE,
+        payload
     };
 }
 
@@ -222,9 +226,10 @@ export function createShop(payload) {
 }
 
 
-function shop_delete_failure() {
+function shop_delete_failure(payload) {
     return {
         type: ENTERPRISE_SHOP_DELETE_FAILURE,
+        payload
     };
 }
 

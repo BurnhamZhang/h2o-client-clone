@@ -9,6 +9,7 @@ import enterprise from './enterprise/index';
 import shop from './shop';
 import region from './region';
 import delivery from './delivery/index';
+import bucket from './bucket/index';
 
 
 
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
   shop,
   enterprise,
   courier,
-  region
+  region,
+  bucket
 });
 
 export default rootReducer;

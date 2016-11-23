@@ -1,12 +1,17 @@
 import React, {Component, PropTypes} from 'react';
 import {Button, Upload, Icon, message} from 'antd';
+import {connect} from 'react-redux';
 
+@connect((state, ownProps)=>({
+    ...state.user.data
+}))
 class CustomUpload extends Component {
     constructor(props) {
         super(props);
         this.onChange = this.onChange.bind(this);
         const value = props.value || props.defaultData;
         this.state = this.mapValueToFileList(value.concat([]));
+        console.warn('state',this.state )
     }
 
     static defaultProps = {
@@ -81,11 +86,14 @@ class CustomUpload extends Component {
 
     render() {
         const {fileList} = this.state;
-        const {maxLength} = this.props;
+        const {maxLength,token} = this.props;
         const props = {
             name: 'image',
             action: '/api/upload',
             listType: 'picture',
+            headers:{
+              token:token
+            },
             // listType: 'picture-card',
             fileList
         };

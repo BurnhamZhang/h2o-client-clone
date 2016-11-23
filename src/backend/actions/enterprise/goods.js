@@ -53,7 +53,7 @@ function goods_success(json) {
 function fetchGoods(data) {
     return dispatch => {
         dispatch(goods_request(data));
-        return fetch('/api/goods/' + data)
+        return fetch('/api/enterprise/goods/' + data)
             .then((json) => {
                 dispatch(goods_success(json));
             }).catch(error => {
@@ -115,7 +115,7 @@ function goods_list_success(json) {
 function fetchGoodsList(data) {
     return dispatch => {
         dispatch(goods_list_request(data));
-        return fetch('/api/goods', {
+        return fetch('/api/enterprise/goods', {
             data
         })
             .then((json) => {
@@ -216,7 +216,7 @@ function goods_create_success(json) {
 export function createGoods(payload) {
     return (dispatch, getState) => {
         dispatch(goods_create_request());
-        return fetch('/api/enterprise/goods/',{
+        return fetch('/api/enterprise/goods',{
             method:'POST',
             data:payload
         })
@@ -256,7 +256,7 @@ function goods_delete_success(json) {
 export function deleteGoodsById(id) {
     return (dispatch, getState) => {
         dispatch(goods_delete_request());
-        return fetch('/api/goods/'+id,{
+        return fetch('/api/enterprise/goods/'+id,{
             method:'DELETE',
         })
             .then((json) => {

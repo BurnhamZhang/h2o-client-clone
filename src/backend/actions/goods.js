@@ -62,7 +62,7 @@ function goods_success(json) {
 function fetchGoods(data) {
     return dispatch => {
         dispatch(goods_request(data));
-        return fetch('/api/goods/' + data)
+        return fetch('/api/shop/goods/' + data)
             .then((json) => {
                 dispatch(goods_success(json));
             }).catch(error => {
@@ -131,7 +131,7 @@ function goods_list_success(json) {
 function fetchGoodsList(data) {
     return dispatch => {
         dispatch(goods_list_request(data));
-        return fetch('/api/goods', {
+        return fetch('/api/shop/goods', {
             data
         })
             .then((json) => {
@@ -272,7 +272,7 @@ function goods_delete_success(json) {
 export function deleteGoodsById(id) {
     return (dispatch, getState) => {
         dispatch(goods_delete_request());
-        return fetch('/api/goods/'+id,{
+        return fetch('/api/shop/goods/'+id,{
             method:'DELETE',
         })
             .then((json) => {
@@ -310,7 +310,7 @@ function available_goods_list_success(json) {
 function fetchAvailableGoodsList() {
     return dispatch => {
         dispatch(available_goods_list_request());
-        return fetch('/api/shop/goods')
+        return fetch('/api/shop/canadd/goods')
             .then((json) => {
                 dispatch(available_goods_list_success(json));
             }).catch(error => {

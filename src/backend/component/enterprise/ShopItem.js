@@ -75,7 +75,6 @@ class ShopForm extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log('handleSubmit');
         const {type, updateItem, createItem} = this.props;
 
 
@@ -85,7 +84,6 @@ class ShopForm extends Component {
                 return;
             }
             values.status = values.status ? '1' : '0';
-            console.log('values', values)
 
 
             if (type == 'create') {
@@ -111,37 +109,57 @@ class ShopForm extends Component {
 
         return (
             <Form horizontal onSubmit={this.handleSubmit}>
-                <FormItem label="门店名"   {...itemLayout} >
+                <FormItem label="门店名"   {...itemLayout} hasFeedback >
                     {
-                        getFieldDecorator('shopName', {})(
+                        getFieldDecorator('shopName', {
+                            rules: [
+                                {required: true, max: 40},
+                            ],
+                        })(
                             <Input />
                         )
                     }
                 </FormItem>
-                <FormItem label="负责人姓名"  {...itemLayout} >
+                <FormItem label="负责人姓名"  {...itemLayout} hasFeedback >
                     {
-                        getFieldDecorator('leader', {})(
+                        getFieldDecorator('leader', {
+                            rules: [
+                                {required: true, max: 40},
+                            ],
+                        })(
                             <Input/>
                         )
                     }
                 </FormItem>
-                <FormItem label="手机号"  {...itemLayout}  >
+                <FormItem label="手机号"  {...itemLayout} hasFeedback >
                     {
-                        getFieldDecorator('phone', {})(
+                        getFieldDecorator('phone', {
+                            rules: [
+                                {required: true, len: 11},
+                            ],
+                        })(
                             <Input type="number"/>
                         )
                     }
                 </FormItem>
-                <FormItem label="登录账号"  {...itemLayout}   >
+                <FormItem label="登录账号"  {...itemLayout}  hasFeedback >
                     {
-                        getFieldDecorator('account', {})(
+                        getFieldDecorator('account', {
+                            rules: [
+                                {required: true,max: 40},
+                            ],
+                        })(
                             <Input />
                         )
                     }
                 </FormItem>
-                <FormItem label="密码"   {...itemLayout}    >
+                <FormItem label="密码"   {...itemLayout}  hasFeedback  >
                     {
-                        getFieldDecorator('password', {})(
+                        getFieldDecorator('password', {
+                            rules: [
+                                {required: type=='create'},
+                            ],
+                        })(
                             <Input type="password"/>
                         )
                     }
@@ -172,7 +190,7 @@ class ShopForm extends Component {
 }
 
 @connect((state, ownProps)=>({
-    ...state.enterprise.shop.item,
+    data:state.enterprise.shop.item.data,
 }), (dispatch, ownProps)=>({
     fetchShopIfNeeded: (payload)=>dispatch(fetchShopIfNeeded(payload)),
     updateShopById: (id, data)=>dispatch(updateShopById(id, data)),
@@ -205,14 +223,6 @@ class ShopLayout extends Component {
         }
     }
 
-    shouldComponentUpdate(nextProps) {
-        if (nextProps.didUpdate) {
-            console.warn(this.props.router);
-            this.props.router.push('/shop')
-            return false
-        }
-        return true
-    }
 
     updateItem(id, data) {
         this.props.updateShopById(id, data)

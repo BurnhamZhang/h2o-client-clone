@@ -1,4 +1,4 @@
-#root,
+#react-content,
 .demo-preview-item,
 .am-tab-bar,
 .am-tab-bar-content,
@@ -8,9 +8,53 @@
 
 
 
-
+html,body,.full-height {
+  height: 100%;
+}
 
 
 .am-tab-bar-tab-title {
   margin: 0;
+}
+
+#main {
+  .am-navbar-left-icon {
+    display: none;
+  }
+
+
+}
+
+
+#cart {
+  .am-list-footer {
+    padding: 0;
+  }
+  .cart-info {
+    line-height: 50px;
+    padding-left: 30px;
+    background: white;
+    position: relative;
+    p {
+      margin:0;
+    }
+    &:after {
+      display: block;
+      position: absolute;
+      content: '';
+      left: 0;
+      bottom: 0;
+      right: auto;
+      top: auto;
+      width: 100%;
+      border-bottom: 1PX solid #ddd;
+    }
+  }
+
+  .submit {
+    height:100px;
+    background: red;
+    color:white;
+    border:none;
+  }
 }

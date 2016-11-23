@@ -124,7 +124,11 @@ class RegionPicker extends Component {
             options
         }
         console.log('onClose', state)
-        this.setState(state)
+        this.setState(state);
+        this.props.onChange(tags.map(item=>({
+            streetId:item.value,
+            streetName:item.label
+        })))
     }
     loadData(treeNode) {
         const targetOption =  treeNode[treeNode.length - 1]

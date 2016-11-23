@@ -13,7 +13,7 @@ const columns = [
         title: '商品图片', dataIndex: 'imagesArray', key: '2',
         render: (text, record, index) => (
             <div>
-                { text.map((item)=>(<img src={item} style={{width: 60, height: 60}} key={item}/>))}
+                { text.map((item,index)=>(<img src={item} style={{width: 60, height: 60}} key={index}/>))}
             </div>
 
         ),

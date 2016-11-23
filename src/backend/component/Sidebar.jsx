@@ -33,6 +33,11 @@ const shop = [{
     type: 'setting',
     path: '/order'
 }, {
+    name: '空桶管理',
+    key: 'bucket',
+    type: 'setting',
+    path: '/bucket'
+},{
     name: '商品管理',
     key: 'goods',
     type: 'notification',

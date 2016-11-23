@@ -55,12 +55,13 @@ const deliveryStatusMap = {
 const statusMap = {
     1: '待支付(在线支付)',
     2: '待支付(货到付款)',
-    3: '已关闭',
+    3: '申请退桶',
     4: '已取消',
     5: '申请取消',
     6: '已支付',
     7: '已完成',
-    8: '超时完成'
+    8: '超时完成',
+    9: '已关闭',
 }
 
 class OrderItem extends Component {

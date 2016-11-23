@@ -12,33 +12,35 @@ import GoodsList from './component/GoodsList';
 import Shop from './component/Shop';
 import Records from './component/Records';
 import Login from './component/Login';
+import Bucket from './component/Bucket';
+import BucketRecord from './component/BucketRecord';
 import Enterprise from './component/enterprise'
 
 
 const enterprise = [
     {
         path: 'shop',
-        title:'门店账号管理',
+        title: '门店账号管理',
         component: Enterprise.ShopList
     },
     {
         path: 'shop/:id',
-        title:'商品详情',
+        title: '商品详情',
         component: Enterprise.ShopItem
     },
     {
         path: 'achievement',
-        title:'业绩管理',
+        title: '业绩管理',
         component: Enterprise.Achievement
     },
     {
         path: 'goods',
-        title:'商品管理',
+        title: '商品管理',
         component: Enterprise.GoodsList
     },
     {
         path: 'goods/:id',
-        title:'商品详情',
+        title: '商品详情',
         component: Enterprise.GoodsItem
     },
     {
@@ -50,48 +52,65 @@ const enterprise = [
 const shop = [
     {
         path: 'manage',
-        title:'调度管理',
+        title: '调度管理',
         component: Manage
     },
     {
         path: 'order',
-        title:'订单管理',
-        component: OrderList
+        title: '订单管理',
+        indexRoute: {
+            component: OrderList,
+        },
+        childRoutes: [{
+            path: ':id',
+            title: '订单详情',
+            component: OrderItem
+        }]
     },
     {
-        path: 'order/:id',
-        title:'订单详情',
-        component: OrderItem
+        path: 'bucket',
+        title: '空桶管理',
+        indexRoute: {
+            component: Bucket
+        },
+        childRoutes: [{
+            path: 'record',
+            title: '空桶记录',
+            component: BucketRecord,
+        }]
     },
     {
         path: 'courier',
-        title:'配送员管理',
-        component: CourierList
+        title: '配送员管理',
+        indexRoute: {
+            component: CourierList
+        },
+        childRoutes: [{
+            path: ':id',
+            title: '配送员详情',
+            component: CourierItem,
+        }]
     },
-    {
-        path: 'courier/:id',
-        title:'配送员详情',
-        component: CourierItem
-    },
-
     {
         path: 'goods',
-        title:'商品管理',
-        component: GoodsList
-    },
-    {
-        path: 'goods/:id',
-        title:'商品详情',
-        component: GoodsItem
+        title: '商品管理',
+        indexRoute: {
+            component: GoodsList
+        },
+        childRoutes: [{
+            path: ':id',
+            title: '商品详情',
+            component: GoodsItem,
+        }]
     },
     {
         path: 'shop',
-        title:'门店管理',
+        title: '门店管理',
         component: Shop
     },
     {
         path: 'records',
-        title:'配送记录',
+        title: '配送记录',
         component: Records
     },
     {
@@ -107,7 +126,7 @@ const defaults = [
     }
 ]
 
-const routes =  (loginType) => {
+const routes = (loginType) => {
     if (loginType == 1) {
         return enterprise
     }
@@ -120,7 +139,7 @@ const routes =  (loginType) => {
 export default (store) => {
     function requireAuth(nextState, replace) {
         const state = store.getState();
-        console.warn('requireAuth>>>>>>>',state.user.data.account)
+        console.warn('requireAuth>>>>>>>', state.user.data.account)
         if (!state.user.data.account) {
             replace({
                 pathname: '/login',
@@ -138,18 +157,20 @@ export default (store) => {
             {
                 path: '/',
                 component: App,
-                title:'首页',
+                title: '首页',
                 onEnter: requireAuth,
-                indexRoute: {onEnter: (nextState, replace) =>{
-                    const state = store.getState();
-                    const loginType = state.user.data.loginType;
-                    replace(loginType == 1 ? '/shop' :'/manage')
-                }},
+                indexRoute: {
+                    onEnter: (nextState, replace) => {
+                        const state = store.getState();
+                        const loginType = state.user.data.loginType;
+                        replace(loginType == 1 ? '/shop' : '/manage')
+                    }
+                },
                 getChildRoutes: (partialNextState, callback)=> {
                     const state = store.getState();
                     const loginType = state.user.data.loginType;
-                    console.warn('getChildRoutes>>>>>>>',loginType,routes(loginType))
-                    callback(null,routes(loginType))
+                    console.warn('getChildRoutes>>>>>>>', loginType, routes(loginType))
+                    callback(null, routes(loginType))
                 },
             }
         ]

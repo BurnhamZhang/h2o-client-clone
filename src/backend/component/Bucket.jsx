@@ -13,22 +13,17 @@ const RadioGroup = Radio.Group;
 
 const columns = [
     {
-        title: '下单时间', dataIndex: 'createdDate', key: '1', render: (item)=> {
-        return moment(item).format('YYYY.MM.DD HH:mm:ss')
+        title: '订单号', dataIndex: 'orderNo', key: '1', render: (orderNo,{createdDate})=> {
+        return   (
+            <div>
+                <p>{orderNo}</p>
+                <p>{moment(createdDate).format('YYYY.MM.DD HH:mm:ss')}</p>
+            </div>
+        )
     }
     },
     {
-        title: '商品/数量', dataIndex: 'orderDetails', key: '2',
-        render: (items, record, index) => {
-            if (items.length == 1) {
-                return items[0].name + '/' + items[0].count
-            }
-            const content = items.map((item, index)=> (<p key={index}>{item.name + '/' + item.count}</p>))
-
-            return (<Popover content={content} trigger="hover">
-                <a>{ items.length }样商品</a>
-            </Popover>)
-        }
+        title: '用户编号', dataIndex: 'userId', key: '2',
     },
     {
         title: '地址/收货人/电话', key: '3', render: (v, {userHouseNumber, userName, userPhone})=> {
@@ -36,38 +31,47 @@ const columns = [
     }
     },
     {
-        title: '订单金额', dataIndex: 'tradeMoney', key: '4', render: (tradeMoney, {invoiceType})=> {
-        return <span>{tradeMoney} {(invoiceType == '1' ? '' : <Tag color="#2db7f5">发票</Tag>)}</span>
+        title: '空桶数量', dataIndex: 'buckets', key: '4', render: (buckets)=> {
+        return  buckets.reduce((item,num)=>(num+item.count*1),0)
     }
     },
-    {title: '状态', dataIndex: 'status', key: '5', render: (status)=>statusMap[status]},
     {
-        title: '操作',
-        key: '6',
-        fixed: 'right',
-        width: 100,
-        dataIndex: 'orderNo',
-        render: (orderNo) => {
-            return <Link to={"order/" + orderNo }>查看详情</Link>
-        },
+        title: '押金金额', dataIndex: 'buckets', key: '5',render: (buckets)=> {
+        return  buckets.reduce((item,num)=>(num+item.money*1),0).toFixed(2)
+    }
     },
+    {title: '状态', dataIndex: 'status', key: '6', render: (status)=>statusMap[status]}
 ];
 const statusMap = {
-    1: '待支付(在线支付)',
-    2: '待支付(货到付款)',
-    6: '已支付',
-    9: '已关闭',
+    3:'申请退桶',
     4: '已取消',
     7: '已完成',
-    5: '申请取消'
 }
 
 const statusList = [{
     k: 'all', v: '全部'
 }];
-for (var a in statusMap) {
+for (let a in statusMap) {
     statusList.push({k: a, v: statusMap[a]})
 }
+
+const typeMap = {
+    orderNo:'订单号',
+    userId:'用户编号',
+    userName:'用户姓名',
+    userPhone:'用户手机号',
+}
+
+const typeList = [];
+for (let a in typeMap) {
+    typeList.push({k: a, v: typeMap[a]})
+}
+
+const sourceList = [
+    {  k: 'all', v: '全部'},
+    {  k: '1', v: '线上订单'},
+    {  k: '2', v: '线下退桶'}
+    ]
 
 @connect((state, ownProps)=>({
     pagination: state.order.list.pagination
@@ -105,7 +109,7 @@ class OrderForm extends Component {
         },0)
     }
     render() {
-        const {getFieldDecorator, getFieldError} = this.props.form;
+        const {getFieldDecorator, getFieldError,getFieldValue} = this.props.form;
         return (
             <Form horizontal>
                 <FormItem
@@ -113,6 +117,7 @@ class OrderForm extends Component {
                     labelCol={{span: 2}}
                     wrapperCol={{span: 22}}
                 >
+                    <Link to="/bucket/record" style={{float:'right'}}>空桶记录</Link>
                     {
                         getFieldDecorator('range', {
                             initialValue: [moment().subtract(7, 'days'), moment()]
@@ -141,18 +146,39 @@ class OrderForm extends Component {
 
                 </FormItem>
                 <FormItem
+                    label="退桶类型"
+                    labelCol={{span: 2}}
+                    wrapperCol={{span: 22}}
+                >
+                    {getFieldDecorator('source', {
+                        initialValue: 'all'
+                    })(
+                        <RadioGroup onChange={()=>this.handleSubmit()}>
+                            {
+                                sourceList.map((obj)=> <RadioButton value={obj.k} key={obj.k}>{obj.v}</RadioButton>)
+                            }
+                        </RadioGroup>
+                    )}
+
+
+                </FormItem>
+                <FormItem
                     label="搜索"
                     labelCol={{span: 2}}
                     wrapperCol={{span: 22}}
                 >
 
                     <span style={{display: 'inline-block', width: 300, verticalAlign: 'middle'}}>
-                         {getFieldDecorator('orderId', {})(
-                             <Input placeholder="输入" size="large"
+                         {getFieldDecorator('typeValue', {})(
+                             <Input placeholder={'请输入'+typeMap[getFieldValue('type')] } size="large"
                                     addonBefore={
-                                        <Select defaultValue="order" style={{width: 80}}>
-                                            <Option value="order">订单号</Option>
-                                        </Select>
+                                    getFieldDecorator('type', {
+                                    })(
+                                        <Select  style={{width: 80}}>
+                                            {
+                                                typeList.map((obj)=> <Option value={obj.k} key={obj.k}>{obj.v}</Option>)
+                                            }
+                                        </Select>)
                                     }
                              />
                          )}
@@ -178,13 +204,14 @@ class OrderForm extends Component {
 }), (dispatch, ownProps)=>({
     fetchOrderListIfNeeded: (payload)=>dispatch(fetchOrderListIfNeeded(payload))
 }))
-class Order extends Component {
+class Bucket extends Component {
     constructor(props) {
         super(props)
         this.state = {
             range: [moment().subtract(7, 'days'), moment()],
             orderId: null,
             status: 'all',
+            type:'orderNo'
         }
         this.fetchData= this.fetchData.bind(this);
     }
@@ -199,15 +226,22 @@ class Order extends Component {
             pageSize,
         })
 
-        values.orderType = 1;
+        values.orderType = 2;
         values.startDate = values.range[0].format('YYYY-MM-DD');
         values.endDate = values.range[1].format('YYYY-MM-DD');
         delete values.range;
         if (values.status == 'all') {
             delete values.status;
         }
-        if (!values.orderId) {
-            delete  values.orderId;
+
+        if (values.source == 'all') {
+            delete values.source;
+        }
+
+        if (values.typeValue) {
+            values[values.type] = values.typeValue;
+            delete  values.type;
+            delete  values.typeValue;
         }
         console.log('Submit!!!', values);
 
@@ -236,4 +270,4 @@ class Order extends Component {
 }
 
 
-export default Order;
+export default Bucket;

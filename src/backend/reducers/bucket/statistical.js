@@ -1,25 +1,33 @@
-import {ENTERPRISE_SHOP_LIST_REQUEST, ENTERPRISE_SHOP_LIST_SUCCESS, ENTERPRISE_SHOP_LIST_FAILURE} from '../../../actions/enterprise/shop';
+import {BUCKET_STATISTICAL_FAILURE,BUCKET_STATISTICAL_REQUEST,BUCKET_STATISTICAL_SUCCESS} from '../../actions/bucket';
 
 export default function (state = {
     isFetching: false,
     didInvalidate: true,
     pagination:{
+    },
+    data:{
+        activeNum:0,
+        addressNum:0,
+        bigBucketNum:0,
+        bigMoneyNum:0,
+        littleBucketNum:0,
+        littleMoneyNum:0
     }
 }, action) {
     switch (action.type) {
-        case ENTERPRISE_SHOP_LIST_FAILURE:
+        case BUCKET_STATISTICAL_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
-                didInvalidate: true,
+                didInvalidate: true
             })
             break;
-        case ENTERPRISE_SHOP_LIST_REQUEST:
+        case BUCKET_STATISTICAL_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
             })
             break;
-        case ENTERPRISE_SHOP_LIST_SUCCESS:
+        case BUCKET_STATISTICAL_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,

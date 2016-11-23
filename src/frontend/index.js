@@ -10,11 +10,16 @@ import configureStore from './store/configureStore';
 import getRoutes from './routes';
 import Root from './container/Root';
 // top entry
+import * as storage from './common/storage';
 
 
 const preloadedState = window.__PRELOADED_STATE__ ||{};
 
-
+preloadedState.user = {
+    isFetching: false,
+    didInvalidate: true,
+    data: storage.get('CLIENT_USER')||{}
+};
 const store = configureStore(preloadedState);
 
 
