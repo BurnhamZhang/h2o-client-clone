@@ -255,7 +255,9 @@ class Records extends Component {
         if (!data) {
             data = Object.assign({},this.state.param);
         }
-        this.setState(data);
+        this.setState({
+            param:data
+        });
 
         const values = Object.assign({}, data, {
             pageNum,
