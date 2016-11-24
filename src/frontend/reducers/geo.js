@@ -1,8 +1,9 @@
-import { GEO_FETCH_FAILURE,GEO_FETCH_REQUEST,GEO_FETCH_SUCCESS } from '../actions/geo';
+import { GEO_FETCH_FAILURE,GEO_FETCH_REQUEST,GEO_FETCH_SUCCESS,GEO_SET_CACHE,GEO_UNSET_CACHE } from '../actions/geo';
 
 export default function (state = {
     isFetching: false,
     didInvalidate: true,
+    cache:null
 }, action) {
     switch (action.type) {
         case GEO_FETCH_REQUEST:
@@ -22,6 +23,16 @@ export default function (state = {
             return Object.assign({}, state, {
                 isFetching:false,
                 didInvalidate: true,
+            })
+            break;
+        case GEO_SET_CACHE:
+            return Object.assign({}, state, {
+                cache:action.payload,
+            })
+            break;
+        case GEO_UNSET_CACHE:
+            return Object.assign({}, state, {
+                cache:null
             })
             break;
         default:

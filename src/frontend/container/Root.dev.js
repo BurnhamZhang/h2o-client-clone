@@ -5,7 +5,7 @@ import {Router} from 'react-router';
 
 const Root = ({store, history, routes}) => (
     <Provider store={store}>
-        <div className="full-height">
+        <div>
             <Router history={history} routes={routes}/>
             <DevTools />
         </div>

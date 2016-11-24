@@ -6,12 +6,16 @@
   height: 100%;
 }
 
-
-
-html,body,.full-height {
+html, body, .full-height {
   height: 100%;
+  overflow: hidden;
 }
 
+
+#react-content {
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
 
 .am-tab-bar-tab-title {
   margin: 0;
@@ -22,9 +26,7 @@ html,body,.full-height {
     display: none;
   }
 
-
 }
-
 
 #cart {
   .am-list-footer {
@@ -36,7 +38,7 @@ html,body,.full-height {
     background: white;
     position: relative;
     p {
-      margin:0;
+      margin: 0;
     }
     &:after {
       display: block;
@@ -52,9 +54,56 @@ html,body,.full-height {
   }
 
   .submit {
-    height:100px;
+    height: 100px;
     background: red;
-    color:white;
-    border:none;
+    color: white;
+    border: none;
+  }
+}
+
+#map {
+  position: fixed;
+  top:0;
+  left: 0;
+  height:100%;
+  width:100%;
+  padding-top: 91px;
+  box-sizing: border-box;
+  .search-bar {
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+  }
+
+  .map-mask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    z-index: 1;
+    background-color: rgba(0,0,0,.8);
+  }
+
+  .map-container {
+    height: 50%;
+    position: relative;
+  }
+  .map-list {
+    -webkit-overflow-scrolling: touch;
+    height: 50%;
+    overflow-y: scroll;
+  }
+  .search-list {
+    position: absolute;
+    z-index: 2;
+    top:0;
+    left: 0;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
   }
 }

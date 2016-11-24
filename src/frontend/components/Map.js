@@ -1,169 +1,199 @@
 import React, {Component} from 'react';
-import { List,Checkbox ,Flex,Stepper,Icon,Popup,Button} from 'antd-mobile';
-import {get_geolocation} from '../actions/geo';
+import {List, Checkbox, Flex, Stepper, Icon, Popup, Button, InputItem} from 'antd-mobile';
+import {get_geolocation,setGeoCache} from '../actions/geo';
 import {connect} from 'react-redux';
+import {withRouter} from 'react-router';
 import debounce from 'debounce';
 
+const Item = List.Item;
+const Brief = Item.Brief;
+let geocoder,searchService,geocoder2;
 
+
+@withRouter
 @connect((state, ownProps)=>({
-    ...state.geo
+    local:state.geo.location,
+    isFetching:state.geo.isFetching,
+    addressComponents:state.geo.addressComponents,
 }), (dispatch, ownProps)=>({
-    get_geolocation:()=>dispatch(get_geolocation())
+    get_geolocation: ()=>dispatch(get_geolocation()),
+    setGeoCache: (payload)=>dispatch(setGeoCache(payload))
 }))
 class Map extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.onChange= this.onChange.bind(this);
+        this.onChange = this.onChange.bind(this);
         this.state = {
-            pois:null
+            pois: null,
+            nearPois: [],
+            value:''
         }
     }
-    componentWillMount(){
-        this.props.get_geolocation();
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.local &&  (!nextProps.isFetching || this.props.isFetching)){
+            this.map.setCenter(nextProps.local)
+        }
     }
-    componentDidMount(){
+    componentDidMount() {
         this.map = new qq.maps.Map(this.refs.map, {
-            zoom:15                                                 // 地图的中心地理坐标。
+            zoom: 15                                                 // 地图的中心地理坐标。
         });
 
-        const citylocation = new qq.maps.CityService({
-            complete :(result)=> {
-                this.map.setCenter(result.detail.latLng)
-                // geocoder.getAddress(result.detail.latLng);
+        if(this.props.local){
+            this.map.setCenter(this.props.local)
+        }
+        else {
+            this.props.get_geolocation();
+        }
+
+
+        geocoder = new qq.maps.Geocoder({
+            complete: (result)=> {
+                this.setState({
+                    nearPois: result.detail.nearPois
+                })
             }
         });
-
-        const geocoder = new qq.maps.Geocoder({
-            complete : function(result){
-
-               console.log('geocoder',result)
-                geocoder2.getAddress(result.detail.location);
-
-            }
-        });
-
-        const geocoder2 = new qq.maps.Geocoder({
-            complete : function(result){
-
-                console.log('geocoder2',result)
-
-
-            }
-        });
-
-        const searchService = new qq.maps.SearchService({
-            //设置搜索范围为北京
-            location: "成都",
-            //设置搜索页码为1
-            pageIndex: 1,
-            //设置每页的结果数为5
-            pageCapacity: 5,
-            //设置展现查询结构到infoDIV上
-            //设置动扩大检索区域。默认值true，会自动检索指定城市以外区域。
-            autoExtend: true,
-            //检索成功的回调函数
-            complete: function(results) {
-                //设置回调函数参数
-                var pois = results.detail.pois;
-                console.log('searchService',results)
-            },
-            //若服务请求失败，则运行以下函数
-            error: function() {
-                alert("出错了。");
-            }
-        });
-        searchService.search('酒店');
 
         qq.maps.event.addListener(this.map, 'center_changed', debounce(()=> {
-           const center = this.map.getCenter();
+            const center = this.map.getCenter();
             geocoder.getAddress(center);
-        },200));
-        //调用searchLocalCity();方法    根据用户IP查询城市信息。
-        citylocation.searchLocalCity();
-
-
+        }, 500));
 
     }
-    componentWillReceiveProps(nextProps){
-        // if(nextProps.location && nextProps.location!=this.props.location){
-        //     console.warn('componentWillReceiveProps',nextProps.location)
-        //     this.map.panTo(new qq.maps.LatLng(location.lat, location.lng));
-        // }
-        this.map.panTo(new qq.maps.LatLng(30.57, 104.08));
+
+    // componentWillReceiveProps(nextProps){
+    //     // if(nextProps.location && nextProps.location!=this.props.location){
+    //     //     console.warn('componentWillReceiveProps',nextProps.location)
+    //     //     this.map.panTo(new qq.maps.LatLng(location.lat, location.lng));
+    //     // }
+    //     this.map.panTo(new qq.maps.LatLng(30.57, 104.08));
+    // }
+    onClick(item) {
+
+        geocoder2 = new qq.maps.Geocoder({
+            complete: (result)=> {
+                result.detail.name = item.name;
+                console.log(result);
+                this.props.setGeoCache(result.detail)
+                this.props.router.goBack();
+            }
+        });
+
+        geocoder2.getAddress(item.latLng);
     }
-    onClick(){
 
-
-        return
-        Popup.show( <List  className="popup-list">
-                {['股票名称', '股票代码', '买入价格', '买入数量', '更多', '更多'].map((i, index) => (
-                    <List.Item key={index}>{i}</List.Item>
-                ))}
-            </List>, { animationType: 'slide-up' });
+    onCancel() {
+        console.log('onCancel')
+        this.setState({
+            pois: null,
+            value:'',
+            focus:false
+        })
     }
-    onChange(e){
-        console.log(e)
+    onFocus(focus){
+        this.setState({
+            focus
+        })
+    }
 
-        return
-        const searchService = new qq.maps.SearchService({
+    onChange(val) {
+        if (!val) {
+            this.setState({
+                pois: []
+            })
+            return
+        }
+        const city = this.props.addressComponents?this.props.addressComponents.city:'宜宾';
+        searchService = new qq.maps.SearchService({
             // autoExtend:false,
             //检索成功的回调函数
-            pageCapacity:20,
+            location: city,
+            pageCapacity: 20,
+            autoExtend: true,
             complete: (resp)=> {
                 //设置回调函数参数
                 var pois = resp.detail.pois;
-                console.warn(pois)
+
+                if (Array.isArray(pois)) {
+                    pois = pois.filter(item=>item.type == 0)
+                }
+                console.warn('success', resp)
                 this.setState({
-                    pois
+                    pois: pois || []
                 })
+
 
             },
             //若服务请求失败，则运行以下函数
-            error: function() {
-                alert("出错了。");
+            error: (e)=> {
+                console.warn('error', e)
+                this.setState({
+                    pois: []
+                })
             }
         });
+        searchService.search(val);
 
-        searchService.search(keyword);
     }
+
     render() {
 
         return (
-            <Flex className="full-height" direction="column" align="stretch">
-                {/*<SearchBar*/}
-                    {/*value={this.state.value}*/}
-                    {/*placeholder="搜索"*/}
-                    {/*onSubmit={(value) => console.log(value, 'onSubmit')}*/}
-                    {/*onClear={(value) => console.log(value, 'onClear')}*/}
-                    {/*onFocus={() => console.log('onFocus')}*/}
-                    {/*onBlur={() => console.log('onBlur')}*/}
-                    {/*showCancelButton*/}
-                    {/*onChange={this.onChange}*/}
-                {/*/>*/}
-                {
-                    Array.isArray(this.state.pois) ?
-                        (<List>
+            <div id="map">
+                <List className="search-bar">
+                    <InputItem extra="取消" labelNumber={3} type="search"
+                               onChange={ debounce((val)=>this.onChange(val), 500)} onExtraClick={()=>this.onCancel()} onFocus={()=>this.onFocus(true)} onBlur={()=>this.onFocus(false)}>
+                        <Icon type="search" />搜索
+                    </InputItem>
+                </List>
+                <div className="full-height" style={{position:'relative'}}>
+                    {
+                        Array.isArray(this.state.pois) ?
+                            (<div className="search-list">
+                                    <List>
+                                        {
+                                            this.state.pois.map((item, index)=>(
+                                                <List.Item key={index} onClick={()=>this.onClick(item)}>
+                                                    {item.name}
+                                                    <Brief>{item.address}</Brief>
+                                                </List.Item>
+                                            ))
+                                        }
+                                    </List>
+                                </div>
+                            ) :null
+                    }
+
+                    {
+                        this.state.focus ? (
+                            <div className="map-mask"></div>
+                        ):null
+                    }
+
+                    <div className="map-container">
+                        <div id="map" ref="map" className="full-height"/>
+                        <Icon type="environment"
+                              style={{position: 'absolute', top: '50%', left: '50%', color: '#108ee9'}}/>
+                    </div>
+                    <div className="map-list">
+                        <List>
                             {
-                                this.state.pois.map((item,index)=>(
-                                    <List.Item key={index}>
-                                        {item}
+                                this.state.nearPois.map((item, index)=>(
+                                    <List.Item key={index} onClick={()=>this.onClick(item)}
+                                               thumb={<Icon type="environment-o"/>}>
+                                        {item.name}
+                                        <Brief>{item.address}</Brief>
                                     </List.Item>
                                 ))
                             }
-                        </List>):
-                        (
-                            [<Flex.Item key="0" style={{position:'relative'}}>
-                                <div id="map" ref="map" className="full-height" >
+                        </List>
+                    </div>
+                </div>
 
-                                </div>
-                                <Icon type="environment" style={{position:'absolute',top:'50%',left:'50%',color:'#108ee9'}}/>
-                            </Flex.Item>,
-                            <Flex.Item key="1">
-                            </Flex.Item>]
-                        )
-                }
 
-            </Flex>
+            </div>
 
         );
     }

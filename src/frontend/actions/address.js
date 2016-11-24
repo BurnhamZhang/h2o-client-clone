@@ -28,6 +28,27 @@ export const ADDRESS_DELETE_FAILURE = 'ADDRESS_DELETE_FAILURE';
 export const ADDRESS_CHOOSE = 'ADDRESS_CHOOSE';
 
 
+
+
+
+
+export const ADDRESS_SET_CACHE = 'ADDRESS_SET_CACHE';
+export const ADDRESS_UNSET_CACHE = 'ADDRESS_UNSET_CACHE';
+
+
+export function setAddressCache(payload) {
+    return {
+        type: ADDRESS_SET_CACHE,
+        payload
+    };
+}
+export function unsetAddressCache(payload) {
+    return {
+        type: ADDRESS_UNSET_CACHE,
+        payload
+    };
+}
+
 //收货地址详情
 
 

@@ -429,7 +429,6 @@ class DeliveryController extends Component {
         const payload = {
             courierId: courier.id,
             orderNoArray: chosenOrders.map(item=>item.orderNo),
-            assignType: 1
         }
 
         console.log('handleSubmit', payload);
