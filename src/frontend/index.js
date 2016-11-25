@@ -18,8 +18,9 @@ const preloadedState = window.__PRELOADED_STATE__ ||{};
 preloadedState.user = {
     isFetching: false,
     didInvalidate: true,
-    data: storage.get('CLIENT_USER')||{}
+    data: storage.get('CLIENT_USER')||{},
 };
+preloadedState.cart =  storage.get('CART')||[];
 const store = configureStore(preloadedState);
 
 

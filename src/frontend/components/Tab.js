@@ -1,8 +1,15 @@
 import { TabBar } from 'antd-mobile';
 import {withRouter} from 'react-router';
-
+import {connect} from 'react-redux';
 import React, {Component} from 'react';
 
+
+
+
+@connect((state, ownProps)=>({
+    cart:state.cart
+}), (dispatch, ownProps)=>({
+}))
 @withRouter
 class Tab  extends Component {
     renderContent(isRender) {
@@ -15,7 +22,9 @@ class Tab  extends Component {
 
         const selectedTab ='/'+ this.props.routes[2].path;
 
-        console.log('selectedTab',selectedTab)
+        const {cart} = this.props;
+
+        const length = cart.reduce((item,count) => count+item.count ,0)
 
         return (
             <TabBar
@@ -28,7 +37,6 @@ class Tab  extends Component {
                     selectedIcon={{ uri: 'https://zos.alipayobjects.com/rmsportal/HLkBvJOKnmOfBPO.png' }}
                     title="首页"
                     key="首页"
-                    badge={1}
                     selected={selectedTab === '/main'}
                     onPress={() => {
                         this.onPress('/main')
@@ -42,6 +50,7 @@ class Tab  extends Component {
                     selectedIcon={{ uri: 'https://zos.alipayobjects.com/rmsportal/LWNaMdwAFSmYBFw.png' }}
                     title="购物车"
                     key="购物车"
+                    badge={length}
                     selected={selectedTab === '/cart'}
                     onPress={() => {
                         this.onPress('/cart')

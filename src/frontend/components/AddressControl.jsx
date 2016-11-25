@@ -70,7 +70,6 @@ class AddressControl extends Component {
         const {sex,name,phone,location ,houseNumber} = this.state;
         return (
             <div>
-                <AddressAction/>
                 <NavBar leftContent="返回" mode="light" onLeftClick={() =>this.props.router.goBack() }
                 >{type=='create'?'新建':'编辑'}收货地址</NavBar>
                 <List renderFooter={()=>'温馨提示：6层以上无电梯需要加收少量楼层搬运费'}>
@@ -199,7 +198,12 @@ class AddressContainer extends Component{
     render(){
         const id = this.props.params.id;
         const data = this.state;
-        return data?<AddressControl type={id} data={data} />:null
+        return (
+            <div>
+                <AddressAction/>
+                {data?<AddressControl type={id} data={data} />:null}
+            </div>
+        )
     }
 }
 

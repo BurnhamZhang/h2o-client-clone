@@ -1,3 +1,4 @@
+import {shopChoose} from './shop';
 export const GEO_FETCH_REQUEST = 'GEO_FETCH_REQUEST';
 export const GEO_FETCH_SUCCESS = 'GEO_FETCH_SUCCESS';
 export const GEO_FETCH_FAILURE = 'GEO_FETCH_FAILURE';
@@ -43,7 +44,7 @@ function geo_fetch_success(json) {
     };
 }
 
-export function get_geolocation() {
+export function get_geolocation(widthShopId) {
 
     return (dispatch)=>{
 
@@ -59,7 +60,12 @@ export function get_geolocation() {
         const geocoder = new qq.maps.Geocoder({
             complete : function(res){
                 console.warn('geocoder complete',res);
+                res.detail.streetNumber = res.detail.addressComponents.streetNumber
                 dispatch(geo_fetch_success(res.detail))
+
+                if(widthShopId){
+                    dispatch(shopChoose(res.detail.addressComponents));
+                }
             },
             error:(err)=>{
                 dispatch(geo_fetch_failure(err))
@@ -67,18 +73,21 @@ export function get_geolocation() {
         });
 
         dispatch(geo_fetch_request())
-        if (navigator.geolocation && false) {
+        if (navigator.geolocation ) {
             navigator.geolocation.getCurrentPosition(function(position)  {
                 var lat=position.coords.latitude;
                 var lng=position.coords.longitude;
-                qq.maps.convertor.translate(new qq.maps.LatLng(lat,lng), 1, function(res){
-                    //取出经纬度并且赋值
-                    alert(JSON.stringify(res[0]));
-                    geocoder.getAddress(res[0]);
-
+                alert(lat+lng)
+                geocoder.getAddress({
+                    lat,
+                    lng
                 });
             },function (error){
                 citylocation.searchLocalCity();
+            },{
+                enableHighAccuracy:true,
+                timeout:3000,
+                maximumAge: 3000
             })
         }
         else

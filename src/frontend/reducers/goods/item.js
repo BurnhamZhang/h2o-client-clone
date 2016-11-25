@@ -1,9 +1,12 @@
-import { SHOP_CHOOSE_FAILURE,SHOP_CHOOSE_REQUEST,SHOP_CHOOSE_SUCCESS } from '../actions/shop';
+import {GOODS_REQUEST, GOODS_SUCCESS, GOODS_FAILURE} from '../../actions/goods';
 
 export default function (state = {
+    isFetching: false,
+    didInvalidate: true,
+    data:null,
 }, action) {
     switch (action.type) {
-        case SHOP_CHOOSE_FAILURE:
+        case GOODS_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
@@ -11,7 +14,7 @@ export default function (state = {
                 ...action.payload
             })
             break;
-        case SHOP_CHOOSE_REQUEST:
+        case GOODS_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
@@ -19,14 +22,15 @@ export default function (state = {
                 data:null,
             })
             break;
-        case SHOP_CHOOSE_SUCCESS:
+        case GOODS_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                didUpdate: true,
+                didUpdate: false,
                 ...action.payload
             })
             break;
+
         default:
             return state
     }

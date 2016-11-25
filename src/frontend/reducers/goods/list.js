@@ -1,30 +1,29 @@
-import { SHOP_CHOOSE_FAILURE,SHOP_CHOOSE_REQUEST,SHOP_CHOOSE_SUCCESS } from '../actions/shop';
+import {GOODS_LIST_REQUEST, GOODS_LIST_SUCCESS, GOODS_LIST_FAILURE} from '../../actions/goods';
 
 export default function (state = {
+    isFetching: false,
+    didInvalidate: true,
+    pagination:{
+    }
 }, action) {
     switch (action.type) {
-        case SHOP_CHOOSE_FAILURE:
+        case GOODS_LIST_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
-                didInvalidate: true,
-                didUpdate: false,
-                ...action.payload
+                didInvalidate: true
             })
             break;
-        case SHOP_CHOOSE_REQUEST:
+        case GOODS_LIST_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
-                didUpdate: false,
-                data:null,
             })
             break;
-        case SHOP_CHOOSE_SUCCESS:
+        case GOODS_LIST_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                didUpdate: true,
-                ...action.payload
+                ... action.payload
             })
             break;
         default:

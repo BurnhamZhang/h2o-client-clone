@@ -3,6 +3,12 @@ import {connect} from 'react-redux';
 import {withRouter,Link} from 'react-router';
 import {get_geolocation} from '../actions/geo';
 import  {ListView,List,NavBar ,Icon,InputItem,Flex,ActivityIndicator} from 'antd-mobile';
+import GoodsList from './GoodsList';
+
+
+
+
+
 
 const data = [
     {
@@ -27,18 +33,19 @@ const data = [
 
 
 @connect((state, ownProps)=>({
-    ...state.geo
+    isFetching:state.geo.isFetching||state.shop.isFetching,
+    location:state.shop.location
 }), (dispatch, ownProps)=>({
-    get_geolocation:()=>dispatch(get_geolocation())
+    get_geolocation:(widthShopId)=>dispatch(get_geolocation(widthShopId))
 }))
 @withRouter
 class Main extends Component{
     componentWillMount(){
-        this.props.get_geolocation();
+        !this.props.location && this.props.get_geolocation(true);
     }
     render() {
 
-        const {isFetching,address} = this.props;
+        const {isFetching,location} = this.props;
 
 
         if(isFetching){
@@ -52,8 +59,9 @@ class Main extends Component{
         }
         return (
             <div id="main">
-                <NavBar leftContent={[<Icon type="environment" key="0" />,address,<Link to="/address"  key="2" ><Icon type="down" /></Link>]} mode="light" onLeftClick={() => console.log('onLeftClick')}
+                <NavBar leftContent={[<Icon type="environment" key="0" />,location,<Icon type="down" key="2" />]} mode="light" onLeftClick={() => this.props.router.push('/geo')}
                 >NavBar</NavBar>
+                {location?<GoodsList/>:null}
             </div>
 
         );
