@@ -5,74 +5,35 @@ import {fetchAddressIfNeeded,setAddressCache,unsetAddressCache,updateAddressById
 import {unsetGeoCache} from '../actions/geo';
 import { ActivityIndicator,NavBar ,Icon,Button,Radio,List,InputItem,WhiteSpace,WingBlank,TextareaItem,Popup,Toast} from 'antd-mobile';
 import { createForm } from 'rc-form';
-import AddressList from './AddressList';
-import Map from './Map';
 const Item = List.Item;
 const Brief = Item.Brief;
 
+import Action from './Action';
 
-class Test extends Component {
-    componentWillMount(){
-        console.warn('componentWillMount')
-    }
-    componentWillReceiveProps(){
-        console.warn('componentWillReceiveProps')
-    }
-    render(){
-        return (<div></div>)
-    }
+@connect((state, ownProps)=>({
+    nextRoute: '/address',
+    remoteMsg: state.address.item.remoteMsg,
+    didInvalidate: state.address.item.didInvalidate,
+    didUpdate: state.address.item.didUpdate,
+}))
+class AddressAction extends Action{
+
 }
+
 
 @withRouter
 @createForm()
 @connect((state, ownProps)=>({
-    cache:state.geo.cache,
-    addressCache:state.address.cache,
 }), (dispatch, ownProps)=>({
-    unsetGeoCache: (payload)=>dispatch(unsetGeoCache(payload)),
     setAddressCache: (payload)=>dispatch(setAddressCache(payload)),
     createAddress: (payload)=>dispatch(createAddress(payload)),
     updateAddressById: (id,payload)=>dispatch(updateAddressById(id,payload)),
-    unsetAddressCache: ()=>dispatch(unsetAddressCache()),
+
 }))
 class AddressControl extends Component {
     constructor(props){
         super(props);
-        this.state= {
-            cache:null,
-            sex:'M',
-            name:'',
-            phone:'',
-            location:'',
-            houseNumber:'',
-            addressComponents:{}
-        }
-    }
-    componentWillMount(){
-        const {cache,addressCache,data} = this.props;
-
-        const state = Object.assign({
-            addressComponents:cache?cache.addressComponents:{},
-            geo:cache?(cache.location.lat+','+cache.location.lng):''
-        },data,{...addressCache},{cache})
-
-        console.warn('state',this.state)
-        console.warn('data',data)
-        console.warn('addressCache',addressCache)
-        console.warn('cache',cache)
-
-        console.warn('state',state)
-
-        if(cache){
-
-            this.props.unsetGeoCache();
-        }
-        if(addressCache){
-
-            this.props.unsetAddressCache();
-        }
-
-        this.setState(state)
+        this.state= props.data
     }
     onSubmit(){
         const type = this.props.type;
@@ -109,6 +70,7 @@ class AddressControl extends Component {
         const {cache,sex,name,phone,location ,houseNumber} = this.state;
         return (
             <div>
+                <AddressAction/>
                 <NavBar leftContent="返回" mode="light" onLeftClick={() =>this.props.router.goBack() }
                 >{type=='create'?'新建':'编辑'}收货地址</NavBar>
                 <List renderFooter={()=>'温馨提示：6层以上无电梯需要加收少量楼层搬运费'}>
@@ -186,20 +148,61 @@ class AddressControl extends Component {
 @connect((state, ownProps)=>({
     data:state.address.item.data,
     isFetching:state.address.item.isFetching,
+    cache:state.geo.cache,
+    addressCache:state.address.cache,
 }), (dispatch, ownProps)=>({
     fetchAddressIfNeeded: (payload)=>dispatch(fetchAddressIfNeeded(payload)),
+    unsetGeoCache: (payload)=>dispatch(unsetGeoCache(payload)),
+    unsetAddressCache: ()=>dispatch(unsetAddressCache()),
 }))
 class AddressContainer extends Component{
     componentWillMount(){
+        const {cache,addressCache,data,isFetching} = this.props;
         const id = this.props.params.id;
         if(id !='create'){
             this.props.fetchAddressIfNeeded(id)
         }
+        this.combineData({cache,addressCache,data,isFetching});
+    }
+    componentWillReceiveProps(nextProps){
+        const {cache,addressCache} = this.props;
+        const {data,isFetching} = nextProps;
+        this.combineData({cache,addressCache,data,isFetching});
+    }
+    combineData({cache,addressCache,data,isFetching}){
+
+        const id = this.props.params.id;
+        if(id !='create' && (!data || isFetching)){
+            return
+        }
+
+        const state = Object.assign({
+            sex:'M',
+            addressComponents:cache?cache.addressComponents:{},
+            geo:cache?(cache.location.lat+','+cache.location.lng):''
+        },data,{...addressCache},{cache})
+
+        console.warn('state',this.state)
+        console.warn('data',data)
+        console.warn('addressCache',addressCache)
+        console.warn('cache',cache)
+
+        console.warn('state',state)
+
+        if(cache){
+
+            this.props.unsetGeoCache();
+        }
+        if(addressCache){
+
+            this.props.unsetAddressCache();
+        }
+        this.setState(state)
     }
     render(){
         const id = this.props.params.id;
-        const {data,isFetching} = this.props;
-        return (data&& !isFetching)?<AddressControl type={id} data={data} />:null
+        const data = this.state;
+        return data?<AddressControl type={id} data={data} />:null
     }
 }
 

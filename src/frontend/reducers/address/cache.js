@@ -12,7 +12,7 @@ export default function (state = {
             })
             break;
         case ADDRESS_UNSET_CACHE:
-            return {};
+            return null;
             break;
         default:
             return state

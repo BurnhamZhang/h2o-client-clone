@@ -92,11 +92,10 @@ export function fetchAddressIfNeeded(id) {
 
     return (dispatch, getState) => {
         const {list,item} = getState().address;
-        // 跳过选取列表中的商品
-        // const address = list.data && list.data.find(item => item.addressId == id);
-        // if (address) {
-        //     return dispatch(address_success({data:address}));
-        // }
+        const address = list.data && list.data.find(item => item.id == id);
+        if (address) {
+            return dispatch(address_success({data:address}));
+        }
 
         if (id != 'create' && shouldFetchData(item)) {
             return dispatch(fetchAddress(id));
