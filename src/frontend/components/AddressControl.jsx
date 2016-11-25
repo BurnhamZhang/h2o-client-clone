@@ -67,7 +67,7 @@ class AddressControl extends Component {
         const type = this.props.type;
 
         const value = getFieldsValue();
-        const {cache,sex,name,phone,location ,houseNumber} = this.state;
+        const {sex,name,phone,location ,houseNumber} = this.state;
         return (
             <div>
                 <AddressAction/>
@@ -109,7 +109,7 @@ class AddressControl extends Component {
                     >联系电话</InputItem>
                     <InputItem editable={false}
                         {...getFieldProps('location', {
-                            initialValue:  cache?cache.name:location,
+                            initialValue:  location,
                             rules:[{
                                 required:true,message:'请选择收货地址'
                             }]
@@ -124,7 +124,7 @@ class AddressControl extends Component {
                     >收货地址</InputItem>
                     <TextareaItem title="详细地址"
                                {...getFieldProps('houseNumber',{
-                                   initialValue: cache?cache.addressComponents.streetNumber:houseNumber,
+                                   initialValue: houseNumber,
                                    rules:[{
                                        required:true,message:'请输入详细地址'
                                    }]
@@ -178,16 +178,13 @@ class AddressContainer extends Component{
 
         const state = Object.assign({
             sex:'M',
-            addressComponents:cache?cache.addressComponents:{},
-            geo:cache?(cache.location.lat+','+cache.location.lng):''
-        },data,{...addressCache},{cache})
+        },data,{...addressCache},cache?{
+            addressComponents:cache.addressComponents,
+            location:cache.name,
+            houseNumber:cache.addressComponents.streetNumber,
+            geo:cache.location.lat+','+cache.location.lng
+        }:null)
 
-        console.warn('state',this.state)
-        console.warn('data',data)
-        console.warn('addressCache',addressCache)
-        console.warn('cache',cache)
-
-        console.warn('state',state)
 
         if(cache){
 
