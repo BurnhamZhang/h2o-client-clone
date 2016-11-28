@@ -10,6 +10,10 @@ import Main from './components/Main';
 import User from './components/User';
 import Cart from './components/Cart';
 import Map from './components/Map';
+import Confirm from './components/Confirm';
+import ConfirmIndex from './components/ConfirmIndex';
+import ConfirmType from './components/ConfirmType';
+import ConfirmRemark from './components/ConfirmRemark';
 
 
 
@@ -53,6 +57,23 @@ export default (store) => {
             {
                 path: '/address',
                 component: Address
+            },
+            {
+                path: '/confirm',
+                component: Confirm,
+                indexRoute:{
+                    component:ConfirmIndex
+                },
+                childRoutes: [
+                    {
+                        path: 'type',
+                        component: ConfirmType,
+                    },
+                    {
+                        path: 'remark',
+                        component: ConfirmRemark,
+                    },
+                ]
             },
             {
                 path: '/map',

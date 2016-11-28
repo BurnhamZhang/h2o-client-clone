@@ -1,68 +1,137 @@
 import React, {Component} from 'react';
-import { List,Checkbox ,Flex,Stepper,Icon} from 'antd-mobile';
+import {connect} from 'react-redux';
+import {List, Checkbox, Flex, Stepper, Icon,Result} from 'antd-mobile';
+import {cartAddGoods, cartUpdateGoods, cartDeleteGoods, cartUpdateGoodsChecked, updateCart} from  '../actions/cart';
 const CheckboxItem = Checkbox.CheckboxItem;
+import {withRouter, Link} from 'react-router';
 
-const data = [
-    {
-        "goodsId":"1",            // 商品id，必填
-        "name":"宾田天然矿泉水4L *  20瓶装",            // 商品名称，必填
-        "priceYuan":"3.23",       // 商品单价，必填
-        "scale":"10L",            // 规格，必填
-        "count":"2",              // 数量，必填
-        "moneyYuan":"1.23",       // 总价，必填
-        "depositType":"1",        // 是否有押金，0，没押金；1，有押金，必填
-        "depositMoneyYuan":"1.11", // 押金，非必填
-        image:'http://temp.im/80x80/4CD964/fff'
-    }, {
-        "goodsId":"1",            // 商品id，必填
-        "name":"宾田天然矿泉水1L *  20瓶装",            // 商品名称，必填
-        "priceYuan":"3.23",       // 商品单价，必填
-        "scale":"10L",            // 规格，必填
-        "count":"2",              // 数量，必填
-        "moneyYuan":"1.23",       // 总价，必填
-        "depositType":"1",        // 是否有押金，0，没押金；1，有押金，必填
-        "depositMoneyYuan":"1.11", // 押金，非必填
-        image:'http://temp.im/80x80/4CD964/fff'
-    }]
-class Cart extends Component {
-    onChange(){
+import Shop from './Shop';
+
+@connect((state, ownProps)=>({}), (dispatch, ownProps)=>({
+    cartAddGoods: (payload)=>dispatch(cartAddGoods(payload)),
+    cartUpdateGoods: (payload)=>dispatch(cartUpdateGoods(payload)),
+    cartDeleteGoods: (payload)=>dispatch(cartDeleteGoods(payload)),
+}))
+class CartItem extends Component {
+    render() {
+        const data = this.props;
+        return (
+            <List.Item thumb={<Checkbox checked={data.checked} onChange={ ({target:{checked}})=> {
+                console.log('checked', checked)
+                this.props.cartUpdateGoods({
+                    ...data,
+                    checked
+                })
+            }} name="cart"/>}>
+                <Flex justify="center">
+                    <img src={data.imagesArray[0]} alt="" style={{height: 100, width: 100}}/>
+                    <Flex.Item className="Item">
+                        {data.name + data.memo}
+                        <Flex justify="between">
+                            <List.Item.Brief>{data.priceYuan}</List.Item.Brief>
+                            <Stepper showNumber min={1} value={data.count} style={{width: 200}} onChange={ (count)=> {
+                                this.props.cartUpdateGoods({
+                                    ...data,
+                                    count
+                                })
+                            } }/>
+                            <Icon type="delete" onClick={()=>this.props.cartDeleteGoods({
+                                ...data
+                            })}/>
+                        </Flex>
+                    </Flex.Item>
+                </Flex>
+            </List.Item>
+        )
+    }
+}
+
+
+@withRouter
+@connect((state, ownProps)=>({
+    data: state.cart.data
+}), (dispatch, ownProps)=>({
+    cartUpdateGoodsChecked: (payload)=>dispatch(cartUpdateGoodsChecked(payload)),
+    updateCart: (payload)=>dispatch(updateCart(payload)),
+}))
+class CartPage extends Component {
+    onChange() {
         console.log(arguments)
     }
+
+    componentWillMount() {
+        this.props.data.length && this.props.updateCart()
+    }
+
     render() {
+        const {data} = this.props;
+        let checked = true;
+        let count = 0;
+        let totalPrice = 0;
+
+
+        if(data.length ==0 ){
+            return (
+                <Result
+                    imgUrl="https://zos.alipayobjects.com/rmsportal/NRzOqylcxEstLGf.png"
+                    title="购物车为空"
+                    message="购物车中什么都没有，快去选购吧"
+                    buttonText="返回首页"
+                    buttonType="primary"
+                    buttonClick={()=>{
+                        this.props.router.push('/main')
+                    }}
+                />
+            )
+        }
+        data.forEach(item=> {
+            if (item.checked) {
+                count += item.count;
+                totalPrice += item.priceYuan * item.count;
+            }
+            else {
+                checked = false;
+            }
+
+        })
+
 
         const footer = (<Flex>
             <Flex.Item>
                 <div className="cart-info">
-                    <p>合计：￥236.00</p>
-                    <p>再买￥50免运费/起送</p>
+                    <p>合计：￥{totalPrice.toFixed(2)}</p>
                 </div>
-
-
             </Flex.Item>
-            <button className="submit">去结算（2）</button>
+            <button className="submit" onClick={
+                ()=>{
+                    this.props.router.push({
+                        pathname:'/confirm',
+                        query:{
+                            cache:Math.random().toString(36).substr(2)
+                        }
+                    })
+                }
+            }>去结算（{count}）</button>
         </Flex>)
-
         return (
             <div id="cart">
-                <List renderHeader={ ()=><Checkbox>全选</Checkbox>} renderFooter={()=>footer}>
-                    {data.map((i,index) => (
-                        <List.Item key={index}  thumb={<Checkbox onChange={this.onChange} name="cart"/>}>
-                            <Flex justify="center">
-                                <img src="http://temp.im/100x100/4CD964/fff" alt="" style={{height:100,width:100}}/>
-                                <Flex.Item className="Item">
-                                    {i.name}
-                                    <Flex justify="between">
-                                        <List.Item.Brief>{i.priceYuan}</List.Item.Brief>
-                                        <Stepper showNumber max={10} min={1} defaultValue={1} style={{width:200}}  />
-                                        <Icon type="delete" />
-                                    </Flex>
-                                </Flex.Item>
-                            </Flex>
-                        </List.Item>
+                <List renderHeader={ ()=><Checkbox checked={checked} onChange={({target:{checked}})=> {
+                    this.props.cartUpdateGoodsChecked(checked)
+                }}>全选</Checkbox>} renderFooter={()=>footer}>
+                    {data.map((i, index) => (
+                        <CartItem key={index} {...i}/>
                     ))}
                 </List>
             </div>
         );
+    }
+}
+
+class Cart extends Component {
+    render() {
+        return <Shop>
+            <CartPage/>
+        </Shop>
     }
 }
 

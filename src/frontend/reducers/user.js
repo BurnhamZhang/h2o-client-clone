@@ -2,7 +2,7 @@ import {REQUEST_USER, RECEIVE_USER, INVALIDATE_USER,AUTH_TIMEOUT,AUTH_LOGOUT} fr
 
 export default function user(state = {
     isFetching: false,
-    didInvalidate: true,
+    didInvalidate: false,
     data:{
     }
 }, action) {

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter,Link} from 'react-router';
 import {connect} from 'react-redux';
-import {List, Flex,Checkbox,Icon,Modal,SwipeAction} from 'antd-mobile';
+import {List, Flex,Checkbox,Icon,Modal,SwipeAction,Toast} from 'antd-mobile';
 import {cartAddGoods} from '../actions/cart'
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -30,7 +30,8 @@ class GoodsItem extends Component {
                 {name }
                 {stock}
                 <Icon type="plus-circle" onClick={()=>{
-                    this.props.cartAddGoods(this.props.data)
+                    this.props.cartAddGoods(this.props.data);
+                    Toast.success('加入购物车成功！',1)
                 }} />
             </Item>
         </SwipeAction>

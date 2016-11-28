@@ -6,6 +6,7 @@ import geo from './geo';
 import address from './address/index';
 import goods from './goods/index';
 import cart from './cart';
+import cache from './cache';
 
 const rootReducer = combineReducers({
   routing: routerReducer,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   geo,
   address,
   goods,
-  cart
+  cart,
+  cache
 });
 
 export default rootReducer;

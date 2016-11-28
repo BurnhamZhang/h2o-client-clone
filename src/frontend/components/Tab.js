@@ -7,7 +7,7 @@ import React, {Component} from 'react';
 
 
 @connect((state, ownProps)=>({
-    cart:state.cart
+    cart:state.cart.data
 }), (dispatch, ownProps)=>({
 }))
 @withRouter
@@ -24,7 +24,7 @@ class Tab  extends Component {
 
         const {cart} = this.props;
 
-        const length = cart.reduce((item,count) => count+item.count ,0)
+        const length = cart.reduce((count,item) => count+item.count ,0)
 
         return (
             <TabBar
