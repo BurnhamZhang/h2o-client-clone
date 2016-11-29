@@ -1,52 +1,53 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter,Link} from 'react-router';
-import {fetchAddressListIfNeeded} from '../actions/address';
-import { ActivityIndicator,NavBar ,Icon,Button} from 'antd-mobile';
-import AddressList from './AddressList';
-import Action from './Action';
+import {fetchAddressIfNeeded,updateAddressById,createAddress} from '../actions/address';
+import {unsetGeoCache} from '../actions/geo';
+import {cacheUpdate} from '../actions/cache';
+import { ActivityIndicator,NavBar ,Icon,Button,Radio,List,InputItem,WhiteSpace,WingBlank,TextareaItem,Popup,Toast} from 'antd-mobile';
+import { createForm } from 'rc-form';
+const Item = List.Item;
+const Brief = Item.Brief;
 
-@connect((state, ownProps)=>({
-    didUpdate: state.address.item.didUpdate,
-    remoteMsg: state.address.item.remoteMsg,
-    didInvalidate: state.address.item.didInvalidate,
-}))
-class AddressAction extends Action{
 
-}
+
+
 
 
 @withRouter
-@connect((state, ownProps)=>({
-    data:state.address.list.data
-}), (dispatch, ownProps)=>({
-    fetchAddressListIfNeeded:()=>dispatch(fetchAddressListIfNeeded())
+@connect((state, ownProps)=>{
+    return{
+        data:  Object.assign({
+            sex:'M',
+        },((state.address.item.data && ownProps.params.id==state.address.item.data.id)?state.address.item.data:null),state.cache[ownProps.location.query.address])
+    }
+}, (dispatch, ownProps)=>({
+    cacheUpdate: (payload)=>dispatch(cacheUpdate(payload)),
+    fetchAddressIfNeeded: (payload)=>dispatch(fetchAddressIfNeeded(payload)),
 }))
 class Address extends Component {
     componentWillMount(){
-        this.props.fetchAddressListIfNeeded()
+        const {data} = this.props;
+        const id = this.props.params.id;
+        console.warn('data',data);
+        if(id !='create'){
+            if( data.id !=id){
+                this.props.fetchAddressIfNeeded(id)
+            }
+        }
+
     }
     render() {
-        const {data} = this.props
-        return (
-            <div>
-                <AddressAction updateHandle={()=>this.props.fetchAddressListIfNeeded()}/>
-                <NavBar leftContent="返回" mode="light"  onLeftClick={() =>this.props.router.goBack() }
-                >收货地址管理</NavBar>
-                <div style={{paddingBottom:84}}>
-                    { data? <AddressList data={data} edit/>:null }
-                </div>
-                <div style={{position:'fixed',bottom:0,width:'100%'}}>
-                    <Link to="/address/create">
-                        <Button  type="primary" >
-                            <Icon type="plus" />
-                            新增收货地址</Button>
-                    </Link>
-                </div>
-            </div>
-        );
+        const {data} = this.props;
+        const id = this.props.params.id;
+
+        if(id=='create' || id==data.id){
+            return   React.cloneElement(this.props.children || <div/>, this.props)
+
+        }
+        return null
     }
-}
+};
 
 
 

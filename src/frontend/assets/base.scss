@@ -107,3 +107,39 @@ html, body, .full-height {
     overflow-y: scroll;
   }
 }
+
+#confirm{
+
+  padding-bottom: 100px;
+  .confirm-footer{
+    position: fixed;
+    bottom:0;
+    width:100%;
+
+    &:before {
+      display: block;
+      position: absolute;
+      content: '';
+      left: 0;
+      top: 0;
+      right: auto;
+      width: 100%;
+      border-bottom: 1PX solid #ddd;
+    }
+  }
+  .confirm-info {
+    line-height: 50px;
+    padding-left: 30px;
+    background: white;
+    p {
+      margin: 0;
+    }
+  }
+
+  .submit {
+    height: 100px;
+    background: red;
+    color: white;
+    border: none;
+  }
+}

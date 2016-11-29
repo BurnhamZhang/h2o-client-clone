@@ -27,7 +27,7 @@ const Item = List.Item;
     get_geolocation:()=>dispatch(get_geolocation()),
     shopChoose:(data)=>dispatch(shopChoose(data)),
 }))
-class Address extends Component {
+class Geo extends Component {
     componentWillMount(){
         this.props.fetchAddressListIfNeeded();
         this.props.get_geolocation();
@@ -50,7 +50,9 @@ class Address extends Component {
                         {this.props.geo.streetNumber}
                     </Item>
                 </List>
-                { data? <AddressList renderHeader={() => '收货地址'} data={data} onChoose={(data)=>this.onClick(data)}/>:null }
+                { data? <AddressList renderHeader={() => '收货地址'} data={data} onChoose={({ streetId,
+                    location})=>this.onClick({streetId,
+                    location})}/>:null }
             </div>
         );
     }
@@ -59,4 +61,4 @@ class Address extends Component {
 
 
 
-export default Address;
+export default Geo;

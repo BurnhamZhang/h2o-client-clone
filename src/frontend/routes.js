@@ -14,6 +14,9 @@ import Confirm from './components/Confirm';
 import ConfirmIndex from './components/ConfirmIndex';
 import ConfirmType from './components/ConfirmType';
 import ConfirmRemark from './components/ConfirmRemark';
+import ConfirmAddress from './components/ConfirmAddress';
+import AddressItem from './components/AddressItem';
+import Pay from './components/Pay';
 
 
 
@@ -55,8 +58,12 @@ export default (store) => {
                 component: Geo
             },
             {
+                path: '/pay/:id',
+                component: Pay
+            },
+            {
                 path: '/address',
-                component: Address
+                component: AddressControl
             },
             {
                 path: '/confirm',
@@ -73,15 +80,24 @@ export default (store) => {
                         path: 'remark',
                         component: ConfirmRemark,
                     },
+                    {
+                        path: 'address',
+                        component: ConfirmAddress,
+                    },
                 ]
             },
             {
-                path: '/map',
-                component: Map
-            },
-            {
                 path: '/address/:id',
-                component: AddressControl
+                component: Address ,
+                indexRoute:{
+                    component:AddressItem
+                },
+                childRoutes: [
+                    {
+                        path: 'map',
+                        component: Map,
+                    },
+                ]
             },
             {
                 path: '/',

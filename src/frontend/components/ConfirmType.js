@@ -12,21 +12,9 @@ const RadioItem = Radio.RadioItem;
 
 class ConfirmType extends Component {
 
-    update(config){
-        const {data, cacheUpdate} = this.props;
-        const cache = this.props.location.query.cache;
-        cacheUpdate({
-            key: cache,
-            data: {
-                ...data,
-                ...config
-            },
-        })
-    }
 
     render() {
-        const {router} = this.props;
-        const cache = this.props.location.query.cache;
+        const {router,cacheUpdate} = this.props;
         const {deliveryType,payType,orderDetails} = this.props.data;
         const zhNow = moment().locale('zh-cn').utcOffset(8);
         const maxDate = moment('2018-12-03 +0800', 'YYYY-MM-DD Z').utcOffset(8);
@@ -40,7 +28,7 @@ class ConfirmType extends Component {
 
                 </Item>
                 <Item>
-                       <span className="am-radio-wrapper" style={{ marginLeft: 10 }} onClick={()=>  {this.update({
+                       <span className="am-radio-wrapper" style={{ marginLeft: 10 }} onClick={()=>  {cacheUpdate({
                            payType:  '1'
                        })}}>
                             <span className={ "am-radio "+ (payType=='1'?'am-radio-checked':'') }>
@@ -49,7 +37,7 @@ class ConfirmType extends Component {
                             <span>在线支付</span>
                         </span>
                     <span className="am-radio-wrapper" style={{ marginLeft: 100 }}  onClick={()=>{
-                        this.update({
+                        cacheUpdate({
                             payType:  '2'
                         })
                     }}>
@@ -63,7 +51,7 @@ class ConfirmType extends Component {
             </List>
             <List  renderHeader={() => '送货时间'}>
                 <RadioItem name='deliveryType' checked={deliveryType=='1'} onChange={({target:{checked}})=>{
-                    this.update({
+                    cacheUpdate({
                         deliveryType: checked ? '1' : '2'
                     })
                 }}>
@@ -74,7 +62,7 @@ class ConfirmType extends Component {
                         <DatePicker className="forss"
                                     mode="datetime"
                                     onChange={()=>{
-                                        this.update({
+                                        cacheUpdate({
                                             deliveryType: checked ? '2' : '1'
                                         })
                                     }}

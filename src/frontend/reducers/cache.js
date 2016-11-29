@@ -5,8 +5,13 @@ export default function (state = {
 
     switch (action.type) {
         case CACHE_UPDATE:
+            if(Array.isArray(action.payload.data)){
+                return Object.assign({},state,{
+                    [action.payload.key] :action.payload.data
+                })
+            }
             return Object.assign({},state,{
-               [action.payload.key] : action.payload.data
+               [action.payload.key] : Object.assign({},state[action.payload.key],action.payload.data)
             })
         default:
             return state

@@ -32,6 +32,7 @@ export default function (state = {
             break;
 
         case ADDRESS_UPDATE_FAILURE:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
@@ -58,6 +59,7 @@ export default function (state = {
 
 
         case ADDRESS_CREATE_FAILURE:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
@@ -85,6 +87,7 @@ export default function (state = {
 
 
         case ADDRESS_DELETE_FAILURE:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,

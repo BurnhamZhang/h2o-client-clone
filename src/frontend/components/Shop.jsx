@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter,Link} from 'react-router';
 import {get_geolocation} from '../actions/geo';
-import  {ActivityIndicator} from 'antd-mobile';
+import  {ActivityIndicator,Result} from 'antd-mobile';
 
 
 
@@ -35,7 +35,14 @@ class Shop extends Component{
         if(Array.isArray(shop) && shop[0]){
             return  this.props.children || <div/>
         }
-        return null
+
+        return (
+            <Result
+                imgUrl="https://zos.alipayobjects.com/rmsportal/LUIUWjyMDWctQTf.png"
+                title="获取门店失败"
+                message="匹配不到门店"
+            />
+        )
     }
 }
 

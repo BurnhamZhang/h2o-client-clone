@@ -2,10 +2,13 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {List, Checkbox, Flex, Stepper, Icon,Result} from 'antd-mobile';
 import {cartAddGoods, cartUpdateGoods, cartDeleteGoods, cartUpdateGoodsChecked, updateCart} from  '../actions/cart';
-const CheckboxItem = Checkbox.CheckboxItem;
+import {cacheUpdate} from  '../actions/cache';
 import {withRouter, Link} from 'react-router';
-
 import Shop from './Shop';
+
+
+const CheckboxItem = Checkbox.CheckboxItem;
+
 
 @connect((state, ownProps)=>({}), (dispatch, ownProps)=>({
     cartAddGoods: (payload)=>dispatch(cartAddGoods(payload)),
@@ -53,6 +56,10 @@ class CartItem extends Component {
 }), (dispatch, ownProps)=>({
     cartUpdateGoodsChecked: (payload)=>dispatch(cartUpdateGoodsChecked(payload)),
     updateCart: (payload)=>dispatch(updateCart(payload)),
+    cacheUpdate: (payload)=>dispatch(cacheUpdate({
+        key:'cart',
+        data:payload
+    })),
 }))
 class CartPage extends Component {
     onChange() {
@@ -104,12 +111,19 @@ class CartPage extends Component {
             </Flex.Item>
             <button className="submit" onClick={
                 ()=>{
-                    this.props.router.push({
-                        pathname:'/confirm',
-                        query:{
-                            cache:Math.random().toString(36).substr(2)
-                        }
-                    })
+
+                    const list = data.filter(item=>item.checked);
+                    console.log('list',list)
+                    if(list.length>0 ){
+                        this.props.cacheUpdate(list)
+                        this.props.router.push({
+                            pathname:'/confirm',
+                            query:{
+                                cache:Math.random().toString(36).substr(2)
+                            }
+                        })
+                    }
+
                 }
             }>去结算（{count}）</button>
         </Flex>)

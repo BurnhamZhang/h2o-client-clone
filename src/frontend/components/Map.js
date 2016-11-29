@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {List, Checkbox, Flex, Stepper, Icon, Popup, Button, InputItem} from 'antd-mobile';
-import {get_geolocation,setGeoCache} from '../actions/geo';
+import {get_geolocation} from '../actions/geo';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import debounce from 'debounce';
@@ -72,11 +72,21 @@ class Map extends Component {
     // }
     onClick(item) {
 
+
         geocoder2 = new qq.maps.Geocoder({
             complete: (result)=> {
                 result.detail.name = item.name;
-                console.log(result);
-                this.props.setGeoCache(result.detail)
+                const cache = result.detail;
+                console.log(cache);
+                this.props.cacheUpdate({
+                    key:this.props.location.query.address,
+                    data:{
+                        addressComponents:cache.addressComponents,
+                        location:cache.name,
+                        houseNumber:cache.addressComponents.streetNumber,
+                        geo:cache.location.lat+','+cache.location.lng
+                    }
+                })
                 this.props.router.goBack();
             }
         });

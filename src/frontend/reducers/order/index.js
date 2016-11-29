@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
-import item from './item';
+import create from './create';
 import list from './list';
 
 
 
 const orderReducer = combineReducers({
-  item,
+  create,
   list,
 });
 

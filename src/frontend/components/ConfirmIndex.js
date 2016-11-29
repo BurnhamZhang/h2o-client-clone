@@ -1,39 +1,85 @@
 import React, {Component, PropTypes} from 'react';
-import {Toast, List, Switch, Icon, Stepper} from 'antd-mobile';
+import {Toast, List, Switch, Icon, Stepper,Result,Flex,Button} from 'antd-mobile';
 import {connect} from 'react-redux';
-import {withRouter} from 'react-router';
-import {fetchAddressListIfNeeded} from '../actions/address';
-import {cacheUpdate} from '../actions/cache';
+import {getDeliveryAddress} from '../actions/address';
+
 
 const Item = List.Item;
 const Brief = Item.Brief;
 
 
 
+import Action from './Action';
+
 @connect((state, ownProps)=>({
-    list: state.address.list.data
+    remoteMsg: state.order.create.remoteMsg,
+    didInvalidate: state.order.create.didInvalidate,
+    didUpdate: state.order.create.didUpdate,
+}))
+class ConfirmAction extends Action {
+}
+
+
+
+@connect((state, ownProps)=>({
+    payload: state.address.delivery.data
+}), (dispatch, ownProps)=>({
+    getDeliveryAddress: ()=>dispatch(getDeliveryAddress())
 }))
 class AddressItem extends Component {
     componentWillMount() {
-        const {payload, data, fetchAddressListIfNeeded} = this.props;
-        if (!payload && !data) {
-            fetchAddressListIfNeeded();
+        const {payload, getDeliveryAddress} = this.props;
+        console.warn('AddressItem', payload);
+        if (!payload) {
+            getDeliveryAddress();
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (!this.props.payload && nextProps.payload && nextProps.payload.id) {
+            console.warn('componentWillReceiveProps>>>>>>>>>>>>>', nextProps)
+            const {id, name, geo, houseNumber, streetId, phone, location} = nextProps.payload
+            this.props.cacheUpdate({
+                addressId: id,
+                name,
+                geo,
+                location,
+                houseNumber,
+                streetId,
+                phone
+            })
         }
     }
 
     render() {
-        const {list} =  this.props;
+        const {payload} =  this.props;
         const cache = this.props.location.query.cache;
-        if (!list) {
-            return null
+        if (this.props.data.addressId) {
+            const {name, phone, houseNumber, location} =this.props.data;
+            return (
+                <Item thumb={<Icon type="environment"/>} multipleLine arrow="horizontal" onClick={()=> {
+                    this.props.router.push({
+                        pathname: `/confirm/address`,
+                        query: {
+                            cache,
+                            address: Math.random().toString(36).substr(2)
+                        }
+                    })
+                }
+                }>
+                    {name + '   ' + phone}
+                    <Brief>{location + houseNumber}</Brief>
+                </Item>
+            )
         }
-        if (Array.isArray(list) && list.length == 0) {
+        if (payload && !payload.id) {
             return (
                 <Item thumb={<Icon type="environment"/>} arrow="horizontal" onClick={()=> {
                     this.props.router.push({
-                        pathname:`/confirm/address/create`,
-                        query:{
-                            cache
+                        pathname: `/address/create`,
+                        query: {
+                            cache,
+                            address: Math.random().toString(36).substr(2)
                         }
                     })
                 }
@@ -42,54 +88,75 @@ class AddressItem extends Component {
                 </Item>
             )
         }
-        return (
-            <Item thumb={<Icon type="environment"/>} multipleLine arrow="horizontal" onClick={()=> {
-                this.props.router.push(`/confirm/address`)
-            }
-            }>
-                白先生 184****1555
-                <Brief>成都丰德万瑞中心A座23楼</Brief>
-            </Item>
-        )
+
+        return null
+
     }
 }
 
 
-
 class ConfirmIndex extends Component {
-
-
     render() {
 
-        console.warn('render>>>>>',this.props);
         const {data, cacheUpdate} = this.props;
         const cache = this.props.location.query.cache;
 
-        const {addressId, name, geo, location, houseNumber, streetId, phone, bucketType, buckets,payType} = this.props.data;
+        const {orderDetails, bucketType, buckets, payType,showMoneyYuan,tradeMoneyYuan,bucketMoneyYuan} = this.props.data;
 
         const bigCount = buckets[0].count;
         const smallCount = buckets[1].count;
 
-        console.warn('>>>>', addressId ? {addressId, name, geo, location, houseNumber, streetId, phone} : null)
-        return <div>
+        if (orderDetails.length == 0) {
+            return   (
+                <Result
+                    imgUrl="https://zos.alipayobjects.com/rmsportal/LUIUWjyMDWctQTf.png"
+                    title="无选择商品"
+                    message="请选择商品"
+                    buttonType="primary"
+                    buttonText="确认"
+                    buttonClick={
+                        ()=>this.props.router.push('/cart')
+                    }
+                />
+            )
+        }
+        const footer = (<Flex className="confirm-footer">
+            <Flex.Item>
+                <div className="confirm-info">
+                    <p>合计：￥{tradeMoneyYuan}</p>
+                    <p>商品：￥{showMoneyYuan} 桶押金：￥{bucketMoneyYuan}</p>
+                </div>
+            </Flex.Item>
+            <button className="submit" onClick={
+                ()=> {
+                    this.props.createOrder({
+                        ...data
+                    })
+                }
+            }>立即下单
+            </button>
+        </Flex>)
+
+        return <div id="confirm">
+            <ConfirmAction/>
             <List>
                 <AddressItem {...this.props }/>
-                <Item arrow="horizontal" onClick={()=>{
+                <Item arrow="horizontal" onClick={()=> {
                     this.props.router.push({
-                        pathname:'/confirm/type',
-                        query:{
+                        pathname: '/confirm/type',
+                        query: {
                             cache
                         }
                     })
                 }}>
-                    <div style={{float: 'right'}}>{payType=='1'?'在线支付':'货到付款'}</div>
+                    <div style={{float: 'right'}}>{payType == '1' ? '在线支付' : '货到付款'}</div>
                     支付方式
                     <Brief><Icon type="clock-circle-o"/>配送时间段内0.5h送达，三天内可预约</Brief>
                 </Item>
-                <Item arrow="horizontal" onClick={()=>{
+                <Item arrow="horizontal" onClick={()=> {
                     this.props.router.push({
-                        pathname:'/confirm/remark',
-                        query:{
+                        pathname: '/confirm/remark',
+                        query: {
                             cache
                         }
                     })
@@ -99,11 +166,7 @@ class ConfirmIndex extends Component {
                 </Item>
                 <Item extra={<Switch checked={bucketType == '2'} onChange={(checked)=> {
                     cacheUpdate({
-                        key: cache,
-                        data: {
-                            ...data,
-                            bucketType: checked ? '2' : '1'
-                        },
+                        bucketType: checked ? '2' : '1'
                     })
                 }
                 }/>}
@@ -112,26 +175,18 @@ class ConfirmIndex extends Component {
                     bucketType == '2' ? (
                         <div>
                             <Item extra={<Stepper showNumber min={1} value={bigCount * 1} onChange={ (count)=> {
-                                buckets[0].count= count;
+                                buckets[0].count = count;
                                 cacheUpdate({
-                                    key: cache,
-                                    data: {
-                                        ...data,
-                                        buckets
-                                    }
+                                    buckets
                                 })
                             }}/>}>
                                 大桶数量
                             </Item>
                             <Item extra={<Stepper showNumber min={1} value={smallCount * 1} onChange={ (count)=> {
                                 buckets[1
-                                    ].count= count;
+                                    ].count = count;
                                 cacheUpdate({
-                                    key: cache,
-                                    data: {
-                                        ...data,
-                                        buckets
-                                    }
+                                    buckets
                                 })
                             }}/>}>
                                 小桶数量
@@ -141,6 +196,7 @@ class ConfirmIndex extends Component {
                 }
 
             </List>
+            {footer}
 
         </div>
     }

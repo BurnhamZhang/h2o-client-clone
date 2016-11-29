@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {Toast, List, Switch, Icon, Stepper,Radio,DatePicker,WhiteSpace,WingBlank,Button,TextareaItem} from 'antd-mobile';
+import { createForm } from 'rc-form';
 const Item = List.Item;
 const Brief = Item.Brief;
 
@@ -7,52 +8,57 @@ const RadioItem = Radio.RadioItem;
 
 
 
-
+@createForm()
 class ConfirmRemark extends Component {
 
-    update(config){
-        const {data, cacheUpdate} = this.props;
-        const cache = this.props.location.query.cache;
-        cacheUpdate({
-            key: cache,
-            data: {
-                ...data,
-                ...config
-            },
-        })
+    constructor(props){
+        super(props);
+        const {invoiceType,memo} = props.data;
+        this.state ={invoiceType,memo};
     }
     onSubmit(){
+        const {router,cacheUpdate} = this.props;
+        this.props.form.validateFields((errors, values) => {
+            if (errors) {
+                Toast.info('请输入发票抬头')
+                return;
+            }
 
+            const {invoiceType,memo} = values;
+            cacheUpdate({
+                invoiceType:invoiceType?'2':'1',
+                 memo
+            })
+            router.goBack();
+
+        });
     }
 
     render() {
-        const {router} = this.props;
-        const {invoiceType,memo} = this.props.data;
+        const { getFieldProps ,getFieldValue} = this.props.form;
+
+        const {invoiceType,memo} = this.state;
 
 
         return <div>
             <List  renderHeader={() => '快速备注'}>
                 <Item
-                    extra={<Switch
-                        checked={invoiceType=='2'}
-                        onChange={(checked)=>{
-                            this.update({
-                                invoiceType:checked?'2':'1'
-                            })
-                        }
-                        }
+                    extra={<Switch  {...getFieldProps('invoiceType',{
+                        initialValue:invoiceType=='2',
+                        valuePropName:'checked'
+                    })}
                     />}
                 >需要发票</Item>
-                {invoiceType=='2'?(
-                    <TextareaItem title="其他备注" value={memo}
+                {getFieldValue('invoiceType')?(
+                    <TextareaItem title="其他备注"
                                   placeholder="请输入发票抬头或您的其余需求~"
                                   rows="3" count="50"
-                                  onChange={(memo)=>{
-                                      this.update({
-                                          memo
-                                      })
-                                  }
-                                  }
+                                  {...getFieldProps('memo',{
+                                      initialValue:memo,
+                                      rules: [
+                                          { required: true },
+                                      ],
+                                  })}
                     />
                 ):null}
 
@@ -60,7 +66,7 @@ class ConfirmRemark extends Component {
             <WhiteSpace/>
             <WingBlank>
                 <Button  type="primary" onClick={()=>{
-                    router.goBack();
+                    this.onSubmit()
                 }}>
                    提交</Button>
             </WingBlank>

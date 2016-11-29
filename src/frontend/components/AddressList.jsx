@@ -53,7 +53,12 @@ class AddressItem extends Component {
                 <Flex justify="between">
                     <Checkbox onChange={(e)=>this.onChange(e.target.checked)} checked={defaultAddress=='2'} disabled={defaultAddress=='2'}>默认地址</Checkbox>
                     <Icon type="edit" onClick={
-                        ()=>this.props.router.push(`/address/${id}`)
+                        ()=>this.props.router.push({
+                            pathname:`/address/${id}`,
+                            query:{
+                                address:Math.random().toString(36).substr(2)
+                            }
+                        })
                     }/>
                     <Icon type="delete" onClick={
                         ()=>this.onDelete(id)
@@ -64,10 +69,7 @@ class AddressItem extends Component {
 
 
         ) : (
-            <Item multipleLine arrow="horizontal" onClick={()=>this.props.onClick({
-                streetId,
-                location
-            })}>
+            <Item multipleLine arrow="horizontal" onClick={()=>this.props.onClick(this.props.data)}>
                 {name + '  ' + phone}
                 <Brief> {houseNumber}</Brief>
             </Item>

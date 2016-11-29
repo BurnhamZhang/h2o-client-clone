@@ -29,25 +29,11 @@ export const ADDRESS_CHOOSE = 'ADDRESS_CHOOSE';
 
 
 
+export const ADDRESS_DELIVERY_REQUEST = 'ADDRESS_DELIVERY_REQUEST';
+export const ADDRESS_DELIVERY_SUCCESS = 'ADDRESS_DELIVERY_SUCCESS';
+export const ADDRESS_DELIVERY_FAILURE = 'ADDRESS_DELIVERY_FAILURE';
 
 
-
-export const ADDRESS_SET_CACHE = 'ADDRESS_SET_CACHE';
-export const ADDRESS_UNSET_CACHE = 'ADDRESS_UNSET_CACHE';
-
-
-export function setAddressCache(payload) {
-    return {
-        type: ADDRESS_SET_CACHE,
-        payload
-    };
-}
-export function unsetAddressCache(payload) {
-    return {
-        type: ADDRESS_UNSET_CACHE,
-        payload
-    };
-}
 
 //收货地址详情
 
@@ -307,3 +293,40 @@ export function addressChoose(payload) {
     };
 }
 
+//结算页用户收货地址
+function address_delivery_failure(payload) {
+    return {
+        type: ADDRESS_DELIVERY_FAILURE,
+        payload
+    };
+}
+
+function address_delivery_request(payload) {
+    return {
+        type: ADDRESS_DELIVERY_REQUEST,
+        payload
+    };
+}
+
+function address_delivery_success(json) {
+    return {
+        type: ADDRESS_DELIVERY_SUCCESS,
+        receiveAt: Date.now(),
+        payload: json
+    };
+}
+
+
+
+export function getDeliveryAddress() {
+    return (dispatch, getState) => {
+        dispatch(address_delivery_request());
+        return fetch('/api/user/delivery/address',{
+        })
+            .then((json) => {
+                dispatch(address_delivery_success(json));
+            }).catch(error => {
+                dispatch(address_delivery_failure(error))
+            });
+    };
+}
