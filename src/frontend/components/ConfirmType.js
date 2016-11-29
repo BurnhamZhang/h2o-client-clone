@@ -2,7 +2,6 @@ import React, {Component, PropTypes} from 'react';
 import {Toast, List, Switch, Icon, Stepper, Radio, DatePicker, WhiteSpace, WingBlank, Button} from 'antd-mobile';
 import 'moment/locale/zh-cn';
 import {connect} from 'react-redux';
-import {getDeliveryType} from  '../actions/delivery';
 import moment from 'moment';
 import {createForm} from 'rc-form';
 const Item = List.Item;
@@ -44,7 +43,7 @@ class MyRadio extends Component {
 }
 
 @createForm()
-class ConfirmTypeContent extends Component {
+class ConfirmType extends Component {
 
 
     render() {
@@ -199,26 +198,6 @@ class ConfirmTypeContent extends Component {
 }
 ;
 
-@connect((state, ownProps)=>({
-    type: state.delivery.type.data
-}), (dispatch, ownProps)=>({
-    getDeliveryType: ()=>dispatch(getDeliveryType())
-}))
-class ConfirmType extends Component {
-
-    componentWillMount() {
-        !this.props.type && this.props.getDeliveryType();
-    }
-
-    render() {
-        const {router, cacheUpdate, type, data} = this.props;
-        const payload = {router, cacheUpdate, type, data};
-        if (type) {
-            return <ConfirmTypeContent {...payload}/>
-        }
-        return null
-    }
-}
 
 
 export default ConfirmType;

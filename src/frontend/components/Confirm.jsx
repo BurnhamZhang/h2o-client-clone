@@ -5,6 +5,8 @@ import {withRouter} from 'react-router';
 import {cacheUpdate} from '../actions/cache';
 import {createOrder} from '../actions/order';
 import {getDeliveryAddress} from '../actions/address';
+import {getDeliveryType} from  '../actions/delivery';
+
 import Shop from './Shop';
 
 import Action from './Action';
@@ -63,7 +65,8 @@ class ConfirmAction extends Action {
             bucketMoneyYuan,
             tradeMoneyYuan
         },
-        res: state.order.create.data
+        res: state.order.create.data,
+        type:state.delivery.type.data
     }
 }, (dispatch, ownProps)=>({
     cacheUpdate: (data)=>dispatch(cacheUpdate({
@@ -85,7 +88,8 @@ class ConfirmAction extends Action {
 
         return dispatch(createOrder(payload))
     },
-    getDeliveryAddress: ()=>dispatch(getDeliveryAddress())
+    getDeliveryAddress: ()=>dispatch(getDeliveryAddress()),
+    getDeliveryType: ()=>dispatch(getDeliveryType())
 }))
 class ConfirmContent extends Component {
     componentWillReceiveProps(nextProps) {
@@ -103,11 +107,13 @@ class ConfirmContent extends Component {
     componentWillMount() {
         if(this.props.data.shopId){
             this.props.getDeliveryAddress();
+            !this.props.type && this.props.getDeliveryType();
         }
-    }
 
+    }
     render() {
         const {orderDetails} = this.props.data;
+        const {type} = this.props;
         if (orderDetails.length == 0) {
             return   (
                 <Result
@@ -121,6 +127,9 @@ class ConfirmContent extends Component {
                     }
                 />
             )
+        }
+        if(!type){
+            return null
         }
 
         return <div>
