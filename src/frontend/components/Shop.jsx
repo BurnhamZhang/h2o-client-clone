@@ -33,7 +33,6 @@ class Shop extends Component{
             )
         }
         if(Array.isArray(shop) && shop[0]){
-            console.warn('render',this.props.children);
             return  this.props.children || <div/>
         }
 

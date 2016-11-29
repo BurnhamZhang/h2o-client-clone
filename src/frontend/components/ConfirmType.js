@@ -11,7 +11,37 @@ const Brief = Item.Brief;
 const RadioItem = Radio.RadioItem;
 
 
-
+class MyRadio extends Component {
+    constructor(props){
+        super(props);
+        let {checked, defaultChecked} = this.props;
+        if(checked ===undefined){
+            checked = defaultChecked
+        }
+        this.state = {
+            checked
+        }
+    }
+    componentWillReceiveProps({checked}){
+        this.setState({
+            checked
+        })
+    }
+    render() {
+        const { onChange ,style} = this.props;
+        const { checked} = this.state;
+        return (
+            <span className="am-radio-wrapper" style={style}  onClick={()=> {
+                onChange && onChange(true)
+            }}>
+                            <span className={ "am-radio " + (checked ? 'am-radio-checked' : '') }>
+                                <span className="am-radio-inner"/>
+                            </span>
+                            <span>{this.props.children}</span>
+                        </span>
+        )
+    }
+}
 
 @createForm()
 class ConfirmTypeContent extends Component {
@@ -22,7 +52,7 @@ class ConfirmTypeContent extends Component {
         const {router, cacheUpdate, type} = this.props;
         const {deliveryType, payType, orderDetails} = this.props.data;
         const minDate = moment().locale('zh-cn').utcOffset(8);
-        const maxDate = minDate.add(3, 'days');
+        const maxDate = moment().locale('zh-cn').utcOffset(8).add(2, 'days');
         const maxTime = moment(type.deliveryEnd, 'HH:mm:ss').utcOffset(8);
         const minTime = moment(type.deliveryStart, 'HH:mm:ss').utcOffset(8);
         const appointStart = moment(this.props.data.appointStart ? this.props.data.appointStart.split(' ')[1] : type.deliveryStart, 'HH:mm:ss').utcOffset(8);
@@ -31,32 +61,43 @@ class ConfirmTypeContent extends Component {
         getFieldProps('deliveryType', {
             initialValue: deliveryType,
         });
+        getFieldProps('payType', {
+            initialValue: payType,
+        });
         return <div>
             <List renderHeader={() => '支付方式'}>
                 <Item>
 
                 </Item>
                 <Item>
-                       <span className="am-radio-wrapper" style={{marginLeft: 10}} onClick={()=> {
-                           cacheUpdate({
-                               payType: '1'
-                           })
-                       }}>
-                            <span className={ "am-radio " + (payType == '1' ? 'am-radio-checked' : '') }>
-                                <span className="am-radio-inner"/>
-                            </span>
-                            <span>在线支付</span>
-                        </span>
-                    <span className="am-radio-wrapper" style={{marginLeft: 100}} onClick={()=> {
-                        cacheUpdate({
-                            payType: '2'
-                        })
-                    }}>
-                            <span className={ "am-radio " + (payType == '2' ? 'am-radio-checked' : '') }>
-                                <span className="am-radio-inner"/>
-                            </span>
-                            <span>货到付款</span>
-                        </span>
+                    <MyRadio style={{marginLeft: 10}}  {...getFieldProps('payType.1', {
+                        valuePropName: 'checked',
+                        exclusive: true,
+                        getValueFromEvent: (checked)=> {
+                            return checked ? '1' : ''
+                        },
+                        getValueProps: (value)=> {
+                            return {
+                                checked: value === '1',
+                            }
+                        },
+                    })}>
+                        在线支付
+                    </MyRadio>
+                    <MyRadio  style={{marginLeft: 100}} {...getFieldProps('payType.2', {
+                        valuePropName: 'checked',
+                        exclusive: true,
+                        getValueFromEvent: (checked)=> {
+                            return checked ? '2' : ''
+                        },
+                        getValueProps: (value)=> {
+                            return {
+                                checked: value === '2',
+                            }
+                        },
+                    })}>
+                        货到付款
+                    </MyRadio>
                     <Radio style={{display: 'none'}}/>
                 </Item>
             </List>
@@ -143,7 +184,8 @@ class ConfirmTypeContent extends Component {
                         cacheUpdate({
                             appointEnd: values.date.format('YYYY-MM-DD ') + values.appointEnd.format('HH:mm:ss'),
                             appointStart: values.date.format('YYYY-MM-DD ') + values.appointStart.format('HH:mm:ss'),
-                            deliveryType: values.deliveryType
+                            deliveryType: values.deliveryType,
+                            payType:values.payType
                         })
                         router.goBack();
 
