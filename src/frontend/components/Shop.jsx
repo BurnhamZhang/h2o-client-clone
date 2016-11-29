@@ -9,14 +9,14 @@ import  {ActivityIndicator,Result} from 'antd-mobile';
 
 @connect((state, ownProps)=>({
     isFetching:state.geo.isFetching||state.shop.isFetching,
-    location:state.shop.location,
+    local:state.shop.location,
     shop:state.shop.data
 }), (dispatch, ownProps)=>({
     get_geolocation:(widthShopId)=>dispatch(get_geolocation(widthShopId))
 }))
 class Shop extends Component{
     componentWillMount(){
-        !this.props.location && this.props.get_geolocation(true);
+        !this.props.local && this.props.get_geolocation(true);
     }
     render() {
 
@@ -33,6 +33,7 @@ class Shop extends Component{
             )
         }
         if(Array.isArray(shop) && shop[0]){
+            console.warn('render',this.props.children);
             return  this.props.children || <div/>
         }
 
