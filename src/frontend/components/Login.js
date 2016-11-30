@@ -15,7 +15,7 @@ class Login extends Component {
     componentDidMount(){
         this.props.login({
             loginType:4,
-            account:'ABCDEFG'
+            account:'15682553619'
         })
     }
     shouldComponentUpdate(nextProps) {

@@ -59,7 +59,18 @@ export default function (state = {
 
         case CART_UPDATE_GOODS_CHECKED:
             data =  data.map((item)=>{
-                item.checked = action.payload
+                if(item.shelves=='1'){
+                    if(item.stock*1>0){
+                        item.checked = action.payload
+                    }
+                    else {
+                        item.checked =false;
+                    }
+                }
+                else {
+                    item.checked =false;
+                }
+
                 return item
             })
             storage.set('CART',data);
@@ -90,6 +101,15 @@ export default function (state = {
                 if(!_item){
                     return false
                 }
+                if( _item.count>item.stock*1){
+                    _item.count = item.stock*1;
+                }
+
+                if(item.shelves=='1'){
+                    _item.checked = false;
+                    _item.count =0;
+                }
+
                 return Object.assign({},_item,item)
             })
 

@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Toast, List, Switch, Icon, Stepper,Result} from 'antd-mobile';
+import {Toast, List, Switch, Icon, Stepper, Result} from 'antd-mobile';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router';
 import {cacheUpdate} from '../actions/cache';
@@ -20,11 +20,9 @@ class ConfirmAction extends Action {
 }
 
 
-
-
 @withRouter
 @connect((state, ownProps)=> {
-    const {id, name, geo, houseNumber, streetId, phone, location} = state.address.delivery.data||{}
+    const {id, name, geo, houseNumber, streetId, phone, location} = state.address.delivery.data || {}
     const data = Object.assign({
         shopId: Array.isArray(state.shop.data) ? state.shop.data[0] : null,
         orderDetails: state.cache.cart || [],
@@ -37,16 +35,14 @@ class ConfirmAction extends Action {
             {
                 scale: "18.9L",          // 规格，必填
                 priceYuan: "35",      // 单价，必填
-                count: "1"             // 数量，必填
             },
             {
                 scale: "11.3L",
                 priceYuan: "30",      // 单价，必填
-                count: "1"
             }
         ],
 
-    },id?{
+    }, id ? {
         addressId: id,
         name,
         geo,
@@ -54,9 +50,35 @@ class ConfirmAction extends Action {
         houseNumber,
         streetId,
         phone
-    }:null, state.cache[ownProps.location.query.cache])
+    } : null, state.cache[ownProps.location.query.cache])
     const showMoneyYuan = data.orderDetails.reduce((value, item)=>value + item.count * item.priceYuan, 0).toFixed(2);
-    const bucketMoneyYuan = data.bucketType == '2' ? data.buckets.reduce((value, item)=>value + item.count * item.priceYuan, 0).toFixed(2) : '0';
+    let bucketMoneyYuan = 0;
+    let bigMax = 0,littleMax = 0;
+    data.orderDetails.forEach(item=>{
+        if(item.depositType=='1'){
+            bucketMoneyYuan += item.count *item.depositMoneyYuan;
+            if(item.scale=='18.9L'){
+                bigMax +=item.count*1;
+            }
+            if(item.scale=='11.3L'){
+                littleMax +=item.count*1;
+            }
+        }
+    })
+    data.buckets[0].max =bigMax;
+    data.buckets[1].max =littleMax;
+    if(data.buckets[0].count ===undefined){
+        data.buckets[0].count =bigMax;
+    }
+    if(data.buckets[1].count ===undefined){
+        data.buckets[1].count =littleMax;
+    }
+    if( data.bucketType == '2'){
+        data.buckets.forEach(item=>{
+            bucketMoneyYuan-= item.count*item.priceYuan;
+        })
+    }
+    bucketMoneyYuan = bucketMoneyYuan.toFixed(2);
     const tradeMoneyYuan = (bucketMoneyYuan * 1 + showMoneyYuan * 1).toFixed(2);
     return {
         data: {
@@ -66,7 +88,7 @@ class ConfirmAction extends Action {
             tradeMoneyYuan
         },
         res: state.order.create.data,
-        type:state.delivery.type.data
+        type: state.delivery.type.data
     }
 }, (dispatch, ownProps)=>({
     cacheUpdate: (data)=>dispatch(cacheUpdate({
@@ -83,19 +105,23 @@ class ConfirmAction extends Action {
             count,
             depositType,
             depositMoneyYuan,
-            moneyYuan: (priceYuan*count).toFixed(2)
+            moneyYuan: (priceYuan * count).toFixed(2)
         }))
+        payload.buckets =  payload.buckets.map(({scale,priceYuan,count})=>{scale,priceYuan,count})
 
+        if(payload.bucketType=='1'){
+            delete payload.buckets;
+        }
         return dispatch(createOrder(payload))
     },
     getDeliveryAddress: ()=>dispatch(getDeliveryAddress()),
     getDeliveryType: ()=>dispatch(getDeliveryType())
 }))
-class ConfirmContent extends Component {
+class Confirm extends Component {
     componentWillReceiveProps(nextProps) {
 
         if (nextProps.res && nextProps.res.orderNo && !this.props.res) {
-            console.log(nextProps.res)
+            console.log('componentWillReceiveProps',nextProps.res)
             this.props.router.push({
                 pathname: `/pay/${nextProps.res.orderNo}`,
                 state: nextProps.res
@@ -105,17 +131,18 @@ class ConfirmContent extends Component {
     }
 
     componentWillMount() {
-        if(this.props.data.shopId){
+        if (this.props.data.shopId) {
             this.props.getDeliveryAddress();
             !this.props.type && this.props.getDeliveryType();
         }
 
     }
+
     render() {
         const {orderDetails} = this.props.data;
         const {type} = this.props;
         if (orderDetails.length == 0) {
-            return   (
+            return (
                 <Result
                     imgUrl="https://zos.alipayobjects.com/rmsportal/LUIUWjyMDWctQTf.png"
                     title="无选择商品"
@@ -128,24 +155,20 @@ class ConfirmContent extends Component {
                 />
             )
         }
-        if(!type){
+        if (!type) {
             return null
         }
 
-        return <div>
-            <ConfirmAction/>
-            {React.cloneElement(this.props.children || <div/>, this.props)}
-            </div>
+        return (
+            <ConfirmAction>
+            <Shop>
+                {React.cloneElement(this.props.children || <div/>, this.props)}
+            </Shop>
+        </ConfirmAction>
+        )
     }
 }
 ;
 
-class Confirm extends Component {
-    render(){
-        return   <Shop>
-            <ConfirmContent {...this.props}/>
-        </Shop>
-    }
-}
 
 export default Confirm;

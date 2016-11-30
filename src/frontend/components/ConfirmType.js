@@ -66,7 +66,9 @@ class ConfirmType extends Component {
         return <div>
             <List renderHeader={() => '支付方式'}>
                 <Item>
-
+                    {
+                        orderDetails.map((item,index)=>(<img key={index} src={item.imagesArray[0]} style={{width:100,height:100,margin:'10px 10px 0 0'}} alt=""/>))
+                    }
                 </Item>
                 <Item>
                     <MyRadio style={{marginLeft: 10}}  {...getFieldProps('payType.1', {
@@ -114,7 +116,7 @@ class ConfirmType extends Component {
                                    }
                                },
                            })}>
-                    即时送 <span>(半小时内到达)</span>
+                    即时送 <span className="am-list-brief">(半小时内到达)</span>
                 </RadioItem>
                 <RadioItem name='deliveryType'
                            {...getFieldProps('deliveryType.2', {
@@ -130,7 +132,7 @@ class ConfirmType extends Component {
                                },
                            })}
                 >
-                    预约选择 <span>每日({type.deliveryStart + '-' + type.deliveryEnd})</span>
+                    预约选择 <span className="am-list-brief">每日({type.deliveryStart + '-' + type.deliveryEnd})</span>
                 </RadioItem>
                 {
                     getFieldValue('deliveryType') == '2' ? (

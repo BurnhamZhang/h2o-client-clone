@@ -26,7 +26,7 @@ export default function (state = {
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                didUpdate: false,
+                didUpdate: true,
                 ...action.payload
             })
             break;

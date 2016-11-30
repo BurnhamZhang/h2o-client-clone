@@ -55,19 +55,23 @@ export default (store) => {
             },
             {
                 path: '/geo',
+                onEnter: requireAuth,
                 component: Geo
             },
             {
                 path: '/pay/:id',
+                onEnter: requireAuth,
                 component: Pay
             },
             {
                 path: '/address',
+                onEnter: requireAuth,
                 component: AddressControl
             },
             {
                 path: '/confirm',
                 component: Confirm,
+                onEnter: requireAuth,
                 indexRoute:{
                     component:ConfirmIndex
                 },
@@ -89,6 +93,7 @@ export default (store) => {
             {
                 path: '/address/:id',
                 component: Address ,
+                onEnter: requireAuth,
                 indexRoute:{
                     component:AddressItem
                 },
