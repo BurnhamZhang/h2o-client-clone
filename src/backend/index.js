@@ -1,5 +1,6 @@
 import './common/lib';
 import 'babel-polyfill';
+import  './common/messages';
 
 // react
 import React from 'react';

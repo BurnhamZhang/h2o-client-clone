@@ -46,7 +46,9 @@ class Action extends Component {
     }
 
     render() {
-     return  this.props.children
+     return  <div>
+         {this.props.children||null}
+     </div>
     }
 }
 ;

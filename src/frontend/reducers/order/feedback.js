@@ -1,14 +1,12 @@
-import {ORDER_LIST_REQUEST, ORDER_LIST_SUCCESS, ORDER_LIST_FAILURE} from '../../actions/order';
+import {ORDER_FEEDBACK_FAILURE, ORDER_FEEDBACK_REQUEST, ORDER_FEEDBACK_SUCCESS} from '../../actions/order';
 
 export default function (state = {
     isFetching: false,
     didInvalidate: false,
     didUpdate:false,
-    pagination:{
-    }
 }, action) {
     switch (action.type) {
-        case ORDER_LIST_FAILURE:
+        case ORDER_FEEDBACK_FAILURE:
             delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
@@ -17,14 +15,15 @@ export default function (state = {
                 ...action.payload
             })
             break;
-        case ORDER_LIST_REQUEST:
+        case ORDER_FEEDBACK_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
                 didUpdate:false,
             })
             break;
-        case ORDER_LIST_SUCCESS:
+        case ORDER_FEEDBACK_SUCCESS:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
@@ -32,7 +31,6 @@ export default function (state = {
                 ...action.payload
             })
             break;
-
         default:
             return state
     }

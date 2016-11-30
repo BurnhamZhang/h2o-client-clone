@@ -7,8 +7,6 @@ import GoodsItem from './GoodsItem'
 
 const Item = List.Item
 
-const NUM_ROWS = 20;
-let pageIndex = 0;
 
 
 

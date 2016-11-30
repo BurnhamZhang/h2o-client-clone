@@ -17,6 +17,8 @@ import ConfirmRemark from './components/ConfirmRemark';
 import ConfirmAddress from './components/ConfirmAddress';
 import AddressItem from './components/AddressItem';
 import Pay from './components/Pay';
+import OrderList from './components/OrderList';
+import OrderItem from './components/OrderItem';
 
 
 
@@ -67,6 +69,16 @@ export default (store) => {
                 path: '/address',
                 onEnter: requireAuth,
                 component: AddressControl
+            },
+            {
+                path: '/order',
+                onEnter: requireAuth,
+                component: OrderList
+            },
+            {
+                path: '/order/:id',
+                onEnter: requireAuth,
+                component: OrderItem
             },
             {
                 path: '/confirm',
