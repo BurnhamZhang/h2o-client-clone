@@ -9,6 +9,7 @@ import cart from './cart';
 import cache from './cache';
 import order from './order/index';
 import delivery from './delivery/index';
+import bucket from './bucket';
 
 const rootReducer = combineReducers({
   routing: routerReducer,
@@ -20,7 +21,8 @@ const rootReducer = combineReducers({
   cart,
   cache,
   order,
-  delivery
+  delivery,
+  bucket
 });
 
 export default rootReducer;

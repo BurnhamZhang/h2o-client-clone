@@ -7,6 +7,16 @@ import {connect} from 'react-redux';
 import Order from './Order';
 const Item = List.Item;
 const Brief = Item.Brief;
+import Action from './Action';
+
+@connect((state, ownProps)=>({
+    remoteMsg: state.order.item.remoteMsg,
+    didInvalidate: state.order.item.didInvalidate,
+    didUpdate: state.order.item.didUpdate,
+
+}))
+class OrderAction extends Action {
+}
 
 const map={
     '1':'待支付',
@@ -22,7 +32,7 @@ const map={
 
 class OrderDetail extends Component {
     render(){
-        const  {tradeMoney,courierName,courierPhone,userLocation,userHouseNumber,userName,userPhone,orderNo,createdDate,payType,orderDetails,status} = this.props.data;
+        const  {version,tradeMoney,courierName,courierPhone,userLocation,userHouseNumber,userName,userPhone,orderNo,createdDate,payType,orderDetails,status} = this.props.data;
         console.log('render',this.props)
         return (
             <div>
@@ -95,20 +105,27 @@ class OrderDetail extends Component {
                     </Item>
 
                 </List>
-                <WhiteSpace/>
-                <WingBlank>
-                    <Button onClick={()=>{
-                        Modal.alert('取消订单', '确定要取消此订单么?', [
-                            { text: '取消' },
-                            { text: '确定', onPress: () =>{
-                                this.props.orderCancelConfirm(orderNo)
-                            } },
-                        ]);
+                {
+                    /^(2|6)$/.test(status)?(
+                        <div>
+                            <WhiteSpace/>
+                            <WingBlank>
+                                <Button onClick={()=>{
+                                    Modal.prompt('取消订单', '请输入取消订单的原因', [
+                                        { text: '取消' },
+                                        { text: '确定', onPress: (reason) =>{
+                                            this.props.orderCancelConfirm(orderNo,{
+                                                reason,
+                                                version
+                                            })
+                                        } },
+                                    ]);
 
-                    }}>取消订单</Button>
-                </WingBlank>
-
-
+                                }}>取消订单</Button>
+                            </WingBlank>
+                        </div>
+                    ):null
+                }
             </div>
 
         )
@@ -117,7 +134,7 @@ class OrderDetail extends Component {
 
 
 @connect((state, ownProps)=>({
-    data:state.order.item.data
+    data:state.order.item.data,
 }))
 class OrderRequest extends Component {
     componentWillMount(){
@@ -127,11 +144,17 @@ class OrderRequest extends Component {
     render(){
         console.log('render',this.props)
         const {data} = this.props;
+        const id = this.props.params.id;
         if(!data){
             return null
         }
         return (
-            <OrderDetail data={data} {...this.props} />
+           <div>
+               <OrderAction updateHandle={()=>{
+                   this.props.fetchOrderIfNeeded(id)
+               }}/>
+               <OrderDetail data={data} {...this.props} />
+           </div>
         )
     }
 }

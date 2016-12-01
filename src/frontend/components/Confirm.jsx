@@ -107,7 +107,7 @@ class ConfirmAction extends Action {
             depositMoneyYuan,
             moneyYuan: (priceYuan * count).toFixed(2)
         }))
-        payload.buckets =  payload.buckets.map(({scale,priceYuan,count})=>{scale,priceYuan,count})
+        payload.buckets =  payload.buckets.map(({scale,priceYuan,count})=>({scale,priceYuan,count}))
 
         if(payload.bucketType=='1'){
             delete payload.buckets;

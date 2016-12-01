@@ -1,33 +1,33 @@
-import {GOODS_LIST_REQUEST, GOODS_LIST_SUCCESS, GOODS_LIST_FAILURE} from '../../actions/goods';
+import {ORDER_PAY_FAILURE, ORDER_PAY_REQUEST, ORDER_PAY_SUCCESS} from '../../actions/order';
 
 export default function (state = {
     isFetching: false,
     didInvalidate: false,
-    didUpdate: false,
-    pagination:{
-    }
+    didUpdate:false,
 }, action) {
     switch (action.type) {
-        case GOODS_LIST_FAILURE:
+        case ORDER_PAY_FAILURE:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
-                didUpdate: false
+                didUpdate:false,
+                ...action.payload
             })
             break;
-        case GOODS_LIST_REQUEST:
+        case ORDER_PAY_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
-                didUpdate: false
+                didUpdate:false,
             })
             break;
-        case GOODS_LIST_SUCCESS:
+        case ORDER_PAY_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                didUpdate: true,
-                ... action.payload
+                didUpdate:true,
+                ...action.payload
             })
             break;
         default:

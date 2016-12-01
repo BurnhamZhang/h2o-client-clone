@@ -189,7 +189,8 @@ function fetchOrderList(data) {
         dispatch(order_list_request(data));
         return fetch('/api/order/list',{
             data:{
-                orderType:1
+                orderType:1,
+                ...data
             }
         })
             .then((json) => {
@@ -300,12 +301,58 @@ function order_pay_success(json) {
 export function orderPay(orderNo) {
     return (dispatch, getState) => {
         dispatch(order_pay_request(orderNo));
-        return fetch(`/order/payAgain/${orderNo}`,{
+        return fetch(`/api/payAgain/${orderNo}`,{
         })
             .then((json) => {
                 dispatch(order_pay_success(json));
             }).catch(error => {
                 dispatch(order_pay_failure(error))
+            });
+    };
+}
+
+
+//订单继续支付
+
+
+export const ORDER_COMPLETE_REQUEST = 'ORDER_COMPLETE_REQUEST';
+export const ORDER_COMPLETE_SUCCESS = 'ORDER_COMPLETE_SUCCESS';
+export const ORDER_COMPLETE_FAILURE = 'ORDER_COMPLETE_FAILURE';
+
+
+function order_complete_failure(payload) {
+    return {
+        type: ORDER_COMPLETE_FAILURE,
+        payload
+    };
+}
+
+function order_complete_request(payload) {
+    return {
+        type: ORDER_COMPLETE_REQUEST,
+        payload
+    };
+}
+
+function order_complete_success(json) {
+    return {
+        type: ORDER_COMPLETE_SUCCESS,
+        receiveAt: Date.now(),
+        payload: json
+    };
+}
+
+
+
+export function orderComplete(orderNo) {
+    return (dispatch, getState) => {
+        dispatch(order_complete_request(orderNo));
+        return fetch(`/api/order/complete/${orderNo}`,{
+        })
+            .then((json) => {
+                dispatch(order_complete_success(json));
+            }).catch(error => {
+                dispatch(order_complete_failure(error))
             });
     };
 }

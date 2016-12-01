@@ -59,7 +59,7 @@ export default function (state = {
 
         case CART_UPDATE_GOODS_CHECKED:
             data =  data.map((item)=>{
-                if(item.shelves=='1'){
+                if(item.shelves=='0'){
                     if(item.stock*1>0){
                         item.checked = action.payload
                     }

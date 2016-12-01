@@ -4,8 +4,7 @@ export default function (state = {
     isFetching: false,
     didInvalidate: false,
     didUpdate:false,
-    pagination:{
-    }
+    didFetch:false,
 }, action) {
     switch (action.type) {
         case ORDER_FAILURE:
@@ -14,6 +13,7 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: true,
                 didUpdate:false,
+                didFetch:false,
                 ...action.payload
             })
             break;
@@ -22,13 +22,15 @@ export default function (state = {
                 isFetching: true,
                 didInvalidate: false,
                 didUpdate:false,
+                didFetch:false,
             })
             break;
         case ORDER_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                didUpdate:true,
+                didUpdate:false,
+                didFetch:true,
                 ...action.payload
             })
             break;
@@ -38,6 +40,7 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: true,
                 didUpdate:false,
+                didFetch:false,
                 ...action.payload
             })
             break;
@@ -46,6 +49,7 @@ export default function (state = {
                 isFetching: true,
                 didInvalidate: false,
                 didUpdate:false,
+                didFetch:false,
             })
             break;
         case ORDER_CANCEL_SUCCESS:
@@ -54,6 +58,7 @@ export default function (state = {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
+                didFetch:false,
                 ...action.payload
             })
             break;

@@ -1,35 +1,37 @@
-import {GOODS_LIST_REQUEST, GOODS_LIST_SUCCESS, GOODS_LIST_FAILURE} from '../../actions/goods';
+/**
+ * Created by zhangbohan on 16/11/24.
+ */
+import { ADDRESS_BUCKET_FAILURE,ADDRESS_BUCKET_REQUEST,ADDRESS_BUCKET_SUCCESS } from '../../actions/address';
 
 export default function (state = {
-    isFetching: false,
-    didInvalidate: false,
-    didUpdate: false,
-    pagination:{
-    }
 }, action) {
     switch (action.type) {
-        case GOODS_LIST_FAILURE:
+
+        case ADDRESS_BUCKET_FAILURE:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
-                didUpdate: false
+                didUpdate:false,
+                ...action.payload
             })
             break;
-        case GOODS_LIST_REQUEST:
+        case ADDRESS_BUCKET_REQUEST:
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
-                didUpdate: false
+                didUpdate:false,
             })
             break;
-        case GOODS_LIST_SUCCESS:
+        case ADDRESS_BUCKET_SUCCESS:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                didUpdate: true,
-                ... action.payload
+                didUpdate:true,
+                ...action.payload,
             })
             break;
+
         default:
             return state
     }

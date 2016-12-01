@@ -3,26 +3,22 @@
  */
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {withRouter,Link} from 'react-router';
 import {orderPay, orderCancelConfirm, feedbackOrder, fetchOrderIfNeeded} from '../actions/order';
 import {ListView, List, Flex, Button, Modal, Tag, Toast} from 'antd-mobile';
 
 
 import Action from './Action';
 
-@connect((state, ownProps)=>({
-    remoteMsg: state.order.item.remoteMsg,
-    didInvalidate: state.order.item.didInvalidate,
-    didUpdate: state.order.item.didUpdate,
-}))
-class OrderAction extends Action {
-}
-
+@withRouter
 @connect((state, ownProps)=>({
     remoteMsg: state.order.feedback.remoteMsg,
     didInvalidate: state.order.feedback.didInvalidate,
     didUpdate: state.order.feedback.didUpdate,
-    updateHandle: ()=> {
-        Toast.info('成功')
+    updateHandle: (component)=> {
+        Toast.info('成功',1,()=>{
+            component.props.router.replace('/order')
+        })
     }
 }))
 class FeedBackAction extends Action {
@@ -31,7 +27,7 @@ class FeedBackAction extends Action {
 
 @connect((state, ownProps)=>({}), (dispatch, ownProps)=>({
     orderPay: (payload)=>dispatch(orderPay(payload)),
-    orderCancelConfirm: (payload)=>dispatch(orderCancelConfirm(payload)),
+    orderCancelConfirm: (orderNo,payload)=>dispatch(orderCancelConfirm(orderNo,payload)),
     feedbackOrder: (payload)=>dispatch(feedbackOrder(payload)),
     fetchOrderIfNeeded: (payload)=>dispatch(fetchOrderIfNeeded(payload)),
 }))
@@ -119,8 +115,7 @@ class Order extends Component {
     render() {
         const {orderPay, orderCancelConfirm, feedbackOrder, fetchOrderIfNeeded} = this.props;
         const {renderTag, renderButton} = this;
-        return (<OrderAction>
-            <FeedBackAction/>
+        return (<FeedBackAction>
             {
                 React.cloneElement(this.props.children || <div/>, {
                     orderPay, orderCancelConfirm, feedbackOrder, fetchOrderIfNeeded,
@@ -128,7 +123,7 @@ class Order extends Component {
                     renderButton
                 })
             }
-        </OrderAction>)
+        </FeedBackAction>)
     }
 }
 export default Order;

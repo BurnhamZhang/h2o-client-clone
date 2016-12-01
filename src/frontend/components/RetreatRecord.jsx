@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter,Link} from 'react-router';
 import {connect} from 'react-redux';
-import { ListView,List,Flex ,Button,Modal,Tag} from 'antd-mobile';
+import { ListView,List,Flex ,Button,Modal,Tag,Result} from 'antd-mobile';
 import {fetchOrderListIfNeeded} from '../actions/order'
 import Order from './Order';
 const Item = List.Item
@@ -24,33 +24,33 @@ class OrderItem extends Component {
     render(){
         const  { orderDetails ,tradeMoney,orderNo} = this.props.data;
         return (
-        <Item onClick={
-            ()=>{
-                this.props.router.push(`/order/${orderNo}`)
-            }
-        }>
-            <Flex justify="center">
-                <img src={orderDetails[0].imageUrls[0]} alt="" style={{height: 100, width: 100}}/>
-                <Flex.Item className="Item">
-                    <Flex justify="between" align="start">
-                        <span>{orderDetails[0].name +'*'+orderDetails[0].count}</span>
-                       <span>
+            <Item onClick={
+                ()=>{
+                    this.props.router.push(`/order/${orderNo}`)
+                }
+            }>
+                <Flex justify="center">
+                    <img src={orderDetails[0].imageUrls[0]} alt="" style={{height: 100, width: 100}}/>
+                    <Flex.Item className="Item">
+                        <Flex justify="between" align="start">
+                            <span>{orderDetails[0].name +'*'+orderDetails[0].count}</span>
+                            <span>
                             {
                                 this.props.renderTag.call(this)
                             }
                        </span>
-                    </Flex>
-                    <Flex justify="between">
-                        <Brief>￥{tradeMoney} </Brief>
-                        {
-                            this.props.renderButton.call(this)
+                        </Flex>
+                        <Flex justify="between">
+                            <Brief>￥{tradeMoney} </Brief>
+                            {
+                                this.props.renderButton.call(this)
 
-                        }
+                            }
 
-                    </Flex>
-                </Flex.Item>
-            </Flex>
-        </Item>
+                        </Flex>
+                    </Flex.Item>
+                </Flex>
+            </Item>
         )
     }
 }
@@ -83,7 +83,8 @@ class OrderList  extends Component {
     componentWillMount(){
         this.props.fetchOrderListIfNeeded({
             pageNum:0,
-            pageSize:20
+            pageSize:20,
+            orderType:2
         })
     }
 
@@ -99,7 +100,6 @@ class OrderList  extends Component {
         }
         if(nextProps.didUpdate) {
             this.combineData(nextProps.data)
-            console.log(this.data.length);
             let isEnd = false;
             if(nextProps.pagination.totalCount*1==this.data.length){
                 isEnd = true;
@@ -123,7 +123,8 @@ class OrderList  extends Component {
         if(this.props.pagination.totalCount*1 >this.state.dataSource.getRowCount()){
             this.props.fetchOrderListIfNeeded({
                 pageNum:this.props.pagination.pageNum*1+1,
-                pageSize:20
+                pageSize:20,
+                orderType:2
             })
         }
 
@@ -152,8 +153,7 @@ class OrderList  extends Component {
                 }}/>
                 {
                     this.state.isEnd && this.state.dataSource.getRowCount()==0?(
-                        <Result title="订单为空"
-                                message="您还没有订单,快去下单吧"
+                        <Result title="申退历史为空"
                                 imgUrl="https://zos.alipayobjects.com/rmsportal/NRzOqylcxEstLGf.png"
                                 buttonText="返回首页"
                                 buttonType="primary"

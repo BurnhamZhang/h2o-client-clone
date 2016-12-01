@@ -11,7 +11,10 @@ const Item = List.Item
 
 
 @connect((state, ownProps)=>({
-    data:state.goods.list.data
+    data:state.goods.list.data,
+    pagination:state.goods.list.pagination,
+    isLoading:state.goods.list.isFetching,
+    didUpdate:state.goods.list.didUpdate,
 }), (dispatch, ownProps)=>({
     fetchGoodsListIfNeeded: (payload)=>dispatch(fetchGoodsListIfNeeded(payload)),
 }))
@@ -24,23 +27,54 @@ class GoodsList  extends Component {
         this.state=  {
             dataSource: dataSource.cloneWithRows([]),
             isLoading: false,
+            isEnd:false,
         };
+        this.data = [];
     }
     componentWillMount(){
-        this.props.fetchGoodsListIfNeeded()
+        this.props.fetchGoodsListIfNeeded({
+            pageNum:0,
+            pageSize:20
+        })
     }
-
+    combineData(data){
+        this.data = this.data.concat(data)
+    }
     componentWillReceiveProps(nextProps){
         console.warn('componentWillReceiveProps',nextProps);
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(nextProps.data),
-            isLoading: false,
-        });
+        if(nextProps.isLoading){
+            this.setState({
+                isLoading: true,
+            });
+        }
+        if(nextProps.didUpdate) {
+            this.combineData(nextProps.data)
+            console.log(this.data.length);
+            let isEnd = false;
+            if(nextProps.pagination.totalCount*1==this.data.length){
+                isEnd = true;
+            }
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(this.data),
+                isLoading: false,
+                isEnd
+            });
+        }
+
     }
 
+
     onEndReached(event) {
-        // load new data
-        console.log('reach end', event);
+
+        if(this.state.isEnd){
+            return
+        }
+        if(this.props.pagination.totalCount*1 >this.state.dataSource.getRowCount()){
+            this.props.fetchGoodsListIfNeeded({
+                pageNum:this.props.pagination.pageNum*1+1,
+                pageSize:20
+            })
+        }
     }
 
     render() {
@@ -58,7 +92,7 @@ class GoodsList  extends Component {
             <ListView style={{marginBottom:100}}
                 dataSource={this.state.dataSource}
                 renderFooter={() => <div style={{ padding: 30, textAlign: 'center' }}>
-                    {this.state.isLoading ? '加载中...' : '加载完毕'}
+                    {this.state.isEnd?'到底了':(this.state.isLoading ? '加载中...' : '加载完毕')}
                 </div>}
                 renderRow={row}
                 className="am-list"

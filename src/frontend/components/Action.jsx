@@ -21,9 +21,8 @@ class Action extends Component {
 
     componentWillReceiveProps(nextProps){
         const  {didInvalidate,remoteMsg,didUpdate,router,nextRoute,updateHandle} = nextProps;
-
         if (didUpdate && didUpdate!=this.props.didUpdate  && typeof updateHandle =='function') {
-            updateHandle(this)
+            updateHandle(this,nextProps)
             return false
         }
 

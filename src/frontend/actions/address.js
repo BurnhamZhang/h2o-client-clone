@@ -34,6 +34,9 @@ export const ADDRESS_DELIVERY_SUCCESS = 'ADDRESS_DELIVERY_SUCCESS';
 export const ADDRESS_DELIVERY_FAILURE = 'ADDRESS_DELIVERY_FAILURE';
 
 
+export const ADDRESS_BUCKET_REQUEST = 'ADDRESS_BUCKET_REQUEST';
+export const ADDRESS_BUCKET_SUCCESS = 'ADDRESS_BUCKET_SUCCESS';
+export const ADDRESS_BUCKET_FAILURE = 'ADDRESS_BUCKET_FAILURE';
 
 //收货地址详情
 
@@ -327,6 +330,45 @@ export function getDeliveryAddress() {
                 dispatch(address_delivery_success(json));
             }).catch(error => {
                 dispatch(address_delivery_failure(error))
+            });
+    };
+}
+
+
+//退桶页面用户收货地址
+function address_bucket_failure(payload) {
+    return {
+        type: ADDRESS_BUCKET_FAILURE,
+        payload
+    };
+}
+
+function address_bucket_request(payload) {
+    return {
+        type: ADDRESS_BUCKET_REQUEST,
+        payload
+    };
+}
+
+function address_bucket_success(json) {
+    return {
+        type: ADDRESS_BUCKET_SUCCESS,
+        receiveAt: Date.now(),
+        payload: json
+    };
+}
+
+
+
+export function getBucketAddress() {
+    return (dispatch, getState) => {
+        dispatch(address_bucket_request());
+        return fetch('/api/user/bucket/address',{
+        })
+            .then((json) => {
+                dispatch(address_bucket_success(json));
+            }).catch(error => {
+                dispatch(address_bucket_failure(error))
             });
     };
 }

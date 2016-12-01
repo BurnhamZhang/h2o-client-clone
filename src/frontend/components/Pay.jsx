@@ -6,7 +6,16 @@ import {withRouter} from 'react-router';
 @withRouter
 class Action extends Component {
     componentDidMount(){
-        this.refs.form && this.refs.form.submit();
+        if(!this.props.location.state.action){
+            this.props.router.setState({
+                action:true
+            })
+            this.refs.form && this.refs.form.submit();
+        }
+        else {
+            this.props.router.goBack()
+        }
+
     }
     render() {
 

@@ -19,6 +19,8 @@ import AddressItem from './components/AddressItem';
 import Pay from './components/Pay';
 import OrderList from './components/OrderList';
 import OrderItem from './components/OrderItem';
+import Retreat from './components/Retreat';
+import RetreatRecord from './components/RetreatRecord';
 
 
 
@@ -69,6 +71,16 @@ export default (store) => {
                 path: '/address',
                 onEnter: requireAuth,
                 component: AddressControl
+            },
+            {
+                path: '/retreat',
+                onEnter: requireAuth,
+                component: Retreat
+            },
+            {
+                path: '/retreat/record',
+                onEnter: requireAuth,
+                component: RetreatRecord
             },
             {
                 path: '/order',

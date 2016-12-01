@@ -106,13 +106,15 @@ class CartPage extends Component {
             )
         }
         data.forEach(item=> {
-            if(item.stock*1>0){
-                if (item.checked) {
-                    count += item.count;
-                    totalPrice += item.priceYuan * item.count;
-                }
-                else {
-                    checked = false;
+            if(item.shelves=='0'){
+                if(item.stock*1>0){
+                    if (item.checked) {
+                        count += item.count;
+                        totalPrice += item.priceYuan * item.count;
+                    }
+                    else {
+                        checked = false;
+                    }
                 }
             }
         })
