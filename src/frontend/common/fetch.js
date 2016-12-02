@@ -35,6 +35,10 @@ export default function (url,options = {}) {
         options.headers.token = token
     }
 
+    if(process.env.NODE_ENV === 'production'){
+        url = `/h2o${url}`
+    }
+
     return fetch(url,options).then((req) => req.json()).then((res)=>{
         if (res.code !='A00000') {
             return Promise.reject(res.response)
