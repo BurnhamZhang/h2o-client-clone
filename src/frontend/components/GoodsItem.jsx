@@ -13,28 +13,45 @@ const Brief = Item.Brief;
 }))
 class GoodsItem extends Component {
     render() {
-        const {name ,stock,imagesArray,goodsId} = this.props.data;
+        const {name ,stock,imagesArray,scale,priceYuan} = this.props.data;
         return  (
-        <SwipeAction
-            autoClose
-            right={[
-                {
-                    text: '删除',
-                    onPress:()=>void 0,
-                    style: { backgroundColor: '#F4333C', color: 'white' },
-                },
-            ]}
-        >
             <Item>
-                <img style={{ height: 64 * (window.viewportScale || 1), width: 64 * (window.viewportScale || 1), marginRight: 8 }} src={imagesArray[0]} />
-                {name }
-                {stock}
-                <Icon type="plus-circle" onClick={()=>{
-                    this.props.cartAddGoods(this.props.data);
-                    Toast.success('加入购物车成功！',1)
-                }} />
+                <Flex justify="center">
+                    <div style={{display:'inline-block',height: 100, width: 100,position:'relative'}}>
+                        <img style={{ height: 100, width:100, marginRight: 8 }} src={imagesArray[0]} />
+                        {
+                            stock*1 ==0?(
+                                <Flex style={{position:'absolute',top:0,left:0,width:'100%',height:'100%'}} justify="center" align="center">
+                                    无货
+                                </Flex>
+                            ):null
+                        }
+                    </div>
+
+                    <Flex.Item className="Item">
+                        <div>{name }</div>
+                        <List.Item.Brief>规格：{scale}</List.Item.Brief>
+                        <Flex justify="between">
+                            ￥：{priceYuan}
+                            {
+                                stock*1 ==0?(
+                                    <Icon type="plus-circle" style={{color:'lightgray'}}/>
+                                ):
+                                    (
+                                        <Icon type="plus-circle" onClick={()=>{
+                                            this.props.cartAddGoods(this.props.data);
+                                            Toast.success('加入购物车成功！',1)
+                                        }} />
+                                    )
+                            }
+
+                        </Flex>
+                    </Flex.Item>
+                </Flex>
+
+
+
             </Item>
-        </SwipeAction>
         )
     }
 }

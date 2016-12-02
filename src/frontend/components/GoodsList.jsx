@@ -34,7 +34,8 @@ class GoodsList  extends Component {
     componentWillMount(){
         this.props.fetchGoodsListIfNeeded({
             pageNum:0,
-            pageSize:20
+            pageSize:20,
+            shelves:0
         })
     }
     combineData(data){
@@ -72,7 +73,8 @@ class GoodsList  extends Component {
         if(this.props.pagination.totalCount*1 >this.state.dataSource.getRowCount()){
             this.props.fetchGoodsListIfNeeded({
                 pageNum:this.props.pagination.pageNum*1+1,
-                pageSize:20
+                pageSize:20,
+                shelves:0
             })
         }
     }
