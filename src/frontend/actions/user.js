@@ -34,7 +34,7 @@ function requestUser(payload) {
     };
 }
 
-function receiveUser(json) {
+export function receiveUser(json) {
     return {
         type: RECEIVE_USER,
         receiveAt: Date.now(),
