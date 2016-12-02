@@ -12,6 +12,18 @@ const RangePicker = DatePicker.RangePicker;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 import {itemLayout, actionLayout} from '../constants/formLayout';
+import Action from './Action';
+
+@connect((state, ownProps)=>({
+    nextRoute: '/goods',
+    remoteMsg: state.goods.item.remoteMsg,
+    didInvalidate: state.goods.item.didInvalidate,
+    didUpdate: state.goods.item.didUpdate,
+}))
+class GoodsAction extends Action {
+
+}
+
 
 @connect((state, ownProps)=>({
 }), (dispatch, ownProps)=>({
@@ -82,6 +94,7 @@ class GoodsItem extends Component {
         const {type,available} = this.props;
 
         return (<div className="ant-layout-content">
+            <GoodsAction/>
             <Form horizontal>
                 <FormItem  label="选择商品" {...itemLayout} >
                     {
