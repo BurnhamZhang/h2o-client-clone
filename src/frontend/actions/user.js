@@ -35,6 +35,7 @@ function requestUser(payload) {
 }
 
 export function receiveUser(json) {
+    storage.set('CLIENT_USER',json.data);
     return {
         type: RECEIVE_USER,
         receiveAt: Date.now(),

@@ -1,5 +1,4 @@
 import {REQUEST_USER, RECEIVE_USER, INVALIDATE_USER,AUTH_TIMEOUT,AUTH_LOGOUT} from '../actions/user';
-
 export default function user(state = {
     isFetching: false,
     didInvalidate: false,

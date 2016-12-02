@@ -13,7 +13,7 @@ import { ActivityIndicator } from 'antd-mobile';
 @withRouter
 class Login extends Component {
     componentDidMount(){
-        if(process.env.NODE_ENV === 'production' ||true){
+        if(process.env.NODE_ENV === 'production'){
             this.props.receiveUser({
                 data:{
                     account:'15682553619',
