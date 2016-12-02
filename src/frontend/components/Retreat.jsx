@@ -3,23 +3,51 @@ import {Toast, List, Switch, Icon, Stepper,Result,Flex,Button,NavBar,WingBlank,W
 import {connect} from 'react-redux';
 import {getBucketAddress} from '../actions/address';
 import {getBucketRecord} from '../actions/bucket';
+import {cacheUpdate} from '../actions/cache';
+import {orderBucket} from '../actions/order';
 import {withRouter,Link} from 'react-router';
+import Shop from './Shop';
 
 const Item = List.Item;
 const Brief = Item.Brief;
 
 
+import Action from './Action';
+
+@connect((state, ownProps)=>({
+    remoteMsg: state.order.bucket.remoteMsg,
+    didInvalidate: state.order.bucket.didInvalidate,
+    didUpdate: state.order.bucket.didUpdate,
+    nextRoute:'/user'
+}))
+class BucketAction extends Action {
+}
+
+
 @withRouter
+@connect((state, ownProps)=>({
+}), (dispatch, ownProps)=>({
+    cacheUpdate: (data)=>dispatch(cacheUpdate(data)),
+    orderBucket: (data)=>dispatch(orderBucket(data)),
+}))
 class RetreatContent extends Component {
+    cacheUpdate(data){
+        console.log(this.props)
+        this.props.cacheUpdate({
+            key: this.props.cache,
+            data
+        })
+    }
     render() {
 
         const {
-            id,
-            userId,
+            addressId,
             name,
             phone,
             houseNumber,
             location,
+            showMoneyYuan,
+            buckets
         } = this.props.data;
 
         const {
@@ -29,8 +57,8 @@ class RetreatContent extends Component {
 
 
 
-
         return <div >
+            <BucketAction/>
             <NavBar leftContent="返回"
                     rightContent={<span onClick={()=>{
                       this.props.router.push('/retreat/record')
@@ -48,7 +76,7 @@ class RetreatContent extends Component {
                     <div>
                     <List>
                         {
-                            id?(
+                            addressId?(
                                 <Item thumb={<Icon type="environment"/>} multipleLine arrow="horizontal" onClick={()=> {
                                     this.props.router.push({
                                         pathname: `/confirm/address`,
@@ -78,7 +106,11 @@ class RetreatContent extends Component {
                         {
                             bigCount*1>0?(
                                 <Item extra={<Stepper showNumber min={0} max={bigCount*1}  onChange={ (count)=> {
-
+                                    buckets[0
+                                        ].count = count;
+                                    this.cacheUpdate({
+                                        buckets
+                                    })
                                 }}/>}>
                                     大桶数量
                                 </Item>
@@ -87,16 +119,28 @@ class RetreatContent extends Component {
                         {
                             littleCount*1>0?(
                                 <Item extra={<Stepper showNumber min={0} max={littleCount*1}  onChange={ (count)=> {
-
+                                    buckets[1
+                                        ].count = count;
+                                    this.cacheUpdate({
+                                        buckets
+                                    })
                                 }}/>}>
                                     小桶数量
                                 </Item>
                             ):null
                         }
+                        <Item>
+                            <span style={{float:'right'}}>￥：{showMoneyYuan}</span>
+                            价格
+                        </Item>
                     </List>
                         <WhiteSpace/>
                         <WingBlank>
-                            <Button type="primary">提交</Button>
+                            <Button type="primary" onClick={()=>{
+                                if(this.props.showMoneyYuan*1!=0){
+                                    this.props.orderBucket(this.props.data)
+                                }
+                            }}>提交</Button>
                         </WingBlank>
                     </div>
                 )
@@ -108,17 +152,54 @@ class RetreatContent extends Component {
 
 
 
-@connect((state, ownProps)=> ({
-    data: state.address.bucket.data,
-    bucket: state.bucket.data
-}), (dispatch, ownProps)=>({
+@connect((state, ownProps)=> {
+    const {id, name, geo, houseNumber, streetId, phone, location} = state.address.bucket.data || {}
+    const data = Object.assign({
+        shopId: Array.isArray(state.shop.data) ? state.shop.data[0] : null,
+        buckets: [                             // 空桶信息，非必填
+            {
+                scale: "18.9L",          // 规格，必填
+                priceYuan: "35",      // 单价，必填
+                count:0
+            },
+            {
+                scale: "11.3L",
+                priceYuan: "30",      // 单价，必填
+                count:0
+            }
+        ],
+
+    }, id ? {
+        addressId: id,
+        name,
+        geo,
+        location,
+        houseNumber,
+        streetId,
+        phone
+    } : null, state.cache[ownProps.location.query.cache])
+
+    const showMoneyYuan = data.buckets.reduce((value, item)=>value + item.count * item.priceYuan, 0).toFixed(2);
+
+    return {
+        data: {
+            ...data,
+            showMoneyYuan
+        },
+        bucket:state.bucket.data,
+    }
+}, (dispatch, ownProps)=>({
     getBucketAddress: ()=>dispatch(getBucketAddress()),
     getBucketRecord: ()=>dispatch(getBucketRecord()),
 }))
-class Retreat extends Component {
+class RetreatContorl extends Component {
     componentWillMount() {
-        this.props.getBucketAddress();
-        this.props.getBucketRecord();
+        if(!this.props.cache){
+            this.props.getBucketAddress();
+            this.props.getBucketRecord({
+                shopId:this.props.data.shopId
+            });
+        }
     }
 
     render() {
@@ -129,8 +210,17 @@ class Retreat extends Component {
         }
 
         return (
-            <RetreatContent data={data} bucket={bucket} />
+            <RetreatContent data={data} bucket={bucket}  cache={this.props.location.query.cache} />
         )
+    }
+}
+
+
+class Retreat extends Component {
+    render(){
+        return <Shop>
+            <RetreatContorl  {...this.props}/>
+        </Shop>
     }
 }
 

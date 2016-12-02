@@ -182,12 +182,14 @@ class ConfirmType extends Component {
                             console.log('Errors in form!!!');
                             return;
                         }
-                        cacheUpdate({
+                        cacheUpdate(Object.assign({
+
+                            deliveryType: values.deliveryType,
+                            payType:values.payType,
+                        },values.date?{
                             appointEnd: values.date.format('YYYY-MM-DD ') + values.appointEnd.format('HH:mm:ss'),
                             appointStart: values.date.format('YYYY-MM-DD ') + values.appointStart.format('HH:mm:ss'),
-                            deliveryType: values.deliveryType,
-                            payType:values.payType
-                        })
+                        }:null))
                         router.goBack();
 
                     });

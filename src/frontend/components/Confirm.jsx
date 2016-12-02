@@ -6,6 +6,7 @@ import {cacheUpdate} from '../actions/cache';
 import {createOrder} from '../actions/order';
 import {getDeliveryAddress} from '../actions/address';
 import {getDeliveryType} from  '../actions/delivery';
+import {cartDeleteGoods} from  '../actions/cart';
 
 import Shop from './Shop';
 
@@ -115,17 +116,28 @@ class ConfirmAction extends Action {
         return dispatch(createOrder(payload))
     },
     getDeliveryAddress: ()=>dispatch(getDeliveryAddress()),
-    getDeliveryType: ()=>dispatch(getDeliveryType())
+    getDeliveryType: ()=>dispatch(getDeliveryType()),
+    cartDeleteGoods: (data)=>dispatch(cartDeleteGoods(data))
 }))
 class Confirm extends Component {
     componentWillReceiveProps(nextProps) {
 
         if (nextProps.res && nextProps.res.orderNo && !this.props.res) {
             console.log('componentWillReceiveProps',nextProps.res)
-            this.props.router.push({
-                pathname: `/pay/${nextProps.res.orderNo}`,
-                state: nextProps.res
-            })
+            this.props.cartDeleteGoods(this.props.data.orderDetails)
+            if(nextProps.res.payType=='1'){
+                this.props.router.push({
+                    pathname: `/pay/${nextProps.res.orderNo}`,
+                    state: nextProps.res
+                })
+            }
+            else{
+                this.props.router.push({
+                    pathname: `/success`,
+                    state: nextProps.res
+                })
+            }
+
 
         }
     }

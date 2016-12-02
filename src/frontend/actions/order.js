@@ -344,10 +344,12 @@ function order_complete_success(json) {
 
 
 
-export function orderComplete(orderNo) {
+export function orderComplete(orderNo,data) {
     return (dispatch, getState) => {
         dispatch(order_complete_request(orderNo));
         return fetch(`/api/order/complete/${orderNo}`,{
+            method:'PUT',
+            data
         })
             .then((json) => {
                 dispatch(order_complete_success(json));
@@ -357,4 +359,94 @@ export function orderComplete(orderNo) {
     };
 }
 
+//创建线上退桶订单
+export const ORDER_BUCKET_REQUEST = 'ORDER_BUCKET_REQUEST';
+export const ORDER_BUCKET_SUCCESS = 'ORDER_BUCKET_SUCCESS';
+export const ORDER_BUCKET_FAILURE = 'ORDER_BUCKET_FAILURE';
 
+
+function order_bucket_failure(payload) {
+    return {
+        type: ORDER_BUCKET_FAILURE,
+        payload
+    };
+}
+
+function order_bucket_request(payload) {
+    return {
+        type: ORDER_BUCKET_REQUEST,
+        payload
+    };
+}
+
+function order_bucket_success(json) {
+    return {
+        type: ORDER_BUCKET_SUCCESS,
+        receiveAt: Date.now(),
+        payload: json
+    };
+}
+
+
+
+export function orderBucket(data) {
+    return (dispatch, getState) => {
+        dispatch(order_bucket_request(data));
+        return fetch(`/api/bucket/order`,{
+            method:'POST',
+            data
+        })
+            .then((json) => {
+                dispatch(order_bucket_success(json));
+            }).catch(error => {
+                dispatch(order_bucket_failure(error))
+            });
+    };
+}
+
+
+
+//线上支付成功直接回调
+export const ORDER_CALLBACK_REQUEST = 'ORDER_CALLBACK_REQUEST';
+export const ORDER_CALLBACK_SUCCESS = 'ORDER_CALLBACK_SUCCESS';
+export const ORDER_CALLBACK_FAILURE = 'ORDER_CALLBACK_FAILURE';
+
+
+function order_callback_failure(payload) {
+    return {
+        type: ORDER_CALLBACK_FAILURE,
+        payload
+    };
+}
+
+function order_callback_request(payload) {
+    return {
+        type: ORDER_CALLBACK_REQUEST,
+        payload
+    };
+}
+
+function order_callback_success(json) {
+    return {
+        type: ORDER_CALLBACK_SUCCESS,
+        receiveAt: Date.now(),
+        payload: json
+    };
+}
+
+
+
+export function orderSuccess(data) {
+    return (dispatch, getState) => {
+        dispatch(order_callback_request(data));
+        return fetch(`/api/pay/success`,{
+            method:'POST',
+            data
+        })
+            .then((json) => {
+                dispatch(order_callback_success(json));
+            }).catch(error => {
+                dispatch(order_callback_failure(error))
+            });
+    };
+}

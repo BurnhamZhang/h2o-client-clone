@@ -4,25 +4,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter,Link} from 'react-router';
-import {orderPay, orderCancelConfirm, feedbackOrder, fetchOrderIfNeeded} from '../actions/order';
+import {orderPay, orderCancelConfirm, feedbackOrder, fetchOrderIfNeeded,orderComplete} from '../actions/order';
 import {ListView, List, Flex, Button, Modal, Tag, Toast} from 'antd-mobile';
 
 
-import Action from './Action';
-
-@withRouter
-@connect((state, ownProps)=>({
-    remoteMsg: state.order.feedback.remoteMsg,
-    didInvalidate: state.order.feedback.didInvalidate,
-    didUpdate: state.order.feedback.didUpdate,
-    updateHandle: (component)=> {
-        Toast.info('成功',1,()=>{
-            component.props.router.replace('/order')
-        })
-    }
-}))
-class FeedBackAction extends Action {
-}
 
 
 @connect((state, ownProps)=>({}), (dispatch, ownProps)=>({
@@ -30,6 +15,7 @@ class FeedBackAction extends Action {
     orderCancelConfirm: (orderNo,payload)=>dispatch(orderCancelConfirm(orderNo,payload)),
     feedbackOrder: (payload)=>dispatch(feedbackOrder(payload)),
     fetchOrderIfNeeded: (payload)=>dispatch(fetchOrderIfNeeded(payload)),
+    orderComplete: (orderNo,payload)=>dispatch(orderComplete(orderNo,payload)),
 }))
 class Order extends Component {
     renderTag() {
@@ -63,7 +49,7 @@ class Order extends Component {
     }
 
     renderButton() {
-        const {status, orderNo} = this.props.data;
+        const {status, orderNo,version} = this.props.data;
         const ts = <Button inline size="small" key="3" onClick={(e)=> {
             e.stopPropagation();
             Modal.prompt('投诉', '请输入投诉的内容', [
@@ -100,7 +86,9 @@ class Order extends Component {
             return (
                 [<Button key="2" inline size="small" type="primary" onClick={(e)=> {
                     e.stopPropagation();
-                    this.props.orderPay(orderNo)
+                    this.props.orderComplete(orderNo,{
+                        version
+                    })
                 }}>确认完成</Button>, cd, ts]
             )
         }
@@ -113,17 +101,15 @@ class Order extends Component {
     }
 
     render() {
-        const {orderPay, orderCancelConfirm, feedbackOrder, fetchOrderIfNeeded} = this.props;
+        const {orderPay, orderCancelConfirm, feedbackOrder, fetchOrderIfNeeded,orderComplete} = this.props;
         const {renderTag, renderButton} = this;
-        return (<FeedBackAction>
-            {
-                React.cloneElement(this.props.children || <div/>, {
+        return React.cloneElement(this.props.children || <div/>, {
                     orderPay, orderCancelConfirm, feedbackOrder, fetchOrderIfNeeded,
                     renderTag,
-                    renderButton
+                    renderButton,
+                    orderComplete
                 })
-            }
-        </FeedBackAction>)
+
     }
 }
 export default Order;

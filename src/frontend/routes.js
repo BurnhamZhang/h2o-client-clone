@@ -21,6 +21,7 @@ import OrderList from './components/OrderList';
 import OrderItem from './components/OrderItem';
 import Retreat from './components/Retreat';
 import RetreatRecord from './components/RetreatRecord';
+import Success from './components/Success';
 
 
 
@@ -76,6 +77,11 @@ export default (store) => {
                 path: '/retreat',
                 onEnter: requireAuth,
                 component: Retreat
+            },
+            {
+                path: '/success',
+                onEnter: requireAuth,
+                component: Success
             },
             {
                 path: '/retreat/record',

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter,Link} from 'react-router';
 import {connect} from 'react-redux';
-import { ListView,List,Flex ,Button,Modal,Tag} from 'antd-mobile';
+import { ListView,List,Flex ,Button,Modal,Tag,Toast} from 'antd-mobile';
 import {fetchOrderListIfNeeded} from '../actions/order'
 import Order from './Order';
 const Item = List.Item
@@ -16,6 +16,18 @@ import Action from './Action';
 }))
 class OrderPayAction extends Action {
 }
+
+
+
+@connect((state, ownProps)=>({
+    remoteMsg: state.order.feedback.remoteMsg,
+    didInvalidate: state.order.feedback.didInvalidate,
+    didUpdate: state.order.feedback.didUpdate,
+
+}))
+class FeedBackAction extends Action {
+}
+
 
 
 @withRouter
@@ -141,6 +153,15 @@ class OrderList  extends Component {
         };
         return (
             <div>
+                <FeedBackAction  updateHandle={ (component)=> {
+                Toast.info('成功',1,()=>{
+                    this.data =[];
+                    this.props.fetchOrderListIfNeeded({
+                        pageNum:0,
+                        pageSize:20
+                    })
+                })
+            }}/>
                 <OrderPayAction updateHandle={(component,nextProps)=>{
                     if (nextProps.res && nextProps.res.orderNo && !component.props.res) {
                         this.props.router.push({
