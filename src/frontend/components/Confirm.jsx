@@ -25,6 +25,9 @@ class ConfirmAction extends Action {
 @connect((state, ownProps)=> {
     const {id, name, geo, houseNumber, streetId, phone, location} = state.address.delivery.data || {}
 
+    console.warn('start')
+    console.warn(state.cache[ownProps.location.query.cache])
+    console.warn( state.address.delivery.data)
 
     const data = Object.assign({
         shopId: Array.isArray(state.shop.data) ? state.shop.data[0] : null,
@@ -129,6 +132,7 @@ class ConfirmAction extends Action {
 }))
 class Confirm extends Component {
     componentWillReceiveProps(nextProps) {
+        console.warn('componentWillReceiveProps',nextProps)
 
         if (nextProps.res && nextProps.res.orderNo && !this.props.res) {
             console.log('componentWillReceiveProps',nextProps.res)
@@ -151,6 +155,7 @@ class Confirm extends Component {
     }
 
     componentWillMount() {
+        console.warn('componentWillMount')
         if (this.props.data.shopId) {
             this.props.getDeliveryAddress();
             !this.props.type && this.props.getDeliveryType();

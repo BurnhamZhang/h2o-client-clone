@@ -33,10 +33,11 @@ function bucket_record_success(json) {
 
 
 
-export function getBucketRecord() {
+export function getBucketRecord(data) {
     return (dispatch, getState) => {
         dispatch(bucket_record_request());
         return fetch('/api/bucket/user',{
+            data
         })
             .then((json) => {
                 dispatch(bucket_record_success(json));

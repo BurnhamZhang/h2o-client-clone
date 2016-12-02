@@ -93,8 +93,8 @@ class GoodsItem extends Component {
         const {getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
         const {type,available} = this.props;
 
+
         return (<div className="ant-layout-content">
-            <GoodsAction/>
             <Form horizontal>
                 <FormItem  label="选择商品" {...itemLayout} >
                     {
@@ -223,6 +223,17 @@ class GoodsForm extends Component {
             this.props.fetchGoodsIfNeeded(id);
         }
     }
+    componentWillReceiveProps(nextProps){
+        if(nextProps.params.id != this.props.params.id){
+            this.props.clearGoods();
+            if(nextProps.params.id =='create'){
+                this.props.fetchAvailableGoodsListIfNeeded()
+            }
+            else{
+                this.props.fetchGoodsIfNeeded(nextProps.params.id );
+            }
+        }
+    }
     componentWillUnmount() {
         this.props.clearGoods();
     }
@@ -257,7 +268,9 @@ class GoodsForm extends Component {
                 condition = true;
             }
         }
-        return  condition ? <GoodsItem type={id} payload={data} available={available||[]}/> : <Block spinning/>
+        return              <GoodsAction>
+            { condition ? <GoodsItem type={id} payload={data} available={available||[]}/> : <Block spinning/>}
+        </GoodsAction>
     }
 }
 

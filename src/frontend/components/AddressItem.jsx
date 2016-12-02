@@ -11,7 +11,6 @@ const Brief = Item.Brief;
 import Action from './Action';
 
 @connect((state, ownProps)=>({
-    nextRoute: '/address',
     remoteMsg: state.address.item.remoteMsg,
     didInvalidate: state.address.item.didInvalidate,
     didUpdate: state.address.item.didUpdate,
@@ -66,7 +65,10 @@ class AddressItem extends Component {
         const {sex,name,phone,location ,houseNumber} = this.state;
         return (
             <div>
-                <AddressAction/>
+                <AddressAction     updateHandle={()=>{
+                    this.props.router.goBack();
+                }}
+                />
 
                 <NavBar leftContent="返回" mode="light" onLeftClick={() =>this.props.router.goBack() }
                 >{type=='create'?'新建':'编辑'}收货地址</NavBar>

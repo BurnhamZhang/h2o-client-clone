@@ -190,7 +190,7 @@ class RetreatContent extends Component {
     }
 }, (dispatch, ownProps)=>({
     getBucketAddress: ()=>dispatch(getBucketAddress()),
-    getBucketRecord: ()=>dispatch(getBucketRecord()),
+    getBucketRecord: (payload)=>dispatch(getBucketRecord(payload)),
 }))
 class RetreatContorl extends Component {
     componentWillMount() {

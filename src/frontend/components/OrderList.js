@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter,Link} from 'react-router';
 import {connect} from 'react-redux';
-import { ListView,List,Flex ,Button,Modal,Tag,Toast} from 'antd-mobile';
+import { ListView,List,Flex ,Button,Modal,Tag,Toast,Result} from 'antd-mobile';
 import {fetchOrderListIfNeeded} from '../actions/order'
 import Order from './Order';
 const Item = List.Item

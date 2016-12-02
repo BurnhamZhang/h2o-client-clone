@@ -20,7 +20,7 @@ const columns = [
     {
         title: '状态', dataIndex: 'shelves', key: '6',
         render: (text, record, index) => (
-            text == 0 ? '已下架' : '销售中'
+            text == 0 ?  '销售中':'已下架'
         )
     },
     {
