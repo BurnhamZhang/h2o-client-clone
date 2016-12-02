@@ -103,21 +103,25 @@ class ConfirmType extends Component {
                 </Item>
             </List>
             <List renderHeader={() => '送货时间'}>
-                <RadioItem name='deliveryType'
-                           {...getFieldProps('deliveryType.1', {
-                               valuePropName: 'checked',
-                               exclusive: true,
-                               getValueFromEvent: ({target:{checked}})=> {
-                                   return checked ? '1' : ''
-                               },
-                               getValueProps: (value)=> {
-                                   return {
-                                       checked: value === '1',
-                                   }
-                               },
-                           })}>
-                    即时送 <span className="am-list-brief">(半小时内到达)</span>
-                </RadioItem>
+                {
+                    type.allow=='1'?(
+                        <RadioItem name='deliveryType'
+                                   {...getFieldProps('deliveryType.1', {
+                                       valuePropName: 'checked',
+                                       exclusive: true,
+                                       getValueFromEvent: ({target:{checked}})=> {
+                                           return checked ? '1' : ''
+                                       },
+                                       getValueProps: (value)=> {
+                                           return {
+                                               checked: value === '1',
+                                           }
+                                       },
+                                   })}>
+                            即时送 <span className="am-list-brief">(半小时内到达)</span>
+                        </RadioItem>
+                    ):null
+                }
                 <RadioItem name='deliveryType'
                            {...getFieldProps('deliveryType.2', {
                                valuePropName: 'checked',

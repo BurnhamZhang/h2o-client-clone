@@ -1,12 +1,22 @@
-import {GOODS_REQUEST, GOODS_SUCCESS, GOODS_FAILURE,GOODS_UPDATE_REQUEST ,GOODS_UPDATE_SUCCESS,GOODS_UPDATE_FAILURE,GOODS_CREATE_SUCCESS,GOODS_CREATE_REQUEST,GOODS_CREATE_FAILURE,GOODS_DELETE_FAILURE,GOODS_DELETE_REQUEST,GOODS_DELETE_SUCCESS} from '../../actions/goods';
+import {GOODS_CLEAR,GOODS_REQUEST, GOODS_SUCCESS, GOODS_FAILURE,GOODS_UPDATE_REQUEST ,GOODS_UPDATE_SUCCESS,GOODS_UPDATE_FAILURE,GOODS_CREATE_SUCCESS,GOODS_CREATE_REQUEST,GOODS_CREATE_FAILURE,GOODS_DELETE_FAILURE,GOODS_DELETE_REQUEST,GOODS_DELETE_SUCCESS} from '../../actions/goods';
 
 export default function (state = {
     isFetching: false,
-    didInvalidate: true,
+    didInvalidate: false,
+    didUpdate: false,
     data:null,
 }, action) {
     switch (action.type) {
+        case GOODS_CLEAR:
+            return Object.assign({}, state, {
+                isFetching: false,
+                didInvalidate: false,
+                didUpdate: false,
+                data:null,
+            })
+            break;
         case GOODS_FAILURE:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
@@ -32,6 +42,7 @@ export default function (state = {
             break;
 
         case GOODS_UPDATE_FAILURE:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
@@ -47,17 +58,18 @@ export default function (state = {
             })
             break;
         case GOODS_UPDATE_SUCCESS:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
                 ...action.payload,
-                data:null,
             })
             break;
 
 
         case GOODS_CREATE_FAILURE:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
@@ -73,18 +85,19 @@ export default function (state = {
             })
             break;
         case GOODS_CREATE_SUCCESS:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
                 ...action.payload,
-                data:null,
             })
             break;
 
 
 
         case GOODS_DELETE_FAILURE:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
@@ -100,12 +113,12 @@ export default function (state = {
             })
             break;
         case GOODS_DELETE_SUCCESS:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
                 ...action.payload,
-                data:null,
             })
             break;
         

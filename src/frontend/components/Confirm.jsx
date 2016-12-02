@@ -24,6 +24,8 @@ class ConfirmAction extends Action {
 @withRouter
 @connect((state, ownProps)=> {
     const {id, name, geo, houseNumber, streetId, phone, location} = state.address.delivery.data || {}
+
+
     const data = Object.assign({
         shopId: Array.isArray(state.shop.data) ? state.shop.data[0] : null,
         orderDetails: state.cache.cart || [],
@@ -52,6 +54,11 @@ class ConfirmAction extends Action {
         streetId,
         phone
     } : null, state.cache[ownProps.location.query.cache])
+
+    if(state.delivery.type.data && state.delivery.type.data.allow=='0'){
+        data.deliveryType='2';
+    }
+
     const showMoneyYuan = data.orderDetails.reduce((value, item)=>value + item.count * item.priceYuan, 0).toFixed(2);
     let bucketMoneyYuan = 0;
     let bigMax = 0,littleMax = 0;
@@ -79,6 +86,7 @@ class ConfirmAction extends Action {
             bucketMoneyYuan-= item.count*item.priceYuan;
         })
     }
+
     bucketMoneyYuan = bucketMoneyYuan.toFixed(2);
     const tradeMoneyYuan = (bucketMoneyYuan * 1 + showMoneyYuan * 1).toFixed(2);
     return {

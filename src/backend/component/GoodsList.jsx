@@ -10,8 +10,8 @@ const columns = [
     {title: '商品名', dataIndex: 'name', key: '1'},
     {
         title: '商品图片', dataIndex: 'imagesArray', key: '2',
-        render: (text, record, index) => (
-            <img src={text[0]} style={{width: 60, height: 60}}/>
+        render: (text, record, index) => text.map((item,index)=>
+            <img src={item} key={index} style={{width: 60, height: 60}}/>
         ),
     },
     {title: '商品描述', dataIndex: 'memo', key: '3'},
@@ -90,7 +90,6 @@ class GoodsList extends Component {
                         <h3>商品管理</h3>
                     </div>
                 )} columns={columns}  bordered dataSource={this.props.data} bgoodsed
-                       loading={this.props.isFetching}
                        pagination={pagination}/>
             </div>)
     }

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link,withRouter} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchGoodsIfNeeded,fetchAvailableGoodsListIfNeeded,createGoods,deleteGoodsById,updateGoodsById} from '../actions/goods';
+import {clearGoods,fetchGoodsIfNeeded,fetchAvailableGoodsListIfNeeded,createGoods,deleteGoodsById,updateGoodsById} from '../actions/goods';
 import {Table, Alert,DatePicker, Radio, Form, Button, Select, Input, InputNumber,Popconfirm,message} from 'antd';
 import Block from './Block';
 const ButtonGroup = Button.Group;
@@ -49,7 +49,8 @@ class GoodsItem extends Component {
             goodsId: item.goodsId,
             images: item.images,
             memo: item.memo,
-            scale: item.scale
+            scale: item.scale,
+            priceYuan:item.priceYuan
         });
     }
 
@@ -78,14 +79,7 @@ class GoodsItem extends Component {
 
     render() {
         const {getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
-        const {type, payload,available} = this.props;
-
-
-        const item = Object.assign({}, payload, getFieldsValue());
-
-
-        console.warn('available',available)
-        console.warn('imagesArray',item.imagesArray)
+        const {type,available} = this.props;
 
         return (<div className="ant-layout-content">
             <Form horizontal>
@@ -103,15 +97,15 @@ class GoodsItem extends Component {
                                 </Select>
                             )
 
-                            : item.name
+                            : getFieldValue('name')
                     }
                 </FormItem>
                 <FormItem  label="图片预览" {...itemLayout} >
                     {
-                        getFieldDecorator('images', {})(
+                        getFieldDecorator('imagesArray', {})(
                             <div>
                                 {
-                                    item.imagesArray.map((item, index)=>(
+                                    getFieldValue('imagesArray').map((item, index)=>(
                                         <img src={item} key={index}
                                              style={{width: 144, height: 144, margin: '0 5px 5px 0'}}
                                              alt={item}/>
@@ -119,31 +113,28 @@ class GoodsItem extends Component {
                                 }
                             </div>
                         )
-
                     }
-
 
                 </FormItem>
                 <FormItem  label="描述" {...itemLayout}  >
                     {
 
                         getFieldDecorator('memo', {})(
-                            <span>{item.memo}</span>
+                            <span>{getFieldValue('memo')}</span>
                         )
                     }
                 </FormItem>
                 <FormItem label="规格"  {...itemLayout}    >
                     {
-
                         getFieldDecorator('scale', {})(
-                            <span>{item.scale}</span>
+                            <span>{getFieldValue('scale')}</span>
                         )
                     }
                 </FormItem>
                 <FormItem label="价格" {...itemLayout}   >
                     {
-                        getFieldDecorator('price', {})(
-                            <InputNumber min={0.01} step="0.01" size="120"/>
+                        getFieldDecorator('priceYuan', {})(
+                            <span>{getFieldValue('priceYuan')}</span>
                         )
                     }
                 </FormItem>
@@ -173,8 +164,8 @@ class GoodsItem extends Component {
                     {
                         getFieldDecorator('shelves', {})(
                             <RadioGroup>
-                                <Radio key="a" value={1}>上架</Radio>
-                                <Radio key="b" value={0}>下架</Radio>
+                                <Radio key="a" value={0}>上架</Radio>
+                                <Radio key="b" value={1}>下架</Radio>
                             </RadioGroup>
                         )
                     }
@@ -200,73 +191,60 @@ class GoodsItem extends Component {
 }
 
 @connect((state, ownProps)=>({
-    ...state.goods
+    data:state.goods.item.data,
+    available:state.goods.available.data,
 }), (dispatch, ownProps)=>({
     fetchGoodsIfNeeded: (payload)=>dispatch(fetchGoodsIfNeeded(payload)),
     fetchAvailableGoodsListIfNeeded:(payload)=>dispatch(fetchAvailableGoodsListIfNeeded(payload)),
+    clearGoods:(payload)=>dispatch(clearGoods(payload)),
 }))
 @withRouter
 class GoodsForm extends Component {
 
     componentWillMount() {
-        console.warn('componentWillMount'.toLocaleUpperCase());
         const id = this.props.params.id;
-        this.props.fetchGoodsIfNeeded(id);
-        this.props.fetchAvailableGoodsListIfNeeded()
-    }
-
-    componentWillReceiveProps(nextProps) {
-
-        const id = nextProps.params.id;
-        if (this.props.params.id !== id) {
-            this.props.fetchGoodsIfNeeded(id);
+        if(id=='create'){
             this.props.fetchAvailableGoodsListIfNeeded()
         }
-    }
-    shouldComponentUpdate(nextProps) {
-        if (nextProps.item.didUpdate) {
-            this.props.router.push('/goods')
-            return false
+        else{
+            this.props.fetchGoodsIfNeeded(id);
         }
-        return true
     }
-    componentDidUpdate(){
-        const  {didInvalidate,remoteMsg} = this.props.item;
-
-        console.warn('componentDidUpdate',didInvalidate,remoteMsg)
-        if(didInvalidate && remoteMsg){
-            message.warn(remoteMsg)
-        }
+    componentWillUnmount() {
+        this.props.clearGoods();
     }
     render() {
         const {id} = this.props.params;
-        let data = this.props.item.data;
-        const available = this.props.available.data;
+        let data = this.props.data;
+        const available = this.props.available;
+        let condition =!!data;
 
 
-        if(Array.isArray(available) && available.length ==0){
-            return ( <Alert
-                message="错误"
-                description="没有可选择的商品"
-                type="error"
-                showIcon
-            />)
+        if (id == 'create') {
+
+            if(Array.isArray(available) && available.length ==0){
+                return ( <Alert
+                    message="错误"
+                    description="没有可选择的商品"
+                    type="error"
+                    showIcon
+                />)
+            }
+
+            if(Array.isArray(available)){
+                data = Object.assign({
+                    imagesArray:[]
+                }, available[0], {
+                    shelves: 0,
+                    depositMoney: 1,
+                    depositType: 0,
+                    stock: 0,
+                    priceYuan: '1.00',
+                });
+                condition = true;
+            }
         }
-
-        if (id == 'create' && Array.isArray(available)) {
-            data = Object.assign({
-                imagesArray:[]
-            }, available[0], {
-                shelves: 1,
-                depositMoney: 1,
-                depositType: 0,
-                stock: 0,
-                price: 1,
-            });
-        }
-
-        console.log('render',available,data)
-        return  (data && Array.isArray(available)) ? <GoodsItem type={id} payload={data} available={available}></GoodsItem> : <Block spinning/>
+        return  condition ? <GoodsItem type={id} payload={data} available={available||[]}/> : <Block spinning/>
     }
 }
 

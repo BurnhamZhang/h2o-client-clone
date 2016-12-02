@@ -3,7 +3,7 @@ import fetch from '../common/fetch';
 export const GOODS_REQUEST = 'GOODS_REQUEST';
 export const GOODS_SUCCESS = 'GOODS_SUCCESS';
 export const GOODS_FAILURE = 'GOODS_FAILURE';
-
+export const GOODS_CLEAR = 'GOODS_CLEAR';
 
 export const GOODS_LIST_REQUEST = 'GOODS_LIST_REQUEST';
 export const GOODS_LIST_SUCCESS = 'GOODS_LIST_SUCCESS';
@@ -34,7 +34,11 @@ export const AVAILABLE_GOODS_LIST_FAILURE = 'AVAILABLE_GOODS_LIST_FAILURE';
 
 
 //商品详情
-
+export  function clearGoods() {
+    return {
+        type: GOODS_CLEAR,
+    };
+}
 
 function goods_failure(payload) {
     return {

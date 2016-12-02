@@ -1,4 +1,4 @@
-import {AVAILABLE_GOODS_LIST_FAILURE,AVAILABLE_GOODS_LIST_SUCCESS,AVAILABLE_GOODS_LIST_REQUEST} from '../../actions/goods';
+import {GOODS_CLEAR,AVAILABLE_GOODS_LIST_FAILURE,AVAILABLE_GOODS_LIST_SUCCESS,AVAILABLE_GOODS_LIST_REQUEST} from '../../actions/goods';
 
 export default function (state = {
     isFetching: false,
@@ -6,10 +6,18 @@ export default function (state = {
     data:null,
 }, action) {
     switch (action.type) {
+        case GOODS_CLEAR:
+            return Object.assign({}, state, {
+                isFetching: false,
+                didInvalidate: true,
+                data:null,
+            })
+            break;
         case AVAILABLE_GOODS_LIST_FAILURE:
             return Object.assign({}, state, {
                 isFetching: false,
-                didInvalidate: true
+                didInvalidate: true,
+                ... action.payload
             })
             break;
         case AVAILABLE_GOODS_LIST_REQUEST:
