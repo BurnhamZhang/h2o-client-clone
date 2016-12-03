@@ -7,6 +7,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 const extractBackendCss = new ExtractTextPlugin('backend.[contenthash].css');
 const extractFrontendCss = new ExtractTextPlugin('frontend.[contenthash].css');
+const extractCourierCss = new ExtractTextPlugin('courier.[contenthash].css');
 // const extractCss = new ExtractTextPlugin('app.[contenthash].css');
 const extractAntd = new ExtractTextPlugin('antd.[contenthash].css');
 const extractAntdMobile = new ExtractTextPlugin('antd.mobile.[contenthash].css');
@@ -42,6 +43,7 @@ module.exports = {
 
             {test: /\.s?css$/, include: [path.join(__dirname, '../node_modules/antd'),path.join(__dirname, '../node_modules/antd-mobile')], loader: extractAntd.extract('style','css!sass')},
             {test: /\.s?css$/, include: path.join(__dirname, '../src/backend'), loader: extractBackendCss.extract('style','css!sass')},
+            {test: /\.s?css$/, include: path.join(__dirname, '../src/courier'), loader: extractCourierCss.extract('style','css!sass')},
             // {test: /\.s?css$/, include: path.join(__dirname, '../node_modules/antd-mobile'), loader: extractAntdMobile.extract('style','css!sass')},
             {test: /\.s?css$/, include: path.join(__dirname, '../src/frontend'), loader: extractFrontendCss.extract('style','css!sass')},
             {test: /\.css$/, include: path.join(__dirname, '../node_modules/normalize'), loader: extractNormalizeMobile.extract('css')},
@@ -67,6 +69,7 @@ module.exports = {
         extractAntd,
         extractBackendCss,
         extractFrontendCss,
+        extractCourierCss,
         extractAntdMobile,
         extractNormalizeMobile,
         new webpack.NoErrorsPlugin(),
