@@ -21,12 +21,18 @@ const enterprise = [
     {
         path: 'shop',
         title: '门店账号管理',
-        component: Enterprise.ShopList
-    },
-    {
-        path: 'shop/:id',
-        title: '商品详情',
-        component: Enterprise.ShopItem
+        indexRoute: {
+            component:  Enterprise.ShopList
+        },
+        childRoutes: [{
+            path: 'create',
+            title: '创建门店账号',
+            component: Enterprise.ShopItem,
+        },{
+            path: ':id',
+            title: '编辑门店账号',
+            component: Enterprise.ShopItem,
+        }]
     },
     {
         path: 'achievement',
@@ -36,12 +42,18 @@ const enterprise = [
     {
         path: 'goods',
         title: '商品管理',
-        component: Enterprise.GoodsList
-    },
-    {
-        path: 'goods/:id',
-        title: '商品详情',
-        component: Enterprise.GoodsItem
+        indexRoute: {
+            component:  Enterprise.GoodsList
+        },
+        childRoutes: [{
+            path: 'create',
+            title: '创建商品',
+            component: Enterprise.GoodsItem,
+        },{
+            path: ':id',
+            title: '商品详情',
+            component: Enterprise.GoodsItem,
+        }]
     },
     {
         path: '*',

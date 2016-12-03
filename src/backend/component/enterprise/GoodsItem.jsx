@@ -4,8 +4,8 @@
 import React, {Component} from 'react';
 import {withRouter, Link} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchGoodsIfNeeded, updateGoodsById, createGoods, deleteGoodsById} from '../../actions/enterprise/goods';
-import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Popconfirm, message} from 'antd';
+import {clearGoods,fetchGoodsIfNeeded, updateGoodsById, createGoods, deleteGoodsById} from '../../actions/enterprise/goods';
+import {Alert,Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Popconfirm, message} from 'antd';
 import Block from '../Block';
 const ButtonGroup = Button.Group;
 const Option = Select.Option;
@@ -21,9 +21,9 @@ import Action from '../Action';
 
 @connect((state, ownProps)=>({
     nextRoute: '/goods',
-    remoteMsg: state.enterprise.goods.item.remoteMsg,
-    didInvalidate: state.enterprise.goods.item.didInvalidate,
-    didUpdate: state.enterprise.goods.item.didUpdate,
+    remoteMsg: state.enterprise.goods.change.remoteMsg,
+    didInvalidate: state.enterprise.goods.change.didInvalidate,
+    didUpdate: state.enterprise.goods.change.didUpdate,
 }))
 class GoodsAction extends Action {
 
@@ -202,12 +202,13 @@ class GoodsForm extends Component {
 }
 
 @connect((state, ownProps)=>({
-    data: state.enterprise.goods.item.data
+    ...state.enterprise.goods.item
 }), (dispatch, ownProps)=>({
     fetchGoodsIfNeeded: (payload)=>dispatch(fetchGoodsIfNeeded(payload)),
     updateGoodsById: (id, data)=>dispatch(updateGoodsById(id, data)),
     createGoods: (data)=>dispatch(createGoods(data)),
     deleteGoodsById: (id)=>dispatch(deleteGoodsById(id)),
+    clearGoods: (id)=>dispatch(clearGoods(id)),
 }))
 @withRouter
 class GoodsItem extends Component {
@@ -220,7 +221,7 @@ class GoodsItem extends Component {
 
     componentWillMount() {
         const id = this.props.params.id;
-        if (id != 'create') {
+        if (id) {
             this.props.fetchGoodsIfNeeded(id);
         }
     }
@@ -229,10 +230,14 @@ class GoodsItem extends Component {
 
         const id = nextProps.params.id;
         if (this.props.params.id !== id) {
-            if (id != 'create') {
+            this.props.clearGoods();
+            if (id) {
                 this.props.fetchGoodsIfNeeded(id);
             }
         }
+    }
+    componentWillUnmount(){
+        this.props.clearGoods();
     }
 
     updateItem(id, data) {
@@ -248,8 +253,8 @@ class GoodsItem extends Component {
     }
 
     render() {
-        const {id} = this.props.params;
-        let data = this.props.data;
+        const id = this.props.params.id||'create';
+        let {data,didInvalidate,remoteMsg} = this.props;
 
         if (id == 'create') {
             data = {
@@ -259,6 +264,11 @@ class GoodsItem extends Component {
                 priceYuan: 1,
                 imagesArray: []
             }
+        }
+        if(didInvalidate){
+            return   <Alert message={remoteMsg}
+                            type="error"
+            />
         }
 
         return (

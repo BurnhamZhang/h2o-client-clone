@@ -29,6 +29,15 @@ export const ENTERPRISE_SHOP_DELETE_SUCCESS = 'ENTERPRISE_SHOP_DELETE_SUCCESS';
 export const ENTERPRISE_SHOP_DELETE_FAILURE = 'ENTERPRISE_SHOP_DELETE_FAILURE';
 
 
+export const ENTERPRISE_SHOP_CLEAR = 'ENTERPRISE_SHOP_CLEAR';
+
+
+export  function clearShop() {
+    return {
+        type: ENTERPRISE_SHOP_CLEAR,
+    };
+}
+
 function shop_failure(payload) {
     return {
         type: ENTERPRISE_SHOP_FAILURE,

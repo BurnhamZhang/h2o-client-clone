@@ -26,6 +26,17 @@ export const ENTERPRISE_GOODS_DELETE_FAILURE = 'ENTERPRISE_GOODS_DELETE_FAILURE'
 
 
 
+export const ENTERPRISE_GOODS_CLEAR = 'ENTERPRISE_GOODS_CLEAR';
+
+
+export  function clearGoods() {
+    return {
+        type: ENTERPRISE_GOODS_CLEAR,
+    };
+}
+
+//商品详情
+
 
 function goods_failure(payload) {
     return {

@@ -1,13 +1,20 @@
-import {ENTERPRISE_SHOP_REQUEST, ENTERPRISE_SHOP_SUCCESS, ENTERPRISE_SHOP_FAILURE,ENTERPRISE_SHOP_UPDATE_REQUEST ,ENTERPRISE_SHOP_UPDATE_SUCCESS,ENTERPRISE_SHOP_UPDATE_FAILURE,ENTERPRISE_SHOP_CREATE_SUCCESS,ENTERPRISE_SHOP_CREATE_REQUEST,ENTERPRISE_SHOP_CREATE_FAILURE,ENTERPRISE_SHOP_DELETE_FAILURE,ENTERPRISE_SHOP_DELETE_REQUEST,ENTERPRISE_SHOP_DELETE_SUCCESS} from '../../../actions/enterprise/shop';
+import {ENTERPRISE_SHOP_CLEAR,ENTERPRISE_SHOP_REQUEST, ENTERPRISE_SHOP_SUCCESS, ENTERPRISE_SHOP_FAILURE} from '../../../actions/enterprise/shop';
 
 export default function (state = {
     isFetching: false,
-    didInvalidate: true,
+    didInvalidate: false,
     data:null,
 }, action) {
     switch (action.type) {
+        case ENTERPRISE_SHOP_CLEAR:
+            return Object.assign({}, state, {
+                isFetching: false,
+                didInvalidate: false,
+                didUpdate:false,
+                data:null,
+            })
+            break;
         case ENTERPRISE_SHOP_FAILURE:
-            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
@@ -32,86 +39,6 @@ export default function (state = {
             break;
 
 
-        case ENTERPRISE_SHOP_UPDATE_FAILURE:
-            delete action.payload.data;
-            return Object.assign({}, state, {
-                isFetching: false,
-                didInvalidate: true,
-                didUpdate:false,
-                ...action.payload
-            })
-            break;
-        case ENTERPRISE_SHOP_UPDATE_REQUEST:
-            return Object.assign({}, state, {
-                isFetching: true,
-                didInvalidate: false,
-                didUpdate:false,
-            })
-            break;
-        case ENTERPRISE_SHOP_UPDATE_SUCCESS:
-            delete action.payload.data;
-            return Object.assign({}, state, {
-                isFetching: false,
-                didInvalidate: false,
-                didUpdate:true,
-                ...action.payload
-            })
-            break;
-
-
-        case ENTERPRISE_SHOP_CREATE_FAILURE:
-            delete action.payload.data;
-            return Object.assign({}, state, {
-                isFetching: false,
-                didInvalidate: true,
-                didUpdate:false,
-                ...action.payload
-            })
-            break;
-        case ENTERPRISE_SHOP_CREATE_REQUEST:
-            return Object.assign({}, state, {
-                isFetching: true,
-                didInvalidate: false,
-                didUpdate:false,
-            })
-            break;
-        case ENTERPRISE_SHOP_CREATE_SUCCESS:
-            delete action.payload.data;
-            return Object.assign({}, state, {
-                isFetching: false,
-                didInvalidate: false,
-                didUpdate:true,
-                ...action.payload
-            })
-            break;
-
-
-
-        case ENTERPRISE_SHOP_DELETE_FAILURE:
-            delete action.payload.data;
-            return Object.assign({}, state, {
-                isFetching: false,
-                didInvalidate: true,
-                didUpdate:false,
-                ...action.payload
-            })
-            break;
-        case ENTERPRISE_SHOP_DELETE_REQUEST:
-            return Object.assign({}, state, {
-                isFetching: true,
-                didInvalidate: false,
-                didUpdate:false,
-            })
-            break;
-        case ENTERPRISE_SHOP_DELETE_SUCCESS:
-            delete action.payload.data;
-            return Object.assign({}, state, {
-                isFetching: false,
-                didInvalidate: false,
-                didUpdate:true,
-                ...action.payload
-            })
-            break;
 
 
         default:

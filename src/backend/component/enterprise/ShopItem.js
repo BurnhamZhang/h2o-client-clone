@@ -4,9 +4,10 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchShopIfNeeded, updateShopById, createShop, deleteShopById} from '../../actions/enterprise/shop';
+import {clearShop,fetchShopIfNeeded, updateShopById, createShop, deleteShopById} from '../../actions/enterprise/shop';
 
 import {
+    Alert,
     Table,
     DatePicker,
     Radio,
@@ -36,9 +37,9 @@ import Action from '../Action';
 
 @connect((state, ownProps)=>({
     nextRoute: '/shop',
-    remoteMsg: state.enterprise.shop.item.remoteMsg,
-    didInvalidate: state.enterprise.shop.item.didInvalidate,
-    didUpdate: state.enterprise.shop.item.didUpdate,
+    remoteMsg: state.enterprise.shop.change.remoteMsg,
+    didInvalidate: state.enterprise.shop.change.didInvalidate,
+    didUpdate: state.enterprise.shop.change.didUpdate,
 }))
 class ShopAction extends Action {
 
@@ -190,12 +191,13 @@ class ShopForm extends Component {
 }
 
 @connect((state, ownProps)=>({
-    data:state.enterprise.shop.item.data,
+    ...state.enterprise.shop.item,
 }), (dispatch, ownProps)=>({
     fetchShopIfNeeded: (payload)=>dispatch(fetchShopIfNeeded(payload)),
     updateShopById: (id, data)=>dispatch(updateShopById(id, data)),
     createShop: (data)=>dispatch(createShop(data)),
     deleteShopById: (id)=>dispatch(deleteShopById(id)),
+    clearShop: ()=>dispatch(clearShop()),
 }))
 class ShopLayout extends Component {
     constructor(props) {
@@ -207,17 +209,21 @@ class ShopLayout extends Component {
     componentWillMount() {
         const {id} = this.props.params;
         console.warn('componentWillMount'.toLocaleUpperCase());
-        if (id != 'create') {
+        if (id) {
             this.props.fetchShopIfNeeded(id);
         }
     }
 
+    componentWillUnmount() {
+       this.props.clearShop();
+    }
 
     componentWillReceiveProps(nextProps) {
         const id = nextProps.params.id;
         console.warn('componentWillReceiveProps', this.props, nextProps)
         if (this.props.params.id !== id) {
-            if (id != 'create') {
+            this.props.clearShop();
+            if (id) {
                 this.props.fetchShopIfNeeded(id);
             }
         }
@@ -237,8 +243,15 @@ class ShopLayout extends Component {
     }
 
     render() {
-        let {data} = this.props;
-        const {id} = this.props.params;
+        let {data,didInvalidate,remoteMsg} = this.props;
+        const id = this.props.params.id||'create';
+
+        if(didInvalidate){
+            return   <Alert message={remoteMsg}
+                            type="error"
+            />
+        }
+
         if (id == 'create') {
             data = {
                 status: '1'
