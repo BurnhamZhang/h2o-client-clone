@@ -3,40 +3,13 @@
  */
 
 
-import io from 'socket.io-client';
 import {getStore} from '../index';
-import {notification} from 'antd';
 
 export const MANAGE_LOGIN = 'MANAGE_LOGIN';
 export const MANAGE_LEAVE = 'MANAGE_LEAVE';
 export const MANAGE_RECEIVE_ORDERS = 'MANAGE_RECEIVE_ORDERS';
 
-console.log('io',io)
-const socket = io();
-console.log('socket',socket);
 
-socket.on('connect', function() {
-    console.log("与服务器联通");
-});
-socket.on('disconnect', function() {
-    console.log("与服务器断开");
-});
-
-
-socket.on('new message',function (data) {
-    console.warn('new message',data);
-    const {userHouseNumber, userName, userPhone} = data;
-    notification['info']({
-        message: '您有新的订单啦！！请及时处理～～',
-        description: `${userHouseNumber}/${userName}/${userPhone}`,
-    })
-})
-
-
-socket.on('receive orders',function (data) {
-    console.warn('receive orders',data)
-    getStore().dispatch(receive_orders(data.response));
-})
 
 
 

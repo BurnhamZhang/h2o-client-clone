@@ -6,7 +6,6 @@ const CheckboxGroup = Checkbox.Group;
 import {Link} from 'react-router';
 const createForm = Form.create;
 import {connect} from 'react-redux';
-import {manage_login} from '../actions/manage';
 import {fetchCandidateCourierListIfNeeded, updateCourierStatus} from '../actions/courier';
 import {createDelivery} from '../actions/delivery';
 import Delivery from './Delivery';
@@ -493,14 +492,10 @@ class DeliveryController extends Component {
 }
 
 
-@connect(null, (dispatch, ownProps)=>({
-    manage_login: ()=>dispatch(manage_login())
-}))
+
 class Manage extends Component {
 
-    componentWillMount() {
-        this.props.manage_login();
-    }
+
 
     render() {
         return (

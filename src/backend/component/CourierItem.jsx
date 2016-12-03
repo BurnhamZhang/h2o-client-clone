@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router';
 import {connect} from 'react-redux';
-import {fetchCourierIfNeeded, updateCourierById, createCourier, deleteCourierById} from '../actions/courier';
+import {clearCourier,fetchCourierIfNeeded, updateCourierById, createCourier, deleteCourierById} from '../actions/courier';
 import {fetchShopRegionIfNeeded} from '../actions/region';
-import {Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon, Popconfirm, message} from 'antd';
+import {Alert,Table, DatePicker, Radio, Form, Button, Select, Input, InputNumber, Icon, Popconfirm, message} from 'antd';
 import Block from './Block';
 import CustomUpload from './CustomUpload';
 const ButtonGroup = Button.Group;
@@ -17,11 +17,12 @@ import {itemLayout, actionLayout} from '../constants/formLayout';
 import Action from './Action';
 
 
+
 @connect((state, ownProps)=>({
     nextRoute: '/courier',
-    remoteMsg: state.courier.item.remoteMsg,
-    didInvalidate: state.courier.item.didInvalidate,
-    didUpdate: state.courier.item.didUpdate,
+    remoteMsg: state.courier.change.remoteMsg,
+    didInvalidate: state.courier.change.didInvalidate,
+    didUpdate: state.courier.change.didUpdate,
 }))
 class CourierAction extends Action {
 
@@ -60,7 +61,8 @@ class CourierItem extends Component {
         this.handleDelete = this.handleDelete.bind(this);
     }
 
-    handleSubmit() {
+    handleSubmit(e) {
+        e.preventDefault();
         console.log('handleSubmit');
         const {type, updateItem, createItem, region} = this.props;
         this.props.form.validateFields((errors, values) => {
@@ -83,6 +85,9 @@ class CourierItem extends Component {
 
             console.log('values after', values)
 
+            if(values.password==''){
+                delete  values.password;
+            }
 
             if (type == 'create') {
                 createItem(values);
@@ -149,8 +154,12 @@ class CourierItem extends Component {
                     {
 
                         getFieldDecorator('password', {
+                            rules: [
+                                { min: 8 , max:20, message:'必须数字+字母组合，至少8位，上限20位'},
+                                {required:type=='create'}
+                            ],
                         })(
-                            <Input type="password" placeholder="6位以上数字或组合"/>
+                            <Input type="password" placeholder="必须数字+字母组合，至少8位，上限20位"/>
                         )
                     }
                 </FormItem>
@@ -227,14 +236,15 @@ class CourierItem extends Component {
 }
 
 @connect((state, ownProps)=>({
-    data:state.courier.item.data,
+    ...state.courier.item,
     region: state.courier.region.data
 }), (dispatch, ownProps)=>({
     fetchCourierIfNeeded: (payload)=>dispatch(fetchCourierIfNeeded(payload)),
     fetchShopRegionIfNeeded: ()=>dispatch(fetchShopRegionIfNeeded()),
     updateCourierById: (id, data)=>dispatch(updateCourierById(id, data)),
     createCourier: (payload)=>dispatch(createCourier(payload)),
-    deleteCourierById: (id)=>dispatch(deleteCourierById(id))
+    deleteCourierById: (id)=>dispatch(deleteCourierById(id)),
+    clearCourier: (id)=>dispatch(clearCourier(id))
 }))
 class CourierForm extends Component {
     constructor(props) {
@@ -247,7 +257,7 @@ class CourierForm extends Component {
     componentWillMount() {
         console.warn('componentWillMount'.toLocaleUpperCase());
         const id = this.props.params.id;
-        if (id != 'create') {
+        if (id) {
             this.props.fetchCourierIfNeeded(id);
         }
         this.props.fetchShopRegionIfNeeded();
@@ -259,11 +269,16 @@ class CourierForm extends Component {
         const id = nextProps.params.id;
         console.warn('componentWillReceiveProps', this.props, nextProps)
         if (this.props.params.id !== id) {
-            if (id != 'create') {
+            this.props.clearCourier()
+            if (id) {
                 this.props.fetchCourierIfNeeded(id);
             }
             this.props.fetchShopRegionIfNeeded();
         }
+    }
+
+    componentWillUnmount(){
+        this.props.clearCourier()
     }
 
     updateItem(id, data) {
@@ -279,9 +294,9 @@ class CourierForm extends Component {
     }
 
     render() {
-        const {id} = this.props.params;
+        const id = this.props.params.id||'create';
         const region = this.props.region;
-        let data = this.props.data;
+        let {data,remoteMsg,didInvalidate} = this.props;
 
         if (id == 'create') {
             data = {
@@ -289,7 +304,11 @@ class CourierForm extends Component {
                 regions: []
             }
         }
-        console.warn('render CourierForm>>>>>>>>>>', data)
+        if(didInvalidate){
+            return   <Alert message={remoteMsg}
+                            type="error"
+            />
+        }
 
         return (
             <div className="ant-layout-content">

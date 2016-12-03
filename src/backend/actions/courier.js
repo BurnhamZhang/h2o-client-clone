@@ -39,11 +39,21 @@ export const COURIER_STATUS_UPDATE_SUCCESS = 'COURIER_STATUS_UPDATE_SUCCESS';
 export const COURIER_STATUS_UPDATE_FAILURE = 'COURIER_STATUS_UPDATE_FAILURE';
 
 
+export const COURIER_CLEAR = 'COURIER_CLEAR';
+
+
+export function clearCourier() {
+    return {
+        type: COURIER_CLEAR,
+    };
+}
+
 //查询配送员详情
 
-function courier_failure() {
+function courier_failure(payload) {
     return {
         type: COURIER_FAILURE,
+        payload
     };
 }
 

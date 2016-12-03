@@ -86,6 +86,10 @@ const shop = [
             component: CourierList
         },
         childRoutes: [{
+            path: 'create',
+            title: '创建配送员',
+            component: CourierItem,
+        },{
             path: ':id',
             title: '配送员详情',
             component: CourierItem,

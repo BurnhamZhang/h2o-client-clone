@@ -5,7 +5,6 @@ import api from './api';
 import backend from './backend';
 import frontend from './frontend';
 import courier from './courier';
-import app from './io';
 import path from 'path';
 import mount from 'koa-mount';
 import serve from 'koa-static';
@@ -15,7 +14,7 @@ import webpack from 'webpack';
 import config from '../../config/webpack.config';
 
 
-// const app = koa();
+const app = koa();
 
 
 
