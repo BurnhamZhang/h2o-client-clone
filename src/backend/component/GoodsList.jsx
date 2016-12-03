@@ -15,7 +15,7 @@ const columns = [
         ),
     },
     {title: '商品描述', dataIndex: 'memo', key: '3'},
-    {title: '单价', dataIndex: 'price', key: '4'},
+    {title: '单价', dataIndex: 'priceYuan', key: '4'},
     {title: '库存', dataIndex: 'stock', key: '5'},
     {
         title: '状态', dataIndex: 'shelves', key: '6',
