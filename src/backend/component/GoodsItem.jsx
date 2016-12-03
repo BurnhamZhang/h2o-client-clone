@@ -158,21 +158,6 @@ class GoodsItem extends Component {
                         )
                     }
                 </FormItem>
-                <FormItem   label="押金费" {...itemLayout}   >
-                    {
-                        getFieldDecorator('depositType', {})(
-                            <RadioGroup>
-                                <Radio key="a" value={0}>无押金</Radio>
-                                <Radio key="b" value={1}>有押金</Radio>
-                            </RadioGroup>
-                        )
-
-                    }
-                    {
-                        getFieldValue('depositType') == 1 ? getFieldDecorator('depositMoney', {})(
-                            <InputNumber min={0.01} step="0.01" size="120"/>) : ''
-                    }
-                </FormItem>
                 <FormItem   label="是否上架" {...itemLayout}  >
                     {
                         getFieldDecorator('shelves', {})(
