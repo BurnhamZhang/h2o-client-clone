@@ -30,10 +30,7 @@ class Action extends Component {
         if(didUpdate!=this.props.didUpdate || nextRoute!=this.props.nextRoute){
             if (didUpdate && nextRoute) {
                 message.success('操作成功！');
-                window.setTimeout(()=>{
-                    console.warn('router>>>>>>>>>>>>',nextRoute);
-                    router.push(nextRoute)
-                },1500)
+                router.push(nextRoute)
                 return false
             }
         }

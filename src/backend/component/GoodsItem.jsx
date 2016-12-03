@@ -26,6 +26,7 @@ class GoodsAction extends Action {
 
 
 @connect((state, ownProps)=>({
+    isFetching: state.goods.item.isFetching,
 }), (dispatch, ownProps)=>({
     createGoods: (payload)=>dispatch(createGoods(payload)),
     deleteGoodsById:(id)=>dispatch(deleteGoodsById(id)),
@@ -91,7 +92,7 @@ class GoodsItem extends Component {
 
     render() {
         const {getFieldDecorator, getFieldValue, getFieldsValue} = this.props.form;
-        const {type,available} = this.props;
+        const {type,available,isFetching} = this.props;
 
 
         return (<div className="ant-layout-content">
@@ -170,12 +171,12 @@ class GoodsItem extends Component {
                 </FormItem>
 
                 <FormItem  {...actionLayout}  >
-                    <Button type="primary" htmlType="button" style={{margin: ' 0 10px'}}
+                    <Button type="primary" htmlType="button" style={{margin: ' 0 10px'}} loading={isFetching}
                             onClick={()=>(this.handleSubmit())}>确定</Button>
                     {
                         type!='create' ?
 
-                            <Popconfirm title="确定要删除吗？" okText="确定" cancelText="不了" onConfirm={()=>(this.handleDelete())}>
+                            <Popconfirm title="确定要删除吗？" okText="确定" cancelText="取消" onConfirm={()=>(this.handleDelete())}>
                                 <Button type="dashed" htmlType="button" style={{margin: ' 0 10px'}}
                                 >删除</Button>
                             </Popconfirm>
@@ -201,7 +202,7 @@ class GoodsForm extends Component {
 
     componentWillMount() {
         const id = this.props.params.id;
-        if(id=='create'){
+        if(!id){
             this.props.fetchAvailableGoodsListIfNeeded()
         }
         else{
@@ -223,7 +224,7 @@ class GoodsForm extends Component {
         this.props.clearGoods();
     }
     render() {
-        const {id} = this.props.params;
+        const id = this.props.params.id||'create';
         let data = this.props.data;
         const available = this.props.available;
         let condition =!!data;

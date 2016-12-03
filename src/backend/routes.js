@@ -102,6 +102,10 @@ const shop = [
             component: GoodsList
         },
         childRoutes: [{
+            path: 'create',
+            title: '创建商品',
+            component: GoodsItem,
+        },{
             path: ':id',
             title: '商品详情',
             component: GoodsItem,
