@@ -4,6 +4,15 @@ import {withRouter} from 'react-router';
 import {assignOrderList,orderListClear} from '../actions/order';
 import OrderItem from './OrderItem';
 import {connect} from 'react-redux';
+import Action from './Action';
+
+@connect((state, ownProps)=>({
+    remoteMsg: state.order.delivery.remoteMsg,
+    didInvalidate: state.order.delivery.didInvalidate,
+    didUpdate: state.order.delivery.didUpdate,
+}))
+class OrderAction extends Action {
+}
 
 
 @withRouter
@@ -29,6 +38,10 @@ class OrderList extends Component {
             return null
         }
         return <div style={{paddingBottom:100}}>
+            <OrderAction updateHandle={()=>{
+                this.props.assignOrderList();
+            }
+            }/>
             {  data.map((item,index)=><OrderItem key={index} data={item} />)}
         </div>
 
