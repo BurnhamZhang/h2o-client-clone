@@ -20,12 +20,6 @@ preloadedState.user = {
     didInvalidate: false,
     data: storage.get('COURIER_USER')||{},
 };
-preloadedState.cart = {
-    isFetching: false,
-    didInvalidate: false,
-    didUpdate: false,
-    data:storage.get('CART')||[]
-} ;
 const store = configureStore(preloadedState);
 
 

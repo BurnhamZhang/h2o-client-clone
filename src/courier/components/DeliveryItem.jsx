@@ -82,10 +82,7 @@ class DeliveryItem extends Component {
                                 收货时间：{deliveryType=='1'?'即时送':(moment(appointStart).format('YYYY-MM-DD  HH:mm')+'  '+moment(appointEnd).format('HH:mm'))}
                             </div>
                             <div>
-                                发票信息：{invoiceMap[invoiceType]  }{invoiceTitle?('（'+invoiceTitle+'）'):null}
-                            </div>
-                            <div>
-                                备注信息：{}（网银北京科技有限公司）
+                                备注信息：{invoiceMap[invoiceType]  }{invoiceTitle?('（'+invoiceTitle+'）'):null}
                             </div>
                             <WhiteSpace/>
                             <Flex>

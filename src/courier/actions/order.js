@@ -44,11 +44,6 @@ function order_assign_success(json) {
 }
 
 
-function order_list_clear() {
-    return {
-        type: ORDER_LIST_CLEAR,
-    };
-}
 
 
 
@@ -68,4 +63,49 @@ export function assignOrderList(data) {
 }
 
 
+//创建配送单 抢单
 
+export const ORDER_DELIVERY_REQUEST = 'ORDER_DELIVERY_REQUEST';
+export const ORDER_DELIVERY_SUCCESS = 'ORDER_DELIVERY_SUCCESS';
+export const ORDER_DELIVERY_FAILURE = 'ORDER_DELIVERY_FAILURE';
+
+
+
+function order_delivery_failure(payload) {
+    return {
+        type: ORDER_DELIVERY_FAILURE,
+        payload
+    };
+}
+
+function order_delivery_request(payload) {
+    return {
+        type: ORDER_DELIVERY_REQUEST,
+        payload
+    };
+}
+
+function order_delivery_success(json) {
+    return {
+        type: ORDER_DELIVERY_SUCCESS,
+        receiveAt: Date.now(),
+        payload: json
+    };
+}
+
+
+
+export function createDeliveryByOrderId(data) {
+    return (dispatch, getState) => {
+        dispatch(order_delivery_request());
+        return fetch(`/api/delivery`,{
+            method:'POST',
+            data
+        })
+            .then((json) => {
+                dispatch(order_delivery_success(json));
+            }).catch(error => {
+                dispatch(order_delivery_failure(error))
+            });
+    };
+}
