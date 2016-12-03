@@ -98,6 +98,10 @@ class CustomUpload extends Component {
             fileList
         };
 
+        if (process.env.NODE_ENV === 'production') {
+            props.action = '/h2o'+props.action;
+        }
+
         return (
             <Upload {...props} className="upload-list-inline" onChange={this.onChange}>
                 <Button type="ghost" style={{display: fileList.length == maxLength ?'none':'inline-block'}}>

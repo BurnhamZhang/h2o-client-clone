@@ -1,5 +1,5 @@
 import React, {Component , PropTypes } from 'react';
-import { message } from 'antd';
+import { Toast } from 'antd-mobile';
 import {withRouter} from 'react-router';
 
 
@@ -21,32 +21,33 @@ class Action extends Component {
 
     componentWillReceiveProps(nextProps){
         const  {didInvalidate,remoteMsg,didUpdate,router,nextRoute,updateHandle} = nextProps;
-
         if (didUpdate && didUpdate!=this.props.didUpdate  && typeof updateHandle =='function') {
-            updateHandle(this)
+            updateHandle(this,nextProps)
             return false
         }
 
         if(didUpdate!=this.props.didUpdate || nextRoute!=this.props.nextRoute){
             if (didUpdate && nextRoute) {
-                message.success('操作成功！');
+                Toast.info('操作成功！',2);
                 window.setTimeout(()=>{
                     console.warn('router>>>>>>>>>>>>',nextRoute);
                     router.push(nextRoute)
-                },1500)
+                },2000)
                 return false
             }
         }
         if(didInvalidate!=this.props.didInvalidate || remoteMsg!=this.props.remoteMsg){
             if(didInvalidate && remoteMsg){
-                message.warn(remoteMsg)
+                Toast.info(remoteMsg)
             }
         }
 
     }
 
     render() {
-     return   this.props.children?this.props.children:null
+     return  <div>
+         {this.props.children||null}
+     </div>
     }
 }
 ;

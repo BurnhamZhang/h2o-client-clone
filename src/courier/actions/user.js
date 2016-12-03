@@ -15,7 +15,7 @@ export function auth_timeout(payload) {
 }
 
 export function auth_logout() {
-    storage.remove('CLIENT_USER');
+    storage.remove('COURIER_USER');
     return {
         type: AUTH_LOGOUT,
     };
@@ -35,7 +35,7 @@ function requestUser(payload) {
 }
 
 export function receiveUser(json) {
-    storage.set('CLIENT_USER',json.data);
+    storage.set('COURIER_USER',json.data);
     return {
         type: RECEIVE_USER,
         receiveAt: Date.now(),
@@ -46,13 +46,14 @@ export function receiveUser(json) {
 function fetchData(data) {
     return dispatch => {
         dispatch(requestUser(data));
-        return fetch('/api/verify/wx/qb', {
+        return fetch('/api/login', {
+            method: 'POST',
             data
         })
             .then((json) => {
                 if (json.data.account) {
                     json.data.loginType = data.loginType;
-                    storage.set('CLIENT_USER', json.data);
+                    storage.set('COURIER_USER', json.data);
                 }
                 dispatch(receiveUser(json));
 

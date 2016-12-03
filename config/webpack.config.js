@@ -8,6 +8,7 @@ module.exports = {
     entry: {
         frontend: ['webpack-hot-middleware/client?reload=true', 'webpack/hot/only-dev-server', path.resolve(__dirname, '../src/frontend/index')],
         backend: ['webpack-hot-middleware/client?reload=true', 'webpack/hot/only-dev-server', path.resolve(__dirname, '../src/backend/index')],
+        courier: ['webpack-hot-middleware/client?reload=true', 'webpack/hot/only-dev-server', path.resolve(__dirname, '../src/courier/index')],
     },
     devtool: 'source-map', // more info:https://webpack.github.io/docs/build-performance.html#sourcemaps and https://webpack.github.io/docs/configuration.html#devtool
     // devtool: 'cheap-module-eval-source-map', // more info:https://webpack.github.io/docs/build-performance.html#sourcemaps and https://webpack.github.io/docs/configuration.html#devtool
@@ -57,6 +58,12 @@ module.exports = {
             filename: path.resolve(__dirname, '../dist/backend.html'),
             template:path.resolve(__dirname, '../src/backend/index.html'),
             chunks: ['backend']
+        }),
+        new HtmlWebpackPlugin({
+            title: 'courier',
+            filename: path.resolve(__dirname, '../dist/courier.html'),
+            template:path.resolve(__dirname, '../src/courier/index.html'),
+            chunks: ['courier']
         })
     ]
 };

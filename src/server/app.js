@@ -4,6 +4,7 @@ import koa from 'koa';
 import api from './api';
 import backend from './backend';
 import frontend from './frontend';
+import courier from './courier';
 import app from './io';
 import path from 'path';
 import mount from 'koa-mount';
@@ -31,6 +32,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 app.use(mount('/backend', backend));
 app.use(mount('/frontend', frontend));
+app.use(mount('/courier', courier));
 app.use(mount('/api', api));
 // app.use(mount(io));
 

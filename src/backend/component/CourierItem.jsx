@@ -149,9 +149,6 @@ class CourierItem extends Component {
                     {
 
                         getFieldDecorator('password', {
-                            rules: [
-                                {required: true, max: 40},
-                            ],
                         })(
                             <Input type="password" placeholder="6位以上数字或组合"/>
                         )

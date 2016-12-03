@@ -13,43 +13,51 @@ import { ActivityIndicator } from 'antd-mobile';
 @withRouter
 class Login extends Component {
     componentDidMount(){
-        if(process.env.NODE_ENV === 'production'){
-            this.props.receiveUser({
-                data:{
-                    account:'15682553619',
-                    token:'U6JD3B2TWLHOEPGBHC3RCBQRLMUSJX6Y5MVM2DZ6J3QWMUVCJL3ELUN4BO3QWHXIJJA2HDOXDBFREZ5OJOOTODZIGGO4VDGKC4HFYT7WT2YIHC5L3OGE3FV6G6T4BDEVQEZ6KUG6SFEA4U4UQJ7AY4QLWM'
-                }
-            })
+        const code =this.props.location.query.code;
+        console.log('code',code);
+        if(this.props.data && this.props.data.token){
+            const {location} = this.props;
+            if (location.state && location.state.nextPathname) {
+                this.props.router.replace(location.state.nextPathname)
+            } else {
+                this.props.router.replace('/main')
+            }
+            return
         }
-        else {
+        if(code){
             this.props.login({
-                loginType:4,
-                account:'15682553619'
+                code
             })
         }
 
     }
     shouldComponentUpdate(nextProps) {
         console.log('shouldComponentUpdate',nextProps)
-        if (nextProps.data.account) {
+        if (nextProps.data.token) {
             const {location} = nextProps;
             if (location.state && location.state.nextPathname) {
                 this.props.router.replace(location.state.nextPathname)
             } else {
-                this.props.router.replace('/manage')
+                this.props.router.replace('/main')
             }
             return false
         }
         return true
     }
     render() {
-        return (
-            <ActivityIndicator
-                toast
-                text="正在登录"
-                animating
-            />
-        );
+        const {isFetching,didInvalidate} = this.props
+        if(isFetching){
+            return (
+                <ActivityIndicator
+                    toast
+                    text="正在登录"
+                    animating
+                />
+            );
+        }
+
+        return null
+
     }
 }
 

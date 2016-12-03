@@ -19,6 +19,7 @@ module.exports = {
     entry: {
         frontend: [path.resolve(__dirname, '../src/frontend/index')],
         backend: [path.resolve(__dirname, '../src/backend/index')],
+        courier: [path.resolve(__dirname, '../src/courier/index')],
     },
     module: {
         loaders: [
@@ -82,6 +83,11 @@ module.exports = {
             filename: path.resolve(__dirname, '../dist/frontend.html'),
             chunks: ['frontend'],
             template:path.resolve(__dirname, '../src/frontend/index.html')
+        }),
+        new HtmlWebpackPlugin({
+            filename: path.resolve(__dirname, '../dist/courier.html'),
+            chunks: ['courier'],
+            template:path.resolve(__dirname, '../src/courier/index.html')
         }),
         new HtmlWebpackPlugin({
             title: 'backend',
