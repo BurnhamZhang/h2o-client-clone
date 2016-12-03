@@ -51,7 +51,7 @@ const enterprise = [
             component: Enterprise.GoodsItem,
         },{
             path: ':id',
-            title: '商品详情',
+            title: '编辑商品',
             component: Enterprise.GoodsItem,
         }]
     },
@@ -103,7 +103,7 @@ const shop = [
             component: CourierItem,
         },{
             path: ':id',
-            title: '配送员详情',
+            title: '编辑配送员',
             component: CourierItem,
         }]
     },
@@ -119,7 +119,7 @@ const shop = [
             component: GoodsItem,
         },{
             path: ':id',
-            title: '商品详情',
+            title: '编辑商品',
             component: GoodsItem,
         }]
     },
