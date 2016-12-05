@@ -62,10 +62,10 @@ class ShopAction extends Action {
             value:payload.complainPhone
         },
         deliveryStart:{
-            value: moment(payload.deliveryStart , 'HH:mm:ss')
+            value: moment(payload.deliveryStart||'08:00:00' , 'HH:mm:ss')
         },
         deliveryEnd:{
-            value: moment(payload.deliveryEnd , 'HH:mm:ss')
+            value: moment(payload.deliveryEnd||'18:00:00' , 'HH:mm:ss')
         },
         deliveryType:{
             value:payload.deliveryType=='1'
