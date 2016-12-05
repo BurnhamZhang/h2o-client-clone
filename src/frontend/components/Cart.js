@@ -135,8 +135,8 @@ class CartPage extends Component {
                         this.props.cacheUpdate(list)
                         this.props.router.push({
                             pathname:'/confirm',
-                            query:{
-                                cache:Math.random().toString(36).substr(2)
+                            state:{
+                                cacheId:Math.random().toString(36).substr(2)
                             }
                         })
                     }

@@ -17,6 +17,7 @@ class ConfirmAddress extends Component {
 
     render() {
         const {data} = this.props;
+        const {cacheId ,edit} = this.props.location.state;
         return (
             <div>
                 <NavBar leftContent="返回" mode="light" onLeftClick={() =>this.props.router.goBack() }
@@ -24,7 +25,7 @@ class ConfirmAddress extends Component {
                         rightContent={ <Link to={{
                             pathname: '/address/create',
                             query: {
-                                address: Math.random().toString(36).substr(2)
+                                cacheId
                             }
                         }}>
                             <span style={{color: '#108ee9'}}>添加</span>
@@ -32,16 +33,19 @@ class ConfirmAddress extends Component {
                 >选择收货地址</NavBar>
                 <div style={{paddingBottom: 84}}>
                     { data ? <AddressList data={data} onChoose={({id, name, geo, houseNumber, streetId, phone,location})=> {
-                        this.props.cacheUpdate({
-                            addressId: id,
-                            name,
-                            geo,
-                            location,
-                            houseNumber,
-                            streetId,
-                            phone
-                        })
-                        this.props.router.goBack();
+                        if(edit){
+                            this.props.cacheUpdate({
+                                addressId: id,
+                                name,
+                                geo,
+                                location,
+                                houseNumber,
+                                streetId,
+                                phone
+                            })
+                            this.props.router.goBack();
+                        }
+
                     }
                     }/> : null }
                 </div>

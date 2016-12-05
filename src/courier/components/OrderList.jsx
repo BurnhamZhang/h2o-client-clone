@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react';
-import {List} from 'antd-mobile';
+import {Result} from 'antd-mobile';
+import ListView from './ListView';
 import {withRouter} from 'react-router';
 import {assignOrderList,orderListClear} from '../actions/order';
 import OrderItem from './OrderItem';
@@ -15,6 +16,17 @@ class OrderAction extends Action {
 }
 
 
+@connect((state, ownProps)=>({
+    data: state.order.list.data,
+    pagination: state.order.list.pagination,
+    isLoading: state.order.list.isFetching,
+    didUpdate: state.order.list.didUpdate,
+}))
+class OrderListView extends ListView {
+
+}
+
+
 @withRouter
 @connect((state, ownProps)=>({
     data:state.order.list.data,
@@ -24,25 +36,35 @@ class OrderAction extends Action {
 }))
 class OrderList extends Component {
     componentWillMount(){
-        this.props.assignOrderList();
+        // this.props.assignOrderList();
     }
     componentWillUnmount(){
         this.props.orderListClear();
     }
     render() {
 
-        const {data} =this.props;
-        console.log(data);
-
-        if(!data){
-            return null
-        }
         return <div style={{paddingBottom:100}}>
             <OrderAction updateHandle={()=>{
-                this.props.assignOrderList();
-            }
-            }/>
-            {  data.map((item,index)=><OrderItem key={index} data={item} />)}
+                this.refs.list.resetData();
+            }}/>
+            <OrderListView ref='list' pageSize={20} row={(rowData, sectionID, rowID) => <OrderItem data={rowData}/>}
+                           endView={ <Result title="空"
+                                             imgUrl="https://zos.alipayobjects.com/rmsportal/NRzOqylcxEstLGf.png"
+                           />}
+                           fetchData={
+                               ({pageNum, pageSize})=> this.props.assignOrderList({
+                                   pageNum,
+                                   pageSize
+                               })
+                           }
+                           renderSeparator={(sectionID, rowID) => (
+                               <div key={`${sectionID}-${rowID}`} style={{
+                                   backgroundColor: '#F5F5F9',
+                                   height: 8,
+                               }}
+                               />
+                           )}
+            />
         </div>
 
     }

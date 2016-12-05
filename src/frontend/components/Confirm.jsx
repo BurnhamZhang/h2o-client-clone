@@ -26,7 +26,7 @@ class ConfirmAction extends Action {
     const {id, name, geo, houseNumber, streetId, phone, location} = state.address.delivery.data || {}
 
     console.warn('start')
-    console.warn(state.cache[ownProps.location.query.cache])
+    console.warn(state.cache[ownProps.location.state.cacheId])
     console.warn( state.address.delivery.data)
 
     const data = Object.assign({
@@ -56,7 +56,7 @@ class ConfirmAction extends Action {
         houseNumber,
         streetId,
         phone
-    } : null, state.cache[ownProps.location.query.cache])
+    } : null, state.cache[ownProps.location.state.cacheId])
 
     if(state.delivery.type.data && state.delivery.type.data.allow=='0'){
         data.deliveryType='2';
@@ -104,7 +104,7 @@ class ConfirmAction extends Action {
     }
 }, (dispatch, ownProps)=>({
     cacheUpdate: (data)=>dispatch(cacheUpdate({
-        key: ownProps.location.query.cache,
+        key: ownProps.location.state.cacheId,
         data
     })),
     createOrder: (payload)=> {

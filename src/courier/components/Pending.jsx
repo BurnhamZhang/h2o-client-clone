@@ -36,7 +36,7 @@ class Pending extends Component {
              <TabPane tab={<Badge text={order}>待抢单</Badge>} key="1">
                  <OrderList/>
              </TabPane>
-             <TabPane tab={<Badge text={delivery}>待抢单</Badge>} key="2">
+             <TabPane tab={<Badge text={delivery}>自动派单</Badge>} key="2">
                  <DeliveryList params={{status:0}}/>
              </TabPane>
          </Tabs>

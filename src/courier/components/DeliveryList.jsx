@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
-import {List} from 'antd-mobile';
+import {Result} from 'antd-mobile';
 import {withRouter} from 'react-router';
+import ListView from './ListView';
 import {clearDeliveryList,getDeliveryList} from '../actions/delivery';
 import DeliveryItem from './DeliveryItem';
 import {connect} from 'react-redux';
@@ -14,38 +15,62 @@ import Action from './Action';
 class DeliveryItemAction extends Action {
 }
 
+@connect((state, ownProps)=>({
+    data: state.delivery.list.data,
+    pagination: state.delivery.list.pagination,
+    isLoading: state.delivery.list.isFetching,
+    didUpdate: state.delivery.list.didUpdate,
+}))
+class DeliveryListView extends ListView {
+
+}
 
 
 @withRouter
 @connect((state, ownProps)=>({
-    data:state.delivery.list.data,
 }), (dispatch, ownProps)=>({
     getDeliveryList: (payload)=>dispatch(getDeliveryList(payload)),
     clearDeliveryList: (payload)=>dispatch(clearDeliveryList(payload)),
 }))
 class DeliveryList extends Component {
     componentWillMount(){
-        this.props.getDeliveryList(this.props.params);
+    //     this.props.getDeliveryList(this.props.params);
     }
     componentWillUnmount(){
         this.props.clearDeliveryList();
     }
     render() {
 
-        const {data} =this.props;
-        console.log(data);
-
-        if(!data){
-            return null
-        }
-        return   <div style={{paddingBottom:100}}>
+        return   <div style={{paddingBottom:100}} className="order-list">
             <DeliveryItemAction updateHandle={()=>{
-                this.props.getDeliveryList(this.props.params);
+                 this.refs.list.resetData();
             }
             }/>
-            {
-                data.map((item,index)=><DeliveryItem key={index} data={item} />)
-            }
+            <DeliveryListView ref='list' pageSize={20} row={(rowData, sectionID, rowID) => <DeliveryItem data={rowData}/>}
+                           endView={ <Result title="空"
+                                             imgUrl="https://zos.alipayobjects.com/rmsportal/NRzOqylcxEstLGf.png"
+
+                           />}
+                           fetchData={
+                               ({pageNum, pageSize})=> this.props.getDeliveryList({
+                                   pageNum,
+                                   pageSize,
+                                   ...this.props.params
+                               })
+                           }
+                              renderSeparator={(sectionID, rowID) => (
+                                  <div key={`${sectionID}-${rowID}`} style={{
+                                      backgroundColor: '#F5F5F9',
+                                      height: 8,
+                                  }}
+                                  />
+                              )}
+                              useZscroller
+                              scrollerOptions={{
+                                  onScroll:(data)=>console.log(data)
+                              }}
+
+            />
         </div>
     }
 }

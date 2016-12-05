@@ -1,4 +1,3 @@
-#react-content,
 .demo-preview-item,
 .am-tab-bar,
 .am-tab-bar-content,
@@ -6,16 +5,12 @@
   height: 100%;
 }
 
-html, body, .full-height {
+.full-height {
   height: 100%;
   overflow: hidden;
 }
 
 
-#react-content {
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-}
 
 .am-tab-bar-tab-title {
   margin: 0;

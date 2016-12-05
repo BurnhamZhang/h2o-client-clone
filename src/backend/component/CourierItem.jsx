@@ -105,7 +105,7 @@ class CourierItem extends Component {
     }
 
     render() {
-        const {getFieldDecorator} = this.props.form;
+        const {getFieldDecorator,getFieldValue} = this.props.form;
 
         const {type, region} = this.props;
 
@@ -146,7 +146,7 @@ class CourierItem extends Component {
                                 {required: true, max: 40},
                             ],
                         })(
-                            <Input placeholder="手机或邮箱"/>
+                            type=='create'?<Input placeholder="手机或邮箱"/>:<span>{getFieldValue('account')}</span>
                         )
                     }
                 </FormItem>

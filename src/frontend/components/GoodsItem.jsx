@@ -38,7 +38,7 @@ class GoodsItem extends Component {
                                     <Icon type="plus-circle" style={{color:'lightgray'}}/>
                                 ):
                                     (
-                                        <Icon type="plus-circle" onClick={()=>{
+                                        <Icon type="plus-circle" style={{color:'#108ee9'}} onClick={()=>{
                                             this.props.cartAddGoods(this.props.data);
                                             Toast.success('加入购物车成功！',1)
                                         }} />

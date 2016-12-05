@@ -52,7 +52,11 @@ class ConfirmType extends Component {
         const {deliveryType, payType, orderDetails} = this.props.data;
         const minDate = moment().locale('zh-cn').utcOffset(8);
         const maxDate = moment().locale('zh-cn').utcOffset(8).add(2, 'days');
-        const maxTime = moment(type.deliveryEnd, 'HH:mm:ss').utcOffset(8);
+        if(moment(moment().format('YYYY-MM-DD ')+type.deliveryEnd, 'YYYY-MM-DD HH:mm:ss').locale('zh-cn').utcOffset(8).isBefore(moment().locale('zh-cn').utcOffset(8))){
+            minDate.add(1, 'days');
+            maxDate.add(1, 'days');
+        }
+        const maxTime = moment(moment().format('YYYY-MM-DD ')+type.deliveryEnd, 'YYYY-MM-DD HH:mm:ss').utcOffset(8);
         const minTime = moment(type.deliveryStart, 'HH:mm:ss').utcOffset(8);
         const appointStart = moment(this.props.data.appointStart ? this.props.data.appointStart.split(' ')[1] : type.deliveryStart, 'HH:mm:ss').utcOffset(8);
         const appointEnd = moment(this.props.data.appointEnd ? this.props.data.appointEnd.split(' ')[1] : type.deliveryEnd, 'HH:mm:ss').utcOffset(8);

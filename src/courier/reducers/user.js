@@ -2,18 +2,22 @@ import {REQUEST_USER, RECEIVE_USER, INVALIDATE_USER,AUTH_TIMEOUT,AUTH_LOGOUT} fr
 export default function user(state = {
     isFetching: false,
     didInvalidate: false,
+    didUpdate:false,
     data:{
     }
 }, action) {
     switch (action.type) {
         case AUTH_TIMEOUT:
             return Object.assign({}, state, {
+                isFetching: false,
+                didInvalidate: false,
                 payload:{}
             })
         case INVALIDATE_USER:
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: true,
+                didUpdate:false,
                 ...action.payload
             })
             break;
@@ -21,6 +25,7 @@ export default function user(state = {
             return Object.assign({}, state, {
                 isFetching: true,
                 didInvalidate: false,
+                didUpdate:false,
                 remoteMsg:null
             })
             break;
@@ -28,6 +33,7 @@ export default function user(state = {
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
+                didUpdate:true,
                 ...action.payload
             })
             break;

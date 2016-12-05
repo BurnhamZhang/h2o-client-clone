@@ -12,7 +12,7 @@ class ConfirmIndex extends Component {
     render() {
 
         const {data, cacheUpdate} = this.props;
-        const cache = this.props.location.query.cache;
+        const cacheId = this.props.location.state.cacheId;
 
         const {addressId,name, phone, houseNumber, location,orderDetails, bucketType, buckets, payType,showMoneyYuan,tradeMoneyYuan,bucketMoneyYuan} = this.props.data;
 
@@ -40,10 +40,10 @@ class ConfirmIndex extends Component {
                     addressId?(
                         <Item thumb={<Icon type="environment"/>} multipleLine arrow="horizontal" onClick={()=> {
                             this.props.router.push({
-                                pathname: `/confirm/address`,
-                                query: {
-                                    cache,
-                                    address: Math.random().toString(36).substr(2)
+                                pathname: `/address`,
+                                state: {
+                                    cacheId,
+                                    choose:true,
                                 }
                             })
                         }
@@ -55,9 +55,8 @@ class ConfirmIndex extends Component {
                         <Item thumb={<Icon type="environment"/>} arrow="horizontal" onClick={()=> {
                             this.props.router.push({
                                 pathname: `/address/create`,
-                                query: {
-                                    cache,
-                                    address: Math.random().toString(36).substr(2)
+                                state: {
+                                    cacheId,
                                 }
                             })
                         }
