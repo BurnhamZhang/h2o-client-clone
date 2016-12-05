@@ -108,7 +108,9 @@ class ShopForm extends Component {
             <Form horizontal>
                 <FormItem label="门店名"   {...itemLayout} >
                     {
-                        getFieldDecorator('showName', {})(
+                        getFieldDecorator('showName', {rules: [
+                            {required: true,max: 20,message: '门店名不能大于20位字符'},
+                        ]})(
                             <Input />
                         )
                     }
@@ -129,8 +131,12 @@ class ShopForm extends Component {
                 </FormItem>
                 <FormItem label="投诉电话"  {...itemLayout}   >
                     {
-                        getFieldDecorator('complainPhone', {})(
-                            <Input placeholder="6位以上数字或组合"/>
+                        getFieldDecorator('complainPhone', {
+                            rules: [
+                                {required: true, max: 20,message: '投诉电话不能大于20位字符'},
+                            ],
+                        })(
+                            <Input placeholder="20位以上数字或组合"/>
                         )
                     }
                 </FormItem>
