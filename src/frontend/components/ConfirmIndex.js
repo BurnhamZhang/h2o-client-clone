@@ -1,14 +1,113 @@
 import React, {Component, PropTypes} from 'react';
 import {Toast, List, Switch, Icon, Stepper,Result,Flex,Button} from 'antd-mobile';
 import {connect} from 'react-redux';
-
+import {getDeliveryType} from  '../actions/delivery';
+import {shopChoose} from  '../actions/shop';
+import {withRouter} from 'react-router';
 
 const Item = List.Item;
 const Brief = Item.Brief;
 
+@connect((state, ownProps)=> ({
+    type: state.delivery.type.data
+}), (dispatch, ownProps)=>({
+    getDeliveryType: (shopId)=>dispatch(getDeliveryType(shopId))
+}))
+class DeliveryType extends Component {
+    componentWillMount(){
+        console.warn(this.props)
+        this.props.getDeliveryType(this.props.shopId)
+    }
+    componentWillReceiveProps(nextProps){
+        console.warn('componentWillReceiveProps',nextProps)
+        if(nextProps.shopId!==this.props.shopId){
+            this.props.getDeliveryType(nextProps.shopId)
+        }
+    }
+
+    render(){
+        const {type} = this.props;
+        if(!type){
+            return null
+        }
+
+        return React.cloneElement(this.props.children || <div/>, {
+            type
+        })
+    }
+}
+
+@withRouter
+@connect((state, ownProps)=> ({
+    shop:state.shop.data,
+    didUpdate:state.shop.didUpdate,
+}), (dispatch, ownProps)=>({
+    shopChoose: (data)=>dispatch(shopChoose(data))
+}))
+class Shop extends Component {
+    constructor(props){
+        super(props);
+        this.state={};
+    }
+    componentWillMount(){
+        this.props.streetId && this.props.shopChoose({
+            streetId:this.props.streetId
+        })
+    }
+    componentWillReceiveProps(nextProps){
+
+        if(nextProps.streetId && !this.props.streetId){
+            this.props.shopChoose({
+                streetId:nextProps.streetId
+            });
+        }
+        if(nextProps.didUpdate&& !this.props.didUpdate){
+            this.setState({
+                shop:nextProps.shop
+            })
+        }
+    }
+    render(){
+        const shop =  this.state.shop;
+        const cache =  this.props.cache;
+        if(Array.isArray(shop)){
+            if(shop[0]){
+                this.props.cacheUpdate({
+                    shopId:shop[0]
+                })
+                return React.cloneElement(this.props.children || <div/>,{
+                    shopId:shop[0]
+                })
+            }
+            else {
+                return  <Result
+                    imgUrl="https://zos.alipayobjects.com/rmsportal/LUIUWjyMDWctQTf.png"
+                    title="此地址为无效地址"
+                    message="请选择有效的收货地址"
+                    buttonType="primary"
+                    buttonText="确认"
+                    buttonClick={ ()=>{
+                        this.props.router.push({
+                            pathname: `/confirm/address`,
+                            query: {
+                                cache,
+                                address: Math.random().toString(36).substr(2)
+                            }
+                        })
+                    }
+                    }
+                />
+            }
+
+        }
+        return null
+
+    }
+}
 
 
-class ConfirmIndex extends Component {
+
+class ConfirmIndexContent extends Component {
     render() {
 
         const {data, cacheUpdate} = this.props;
@@ -16,7 +115,6 @@ class ConfirmIndex extends Component {
 
         const {addressId,name, phone, houseNumber, location,orderDetails, bucketType, buckets, payType,showMoneyYuan,tradeMoneyYuan,bucketMoneyYuan} = this.props.data;
 
-        console.warn('ConfirmIndex',this.props.data);
         const footer = (<Flex className="confirm-footer">
             <Flex.Item>
                 <div className="confirm-info">
@@ -149,6 +247,29 @@ class ConfirmIndex extends Component {
     }
 }
 ;
+
+
+class ConfirmIndex extends Component {
+    render(){
+        const {streetId} = this.props.data;
+        const {type} = this.props;
+
+
+        return (
+            <Shop streetId={
+                streetId
+            } cache={this.props.location.query.cache} cacheUpdate={this.props.cacheUpdate}>
+                <DeliveryType >
+                    {
+                        React.cloneElement(<ConfirmIndexContent/>||<div/> ,{
+                            ...this.props
+                        } )
+                    }
+                </DeliveryType>
+            </Shop>
+        )
+    }
+}
 
 
 export default ConfirmIndex;

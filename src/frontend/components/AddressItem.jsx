@@ -141,8 +141,7 @@ class AddressItem extends Component {
                 <WhiteSpace/>
                 <WingBlank>
                     <Button  type="primary" onClick={()=>this.onSubmit()}>
-                            <Icon type="plus" />
-                            {type=='create'?'新建':'编辑'}收货地址</Button>
+                           确定</Button>
                 </WingBlank>
 
             </div>

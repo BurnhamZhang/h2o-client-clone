@@ -37,12 +37,10 @@ function delivery_type_success(json) {
 
 
 
-export function getDeliveryType(payload) {
+export function getDeliveryType(shopId) {
     return (dispatch, getState) => {
-        const id = getState().shop.data[0];
         dispatch(delivery_type_request());
-        return fetch(`/api/shop/delivery/${id}`,{
-            data:payload
+        return fetch(`/api/shop/delivery/${shopId}`,{
         })
             .then((json) => {
                 dispatch(delivery_type_success(json));

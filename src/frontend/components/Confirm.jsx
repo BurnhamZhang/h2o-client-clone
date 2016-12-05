@@ -8,7 +8,6 @@ import {getDeliveryAddress} from '../actions/address';
 import {getDeliveryType} from  '../actions/delivery';
 import {cartDeleteGoods} from  '../actions/cart';
 
-import Shop from './Shop';
 
 import Action from './Action';
 
@@ -25,12 +24,8 @@ class ConfirmAction extends Action {
 @connect((state, ownProps)=> {
     const {id, name, geo, houseNumber, streetId, phone, location} = state.address.delivery.data || {}
 
-    console.warn('start')
-    console.warn(state.cache[ownProps.location.query.cache])
-    console.warn( state.address.delivery.data)
-
     const data = Object.assign({
-        shopId: Array.isArray(state.shop.data) ? state.shop.data[0] : null,
+        shopId: null,
         orderDetails: state.cache.cart || [],
         discountType: '1',
         bucketType: '1',
@@ -132,7 +127,6 @@ class ConfirmAction extends Action {
 }))
 class Confirm extends Component {
     componentWillReceiveProps(nextProps) {
-        console.warn('componentWillReceiveProps',nextProps)
 
         if (nextProps.res && nextProps.res.orderNo && !this.props.res) {
             console.log('componentWillReceiveProps',nextProps.res)
@@ -156,10 +150,7 @@ class Confirm extends Component {
 
     componentWillMount() {
         console.warn('componentWillMount')
-        if (this.props.data.shopId) {
-            this.props.getDeliveryAddress();
-            !this.props.type && this.props.getDeliveryType();
-        }
+        this.props.getDeliveryAddress();
 
     }
 
@@ -180,15 +171,13 @@ class Confirm extends Component {
                 />
             )
         }
-        if (!type) {
-            return null
-        }
+
 
         return (
             <ConfirmAction>
-            <Shop>
-                {React.cloneElement(this.props.children || <div/>, this.props)}
-            </Shop>
+
+                    {React.cloneElement(this.props.children || <div/>, this.props)}
+
         </ConfirmAction>
         )
     }

@@ -49,7 +49,7 @@ class AddressItem extends Component {
         >
             <Item extra="" multipleLine>
                 {name + '  ' + phone}
-                <Brief> {houseNumber}</Brief>
+                <Brief> {location+houseNumber}</Brief>
                 <Flex justify="between">
                     <Checkbox onChange={(e)=>this.onChange(e.target.checked)} checked={defaultAddress=='2'} disabled={defaultAddress=='2'}>默认地址</Checkbox>
                     <Icon type="edit" onClick={
@@ -71,7 +71,7 @@ class AddressItem extends Component {
         ) : (
             <Item multipleLine arrow="horizontal" onClick={()=>this.props.onClick(this.props.data)}>
                 {name + '  ' + phone}
-                <Brief> {houseNumber}</Brief>
+                <Brief> {location+houseNumber}</Brief>
             </Item>
         )
     }
