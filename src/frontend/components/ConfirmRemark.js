@@ -49,18 +49,18 @@ class ConfirmRemark extends Component {
                     })}
                     />}
                 >需要发票</Item>
-                {getFieldValue('invoiceType')?(
+                (
                     <TextareaItem title="其他备注"
                                   placeholder="请输入发票抬头或您的其余需求~"
                                   rows="3" count="50"
                                   {...getFieldProps('memo',{
                                       initialValue:memo,
                                       rules: [
-                                          { required: true },
+                                          { required: getFieldValue('invoiceType')=='2' },
                                       ],
                                   })}
                     />
-                ):null}
+                )
 
             </List>
             <WhiteSpace/>

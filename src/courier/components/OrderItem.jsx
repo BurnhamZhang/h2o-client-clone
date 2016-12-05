@@ -5,7 +5,6 @@ import moment from 'moment';
 import {createDeliveryByOrderId} from '../actions/order';
 import {connect} from 'react-redux';
 const  invoiceMap={
-    '1':'无发票',
     '2':'普通发票',
     '3':'增值税发票',
 }
@@ -18,7 +17,7 @@ const  invoiceMap={
 class OrderItem extends Component {
 
     render() {
-        const {userLocation,deliveryNo,payType,orderType,createdDate,invoiceType,invoiceTitle,orderNo,tradeMoney,deliveryType,appointStart,appointEnd,orderDetails,userHouseNumber,userName,userPhone} = this.props.data;
+        const {userLocation,deliveryNo,payType,orderType,createdDate,invoiceType,memo,orderNo,tradeMoney,deliveryType,appointStart,appointEnd,orderDetails,userHouseNumber,userName,userPhone} = this.props.data;
 
 
         return  <Card full style={{marginBottom:10}}>
@@ -40,7 +39,7 @@ class OrderItem extends Component {
                     收货时间：{deliveryType=='1'?'即时送':(moment(appointStart).format('YYYY-MM-DD  HH:mm')+'  '+moment(appointEnd).format('HH:mm'))}
                 </div>
                 <div>
-                    备注信息：{invoiceMap[invoiceType]  }{invoiceTitle?('（'+invoiceTitle+'）'):null}
+                    备注信息：{invoiceMap[invoiceType]  }{memo?('（'+memo+'）'):null}
                 </div>
                 <WhiteSpace/>
                 <Flex>

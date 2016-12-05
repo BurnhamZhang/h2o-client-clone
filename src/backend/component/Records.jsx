@@ -156,7 +156,9 @@ class RecordsForm extends Component {
                         })(
                             <RangePicker format="YYYY/MM/DD" style={{width: 300}}
                                          onOpenChange={(status)=>!status && this.handleSubmit()}
-                                         allowClear={false}/>
+                                         allowClear={false} disabledDate={(date)=>{
+                                return date.isAfter(moment())
+                            }}/>
                         )
                     }
                 </FormItem>

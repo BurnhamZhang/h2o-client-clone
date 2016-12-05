@@ -30,8 +30,8 @@ class CartItem extends Component {
                     <div style={{display:'inline-block',height: 100, width: 100,position:'relative'}}>
                         <img src={data.imagesArray[0]} alt="" style={{height: 100, width: 100}}/>
                         {
-                            data.shelves =='1'?(
-                                <Flex style={{position:'absolute',top:0,left:0,width:'100%',height:'100%'}} justify="center" align="center">
+                            data.shelves =='1'|| data.stock*1==0?(
+                                <Flex style={{position:'absolute',top:0,left:0,width:'100%',height:'100%',background:'rgba(0,0,0,0.15)'}} justify="center" align="center">
                                     无货
                                 </Flex>
                             ):null
@@ -39,11 +39,11 @@ class CartItem extends Component {
                     </div>
 
                     <Flex.Item className="Item">
-                        {data.name + data.memo}
+                        {data.name }
                         <Flex justify="between">
                             <List.Item.Brief>{data.priceYuan}</List.Item.Brief>
                             {
-                                data.shelves == '0'?(
+                                data.shelves == '0'&& data.stock*1>0 ?(
                                     <Stepper showNumber min={1} max={data.stock*1} value={data.count} style={{width: 200}} onChange={ (count)=> {
                                         this.props.cartUpdateGoods({
                                             ...data,
