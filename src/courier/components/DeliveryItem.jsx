@@ -19,7 +19,7 @@ class DeliveryItem extends Component {
 
 
     render() {
-        const {deliveryNo,status,payType,orderType,orderCreatedDate,invoiceType,memo,orderNo,tradeMoney,deliveryType,appointStart,appointEnd,goods,userAddress,userName,userPhone} = this.props.data;
+        const {buckets,deliveryNo,status,payType,orderType,orderCreatedDate,invoiceType,memo,orderNo,tradeMoney,deliveryType,appointStart,appointEnd,goods,userAddress,userName,userPhone} = this.props.data;
 
         const renderFooter =()=>{
             if(status=='0'){
@@ -104,7 +104,7 @@ class DeliveryItem extends Component {
                     ):(
                         <div>
                             <div>
-                                个数：个
+                                个数：{buckets.reduce((count,item)=>(count+item.count*1),0)}个
                             </div>
                             <WhiteSpace/>
                             <Tag>

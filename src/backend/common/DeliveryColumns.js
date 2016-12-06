@@ -35,7 +35,7 @@ const columns = [
     }
     },
     {
-        title: '商品/数量', dataIndex: 'goods', key: '3', render: (items, {orderType}, index) => {
+        title: '商品/数量', dataIndex: 'goods', key: '3', render: (items, {orderType,buckets}, index) => {
             if(orderType=='1'){
                 if (items.length == 1) {
                     return items[0].goodsName + '/' + items[0].count
@@ -47,7 +47,7 @@ const columns = [
                 </Popover>)
             }
             else {
-                return '退桶'
+                return '退桶'+buckets.reduce((count,item)=>(count+item.count*1),0)
             }
     }
     },

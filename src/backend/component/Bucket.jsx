@@ -177,7 +177,7 @@ class OrderForm extends Component {
                                     getFieldDecorator('type', {
                                         initialValue: 'orderNo'
                                     })(
-                                        <Select  style={{width: 80}}>
+                                        <Select  style={{width: 100}}>
                                             {
                                                 typeList.map((obj)=> <Option value={obj.k} key={obj.k}>{obj.v}</Option>)
                                             }
@@ -261,8 +261,8 @@ class Bucket extends Component {
             defaultCurrent: this.props.pageNum * 1,
             showQuickJumper: true,
             showSizeChanger: true,
-            onShowSizeChange: this.handleSubmit,
-            onChange: this.handleSubmit
+            onShowSizeChange: this.fetchData,
+            onChange: this.fetchData
         }
 
 

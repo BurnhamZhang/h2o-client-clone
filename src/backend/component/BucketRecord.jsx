@@ -182,23 +182,23 @@ class Record extends Component {
                     </Col>
                     <Col span={4}>
                         <h2>收货地址</h2>
-                        <p>{ addressNum }人</p>
+                        <p>{ addressNum }个</p>
                     </Col>
                     <Col span={4}>
                         <h2>大桶总数</h2>
-                        <p>{ bigBucketNum }人</p>
+                        <p>{ bigBucketNum }个</p>
                     </Col>
                     <Col span={4}>
                         <h2>大桶押金</h2>
-                        <p>{ bigMoneyNum }人</p>
+                        <p>{ bigMoneyNum }元</p>
                     </Col>
                     <Col span={4}>
                         <h2>小桶总数</h2>
-                        <p>{ littleBucketNum }人</p>
+                        <p>{ littleBucketNum }个</p>
                     </Col>
                     <Col span={4}>
                         <h2>小桶押金</h2>
-                        <p>{ littleMoneyNum }人</p>
+                        <p>{ littleMoneyNum }元</p>
                     </Col>
                 </Row>
             </Spin>
