@@ -75,12 +75,17 @@ export function get_geolocation(widthShopId) {
         dispatch(geo_fetch_request())
         if (navigator.geolocation ) {
             navigator.geolocation.getCurrentPosition(function(position)  {
-                var lat=position.coords.latitude;
-                var lng=position.coords.longitude;
-                geocoder.getAddress({
-                    lat,
-                    lng
-                });
+                if(position.coords){
+                    const lat=position.coords.latitude*1;
+                    const lng=position.coords.longitude*1;
+                    if(lat && lng){
+                        const lagtLng = new qq.maps.LatLng(lat,lng);
+                        geocoder.getAddress(lagtLng);
+                        return
+                    }
+                }
+                citylocation.searchLocalCity();
+
             },function (error){
                 citylocation.searchLocalCity();
             },{
