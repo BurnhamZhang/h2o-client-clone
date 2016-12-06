@@ -337,7 +337,7 @@ class Records extends Component {
             <CourierAction updateHandle={this.updateHandle}/>
             <CourierModal payload={this.state.chosen} onCancel={this.onCancel} onOk={this.onOk} />
             <Table columns={columns} title={()=><RecordsForm payload={this.state.param} fetchData={this.fetchData}/>}
-                   dataSource={this.props.data} bordered
+                   bordered
                    pagination={pagination}/>
         </div>)
     }
