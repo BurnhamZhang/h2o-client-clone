@@ -50,11 +50,12 @@ class RetreatContent extends Component {
             buckets
         } = this.props.data;
 
-        const {
+        let {
             bigCount,
             littleCount
         } = this.props.bucket;
-
+        bigCount=Math.abs(bigCount)
+        littleCount=Math.abs(littleCount)
 
         const {cacheId} = this.props;
 
@@ -105,6 +106,9 @@ class RetreatContent extends Component {
                                 </Item>
                             )
                         }
+                        <Item>
+                            <div style={{color:'red'}}>当前最多可退大桶数为{bigCount}，小桶数为{littleCount}</div>
+                        </Item>
                         {
                             bigCount*1>0?(
                                 <Item extra={<Stepper showNumber min={0} max={bigCount*1}  onChange={ (count)=> {

@@ -51,7 +51,7 @@ class OrderItem extends Component {
                 />
                 <Card.Body>
                     <div>地址：{userLocation+userHouseNumber+userName+userPhone}</div>
-                    <div>个数：大桶{buckets[0].count}个，小桶{buckets[1].count}个</div>
+                    <div>个数：{ buckets.map((item)=>(item.scale=='18.9L'?'大':'小')+'桶'+item.count+'个').join(',')}</div>
                     <Flex>
                         <Flex.Item>
                             ¥{tradeMoney}
