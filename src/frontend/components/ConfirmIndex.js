@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Toast, List, Switch, Icon, Stepper,Result,Flex,Button} from 'antd-mobile';
+import {Toast, List, Switch, Icon, Stepper,Result,Flex,Button,NavBar} from 'antd-mobile';
 import {connect} from 'react-redux';
 
 
@@ -35,6 +35,8 @@ class ConfirmIndex extends Component {
         </Flex>)
 
         return <div id="confirm">
+            <NavBar leftContent="返回" mode="light"  onLeftClick={() =>this.props.router.goBack() }
+            >订单确认</NavBar>
             <List>
                 {
                     addressId?(
@@ -77,8 +79,8 @@ class ConfirmIndex extends Component {
                 <Item arrow="horizontal" onClick={()=> {
                     this.props.router.push({
                         pathname: '/confirm/type',
-                        query: {
-                            cache
+                        state: {
+                            cacheId
                         }
                     })
                 }}>
@@ -89,8 +91,8 @@ class ConfirmIndex extends Component {
                 <Item arrow="horizontal" onClick={()=> {
                     this.props.router.push({
                         pathname: '/confirm/remark',
-                        query: {
-                            cache
+                        state: {
+                            cacheId
                         }
                     })
                 }}>

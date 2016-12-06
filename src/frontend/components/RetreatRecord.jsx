@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter,Link} from 'react-router';
 import {connect} from 'react-redux';
-import { ListView,List,Flex ,Button,Modal,Tag,Result} from 'antd-mobile';
+import { ListView,List,Flex ,Button,Modal,Tag,Result,NavBar} from 'antd-mobile';
 import {fetchOrderListIfNeeded} from '../actions/order'
 import Order from './Order';
 const Item = List.Item
@@ -142,6 +142,8 @@ class OrderList  extends Component {
         };
         return (
             <div>
+                <NavBar leftContent="返回" mode="light"  onLeftClick={() =>this.props.router.goBack() }
+                >申退历史</NavBar>
                 <OrderPayAction updateHandle={(component,nextProps)=>{
                     if (nextProps.res && nextProps.res.orderNo && !component.props.res) {
                         this.props.router.push({

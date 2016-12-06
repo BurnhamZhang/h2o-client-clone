@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter, Link} from 'react-router';
 import {connect} from 'react-redux';
-import {List, Flex, Button, Modal, Tag, Toast, Result} from 'antd-mobile';
+import {List, Flex, Button, Modal, Tag, Toast, Result,NavBar} from 'antd-mobile';
 import ListView from './ListView';
 import {fetchOrderListIfNeeded} from '../actions/order'
 import Order from './Order';
@@ -89,6 +89,8 @@ class OrderList extends Component {
     render() {
         return (
             <div>
+                <NavBar leftContent="返回" mode="light"  onLeftClick={() =>this.props.router.goBack() }
+                >我的订单</NavBar>
                 <FeedBackAction updateHandle={ (component)=> {
                     Toast.info('成功', 1, ()=> {
                         this.data = [];

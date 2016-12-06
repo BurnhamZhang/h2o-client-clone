@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {List, Checkbox, Flex, Stepper, Icon,Result} from 'antd-mobile';
+import {List, Checkbox, Flex, Stepper, Icon,Resultk,NavBar} from 'antd-mobile';
 import {cartAddGoods, cartUpdateGoods, cartDeleteGoods, cartUpdateGoodsChecked, updateCart} from  '../actions/cart';
 import {cacheUpdate} from  '../actions/cache';
 import {withRouter, Link} from 'react-router';
@@ -19,46 +19,48 @@ class CartItem extends Component {
     render() {
         const data = this.props;
         return (
-            <List.Item thumb={<Checkbox checked={data.checked} disabled={ data.shelves =='1'} onChange={ ({target:{checked}})=> {
-                console.log('checked', checked)
-                this.props.cartUpdateGoods({
-                    ...data,
-                    checked
-                })
-            }} name="cart"/>}>
-                <Flex justify="center">
-                    <div style={{display:'inline-block',height: 100, width: 100,position:'relative'}}>
-                        <img src={data.imagesArray[0]} alt="" style={{height: 100, width: 100}}/>
-                        {
-                            data.shelves =='1'|| data.stock*1==0?(
-                                <Flex style={{position:'absolute',top:0,left:0,width:'100%',height:'100%',background:'rgba(0,0,0,0.15)'}} justify="center" align="center">
-                                    无货
-                                </Flex>
-                            ):null
-                        }
-                    </div>
-
-                    <Flex.Item className="Item">
-                        {data.name }
-                        <Flex justify="between">
-                            <List.Item.Brief>{data.priceYuan}</List.Item.Brief>
+            <div>
+                <List.Item thumb={<Checkbox checked={data.checked} disabled={ data.shelves =='1'} onChange={ ({target:{checked}})=> {
+                    console.log('checked', checked)
+                    this.props.cartUpdateGoods({
+                        ...data,
+                        checked
+                    })
+                }} name="cart"/>}>
+                    <Flex justify="center">
+                        <div style={{display:'inline-block',height: 100, width: 100,position:'relative'}}>
+                            <img src={data.imagesArray[0]} alt="" style={{height: 100, width: 100}}/>
                             {
-                                data.shelves == '0'&& data.stock*1>0 ?(
-                                    <Stepper showNumber min={1} max={data.stock*1} value={data.count} style={{width: 200}} onChange={ (count)=> {
-                                        this.props.cartUpdateGoods({
-                                            ...data,
-                                            count
-                                        })
-                                    } }/>
+                                data.shelves =='1'|| data.stock*1==0?(
+                                    <Flex style={{position:'absolute',top:0,left:0,width:'100%',height:'100%',background:'rgba(0,0,0,0.15)'}} justify="center" align="center">
+                                        无货
+                                    </Flex>
                                 ):null
                             }
-                            <Icon type="delete" onClick={()=>this.props.cartDeleteGoods({
-                                ...data
-                            })}/>
-                        </Flex>
-                    </Flex.Item>
-                </Flex>
-            </List.Item>
+                        </div>
+
+                        <Flex.Item className="Item">
+                            {data.name }
+                            <Flex justify="between">
+                                <List.Item.Brief>{data.priceYuan}</List.Item.Brief>
+                                {
+                                    data.shelves == '0'&& data.stock*1>0 ?(
+                                        <Stepper showNumber min={1} max={data.stock*1} value={data.count} style={{width: 200}} onChange={ (count)=> {
+                                            this.props.cartUpdateGoods({
+                                                ...data,
+                                                count
+                                            })
+                                        } }/>
+                                    ):null
+                                }
+                                <Icon type="delete" onClick={()=>this.props.cartDeleteGoods({
+                                    ...data
+                                })}/>
+                            </Flex>
+                        </Flex.Item>
+                    </Flex>
+                </List.Item>
+            </div>
         )
     }
 }
@@ -146,6 +148,8 @@ class CartPage extends Component {
         </Flex>)
         return (
             <div id="cart">
+                <NavBar leftContent="返回" mode="light"  onLeftClick={() =>this.props.router.goBack() }
+                >购物车</NavBar>
                 <List renderHeader={ ()=><Checkbox checked={checked} onChange={({target:{checked}})=> {
                     this.props.cartUpdateGoodsChecked(checked)
                 }}>全选</Checkbox>} renderFooter={()=>footer}>

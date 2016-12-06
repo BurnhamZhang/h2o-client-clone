@@ -2,7 +2,8 @@
  * Created by zhangbohan on 16/11/21.
  */
 import React, {Component} from 'react';
-import { List,Icon ,Flex,Button,Modal ,WingBlank,WhiteSpace} from 'antd-mobile';
+import {withRouter, Link} from 'react-router';
+import { List,Icon ,Flex,Button,Modal ,WingBlank,WhiteSpace,NavBar} from 'antd-mobile';
 import {connect} from 'react-redux';
 import Order from './Order';
 const Item = List.Item;
@@ -30,12 +31,16 @@ const map={
     '9':'已取消',
 }
 
+
+@withRouter
 class OrderDetail extends Component {
     render(){
         const  {version,tradeMoney,courierName,courierPhone,userLocation,userHouseNumber,userName,userPhone,orderNo,createdDate,payType,orderDetails,status} = this.props.data;
         console.log('render',this.props)
         return (
             <div>
+                <NavBar leftContent="返回" mode="light"  onLeftClick={() =>this.props.router.goBack() }
+                >订单详情</NavBar>
                 <List>
                     <Item>
                         <Flex justify="center">

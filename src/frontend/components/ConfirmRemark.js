@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Toast, List, Switch, Icon, Stepper,Radio,DatePicker,WhiteSpace,WingBlank,Button,TextareaItem} from 'antd-mobile';
+import {Toast, List, Switch, Icon, Stepper,Radio,DatePicker,WhiteSpace,WingBlank,Button,TextareaItem,NavBar} from 'antd-mobile';
 import { createForm } from 'rc-form';
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -41,6 +41,8 @@ class ConfirmRemark extends Component {
 
 
         return <div>
+            <NavBar leftContent="返回" mode="light"  onLeftClick={() =>this.props.router.goBack() }
+            >订单备注</NavBar>
             <List  renderHeader={() => '快速备注'}>
                 <Item
                     extra={<Switch  {...getFieldProps('invoiceType',{
@@ -49,18 +51,16 @@ class ConfirmRemark extends Component {
                     })}
                     />}
                 >需要发票</Item>
-                (
-                    <TextareaItem title="其他备注"
-                                  placeholder="请输入发票抬头或您的其余需求~"
-                                  rows="3" count="50"
-                                  {...getFieldProps('memo',{
-                                      initialValue:memo,
-                                      rules: [
-                                          { required: getFieldValue('invoiceType')=='2' },
-                                      ],
-                                  })}
-                    />
-                )
+                <TextareaItem title="其他备注"
+                              placeholder="请输入发票抬头或您的其余需求~"
+                              rows="3" count="50"
+                              {...getFieldProps('memo',{
+                                  initialValue:memo,
+                                  rules: [
+                                      { required: getFieldValue('invoiceType')=='2' },
+                                  ],
+                              })}
+                />
 
             </List>
             <WhiteSpace/>

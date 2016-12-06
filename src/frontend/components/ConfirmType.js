@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Toast, List, Switch, Icon, Stepper, Radio, DatePicker, WhiteSpace, WingBlank, Button} from 'antd-mobile';
+import {Toast, List, Switch, Icon, Stepper, Radio, DatePicker, WhiteSpace, WingBlank, Button,NavBar} from 'antd-mobile';
 import 'moment/locale/zh-cn';
 import {connect} from 'react-redux';
 import moment from 'moment';
@@ -68,6 +68,8 @@ class ConfirmType extends Component {
             initialValue: payType,
         });
         return <div>
+            <NavBar leftContent="返回" mode="light"  onLeftClick={() =>this.props.router.goBack() }
+            >选择支付方式和配送时间</NavBar>
             <List renderHeader={() => '支付方式'}>
                 <Item>
                     {
