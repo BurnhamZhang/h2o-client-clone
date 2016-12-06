@@ -28,9 +28,7 @@ class MyListView  extends Component {
     }
     resetData (){
         this.data = [];
-        this.setState({
-            isEnd:false
-        });
+
         this.props.fetchData({
             pageNum:1,
             pageSize:this.props.pageSize||20
@@ -44,7 +42,6 @@ class MyListView  extends Component {
         if(nextProps.isLoading && !this.props.isLoading){
             this.setState({
                 isLoading: true,
-                isEnd:false
             });
         }
         if(nextProps.didUpdate && !this.props.didUpdate) {
@@ -113,15 +110,14 @@ class MyListView  extends Component {
         }
 
         const renderFooter = ()=>{
+            if(this.state.isLoading){
+                return <div style={{  textAlign: 'center' ,padding:'15px 30px'}}>加载中...</div>
+            }
             if(this.state.isEnd){
                 if(this.state.dataSource.getRowCount()==0){
                     return this.props.endView||null
                 }
                 return <div style={{  textAlign: 'center',padding:'15px 30px' }}>到底了</div>
-            }
-
-            if(this.state.isLoading){
-                return <div style={{  textAlign: 'center' ,padding:'15px 30px'}}>加载中...</div>
             }
             return <div style={{  textAlign: 'center',padding:'15px 30px' }}>加载完毕</div>
         }
