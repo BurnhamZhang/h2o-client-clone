@@ -100,7 +100,7 @@ class DeliveryItem extends Component {
                     ):(
                         <div>
                             <div>
-                                个数：2个
+                                个数：个
                             </div>
                             <WhiteSpace/>
                             <Tag>

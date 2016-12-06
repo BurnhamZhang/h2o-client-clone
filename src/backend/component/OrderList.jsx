@@ -147,7 +147,7 @@ class OrderForm extends Component {
                 >
 
                     <span style={{display: 'inline-block', width: 300, verticalAlign: 'middle'}}>
-                         {getFieldDecorator('orderId', {})(
+                         {getFieldDecorator('orderNo', {})(
                              <Input placeholder="输入" size="large"
                                     addonBefore={
                                         <Select defaultValue="order" style={{width: 80}}>
@@ -183,7 +183,7 @@ class Order extends Component {
         super(props)
         this.state = {
             range: [moment().subtract(7, 'days'), moment()],
-            orderId: null,
+            orderNo: null,
             status: 'all',
         }
         this.fetchData= this.fetchData.bind(this);
@@ -206,8 +206,8 @@ class Order extends Component {
         if (values.status == 'all') {
             delete values.status;
         }
-        if (!values.orderId) {
-            delete  values.orderId;
+        if (!values.orderNo) {
+            delete  values.orderNo;
         }
         console.log('Submit!!!', values);
 

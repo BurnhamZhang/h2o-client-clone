@@ -35,7 +35,7 @@ const map={
 @withRouter
 class OrderDetail extends Component {
     render(){
-        const  {version,tradeMoney,courierName,courierPhone,userLocation,userHouseNumber,userName,userPhone,orderNo,createdDate,payType,orderDetails,status} = this.props.data;
+        const  {version,courierImageUrl,tradeMoney,courierName,courierPhone,userLocation,userHouseNumber,userName,userPhone,orderNo,createdDate,payType,orderDetails,status} = this.props.data;
         console.log('render',this.props)
         return (
             <div>
@@ -80,7 +80,7 @@ class OrderDetail extends Component {
                         courierName?(
                             <Item>
                                 <Flex justify="center">
-                                    <img alt="" style={{height: 100, width: 100}}/>
+                                    <img alt="" src={courierImageUrl} style={{height: 100, width: 100}}/>
                                     <Flex.Item className="Item">
                                         配送员  {courierName}
                                         <Brief>{courierPhone}</Brief>

@@ -221,7 +221,7 @@ class CourierItem extends Component {
                     {
                         type != 'create' ?
 
-                            <Popconfirm title="确定要删除吗？" okText="确定" cancelText="不了"
+                            <Popconfirm title="确定要删除吗？" okText="确定" cancelText="取消"
                                         onConfirm={()=>(this.handleDelete())}>
                                 <Button type="dashed" htmlType="button" style={{margin: ' 0 10px'}}
                                 >删除</Button>
