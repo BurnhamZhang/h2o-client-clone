@@ -19,7 +19,7 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'babel',
                 query: {
-                    plugins: ['transform-decorators-legacy',  ["import", [{ "libraryName": "antd" ,"style": "css"},{ "libraryName": "antd-mobile" ,"style": "css"}]]],
+                    plugins: ['transform-decorators-legacy',  ["import", [{ "libraryName": "antd" ,"style": "css"},{ "libraryName": "antd-mobile" }]]],
                     presets: ['latest', 'react', 'stage-0', 'react-hmre']
                 }
             },

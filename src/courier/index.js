@@ -1,4 +1,5 @@
 import 'babel-polyfill';
+import 'antd-mobile/dist/antd-mobile.min.css';
 import './assets/base.scss';
 // react
 import React from 'react';
