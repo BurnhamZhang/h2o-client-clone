@@ -66,6 +66,7 @@ class AddressItem extends Component {
         return (
             <div>
                 <AddressAction     updateHandle={()=>{
+                    console.log('update');
                     this.props.router.goBack();
                 }}
                 />
@@ -135,7 +136,7 @@ class AddressItem extends Component {
                                    }]
                                })}
                                placeholder="您所在的具体地址(门牌号等)"
-                                  rows="3" count="100"
+                                  rows="3" count="40"
                     />
                 </List>
                 <WhiteSpace/>
