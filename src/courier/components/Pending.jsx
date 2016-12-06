@@ -32,12 +32,12 @@ class Pending extends Component {
             delivery = deliverPagination.totalCount;
         }
      return  <div>
-         <Tabs defaultActiveKey="1">
+         <Tabs defaultActiveKey="1" animated={false}>
              <TabPane tab={<Badge text={order}>待抢单</Badge>} key="1">
                  <OrderList/>
              </TabPane>
              <TabPane tab={<Badge text={delivery}>自动派单</Badge>} key="2">
-                 <DeliveryList params={{status:0}}/>
+                 <DeliveryList params={{status:0}} />
              </TabPane>
          </Tabs>
      </div>

@@ -45,7 +45,10 @@ class OrderList extends Component {
 
         return <div style={{paddingBottom:100}}>
             <OrderAction updateHandle={()=>{
-                this.refs.list.resetData();
+                this.props.assignOrderList({
+                    pageNum:0,
+                    pageSize:20
+                })
             }}/>
             <OrderListView ref='list' pageSize={20} row={(rowData, sectionID, rowID) => <OrderItem data={rowData}/>}
                            endView={ <Result title="空"
@@ -64,6 +67,8 @@ class OrderList extends Component {
                                }}
                                />
                            )}
+                           style={{height:document.documentElement.clientHeight-185}}
+                           refresh
             />
         </div>
 

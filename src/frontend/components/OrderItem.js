@@ -62,10 +62,12 @@ class OrderDetail extends Component {
                             <img src={orderDetails[0].imageUrls[0]} alt="" style={{height: 100, width: 100}}/>
                             <Flex.Item className="Item">
                                 {
-                                    orderDetails.map((item,index)=>(<div key={index}>
-                                        <span style={{float:'right'}}>￥：{item.money}</span>
-                                        {item.name+'*'+item.count}
-                                    </div>))
+                                    orderDetails.map((item,index)=>(<Flex key={index} justify="between" align="top" style={{whiteSpace:'normal'}}>
+                                        <Flex.Item >
+                                            {item.name+'*'+item.count}
+                                        </Flex.Item>
+                                        <div>￥：{item.money}</div>
+                                    </Flex>))
                                 }
                                 <div style={{color:'red'}}>
                                     <span style={{float:'right'}}>￥：{tradeMoney}</span>

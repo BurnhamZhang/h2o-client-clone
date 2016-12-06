@@ -40,10 +40,13 @@ class DeliveryList extends Component {
         this.props.clearDeliveryList();
     }
     render() {
-
         return   <div style={{paddingBottom:100}} className="order-list">
             <DeliveryItemAction updateHandle={()=>{
-                 this.refs.list.resetData();
+                this.props.getDeliveryList({
+                    pageNum:0,
+                    pageSize:20,
+                    ...this.props.params
+                })
             }
             }/>
             <DeliveryListView ref='list' pageSize={20} row={(rowData, sectionID, rowID) => <DeliveryItem data={rowData}/>}
@@ -65,10 +68,8 @@ class DeliveryList extends Component {
                                   }}
                                   />
                               )}
-                              useZscroller
-                              scrollerOptions={{
-                                  onScroll:(data)=>console.log(data)
-                              }}
+                              style={{height:document.documentElement.clientHeight-185}}
+                              refresh
 
             />
         </div>

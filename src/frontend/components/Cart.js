@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {List, Checkbox, Flex, Stepper, Icon,Resultk,NavBar} from 'antd-mobile';
+import {List, Checkbox, Flex, Stepper, Icon,Result,NavBar} from 'antd-mobile';
 import {cartAddGoods, cartUpdateGoods, cartDeleteGoods, cartUpdateGoodsChecked, updateCart} from  '../actions/cart';
 import {cacheUpdate} from  '../actions/cache';
 import {withRouter, Link} from 'react-router';
