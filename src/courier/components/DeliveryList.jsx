@@ -43,7 +43,7 @@ class DeliveryList extends Component {
         return   <div style={{paddingBottom:100}} className="order-list">
             <DeliveryItemAction updateHandle={()=>{
                 this.props.getDeliveryList({
-                    pageNum:0,
+                    pageNum:1,
                     pageSize:20,
                     ...this.props.params
                 })

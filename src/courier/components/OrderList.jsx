@@ -46,7 +46,7 @@ class OrderList extends Component {
         return <div style={{paddingBottom:100}}>
             <OrderAction updateHandle={()=>{
                 this.props.assignOrderList({
-                    pageNum:0,
+                    pageNum:1,
                     pageSize:20
                 })
             }}/>

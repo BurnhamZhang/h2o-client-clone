@@ -22,7 +22,7 @@ class MyListView  extends Component {
     }
     componentWillMount(){
         this.props.fetchData({
-            pageNum:0,
+            pageNum:1,
             pageSize:this.props.pageSize||20
         })
     }
@@ -32,7 +32,7 @@ class MyListView  extends Component {
             isEnd:false
         });
         this.props.fetchData({
-            pageNum:0,
+            pageNum:1,
             pageSize:this.props.pageSize||20
         })
     }
