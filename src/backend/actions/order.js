@@ -145,7 +145,7 @@ function order_cancel_success(json) {
 export function orderCancelConfirm(orderNo,payload) {
   return (dispatch, getState) => {
     dispatch(order_cancel_request(orderNo));
-    return fetch(`/order/complete/${orderNo}`,{
+    return fetch(`/api/order/cancel/confirm/${orderNo}`,{
       method:'PUT',
       data:payload
     })

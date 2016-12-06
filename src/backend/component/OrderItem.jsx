@@ -195,8 +195,8 @@ class OrderItem extends Component {
                                 label="订单状态："
                             >
 
-                                { /^(1|2|4|6)$/.test(data.status+'') ?
-                                ( <Popconfirm title="确定要取消订单吗？" okText="是的" cancelText="不是" onConfirm={this.props.cancelOrder}>
+                                { /^(1|2|3|5|6)$/.test(data.status+'') ?
+                                ( <Popconfirm title="确定要取消订单吗？" okText="是的" cancelText="不是" onConfirm={this.cancelOrder}>
                                     <Button type='primary' htmlType='button'>取消订单</Button>
                                 </Popconfirm>)
                                  :null
@@ -250,7 +250,7 @@ class OrderItem extends Component {
     data: state.order.item.data,
 }), (dispatch, ownProps)=>({
     fetchOrderIfNeeded: (payload)=>dispatch(fetchOrderIfNeeded(payload)),
-    orderCancelConfirm: (payload)=>dispatch(orderCancelConfirm(payload))
+    orderCancelConfirm: (orderNo,payload)=>dispatch(orderCancelConfirm(orderNo,payload))
 }))
 class OrderForm extends Component {
 
@@ -269,14 +269,14 @@ class OrderForm extends Component {
         }
     }
 
-    cancelOrder(...data){
-        this.props.orderCancelConfirm(...data);
+    cancelOrder(orderNo,data){
+        this.props.orderCancelConfirm(orderNo,data);
     }
 
     render() {
         const data = this.props.data;
         return (
-            data ? <OrderItem payload={data} cancelOrder={(...data)=>this.cancelOrder(...data)}></OrderItem> : <Block spinning/>
+            data ? <OrderItem payload={data} cancelOrder={(orderNo,data)=>this.cancelOrder(orderNo,data)}></OrderItem> : <Block spinning/>
         )
     }
 }
