@@ -111,7 +111,7 @@ class MyListView  extends Component {
 
         const renderFooter = ()=>{
             if(this.state.isLoading){
-``                // return <div style={{  textAlign: 'center' ,padding:'15px 30px'}}>加载中...</div>
+                // return <div style={{  textAlign: 'center' ,padding:'15px 30px'}}>加载中...</div>
             }
             if(this.state.isEnd){
                 if(this.state.dataSource.getRowCount()==0){

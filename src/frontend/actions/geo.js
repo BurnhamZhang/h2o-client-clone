@@ -77,7 +77,6 @@ export function get_geolocation(widthShopId) {
             navigator.geolocation.getCurrentPosition(function(position)  {
                 var lat=position.coords.latitude;
                 var lng=position.coords.longitude;
-                alert(lat+lng)
                 geocoder.getAddress({
                     lat,
                     lng

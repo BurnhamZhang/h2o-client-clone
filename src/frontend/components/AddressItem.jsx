@@ -136,7 +136,7 @@ class AddressItem extends Component {
                                    }]
                                })}
                                placeholder="您所在的具体地址(门牌号等)"
-                                  rows="3" count="40"
+                                  rows="3" count="20"
                     />
                 </List>
                 <WhiteSpace/>
