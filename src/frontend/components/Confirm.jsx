@@ -51,7 +51,7 @@ class ConfirmAction extends Action {
         houseNumber,
         streetId,
         phone
-    } : null, state.cache[ownProps.location.query.cache])
+    } : null, state.cache[ownProps.location.state.cacheId])
 
     if(state.delivery.type.data && state.delivery.type.data.allow=='0'){
         data.deliveryType='2';
@@ -99,7 +99,7 @@ class ConfirmAction extends Action {
     }
 }, (dispatch, ownProps)=>({
     cacheUpdate: (data)=>dispatch(cacheUpdate({
-        key: ownProps.location.query.cache,
+        key: ownProps.location.state.cacheId,
         data
     })),
     createOrder: (payload)=> {

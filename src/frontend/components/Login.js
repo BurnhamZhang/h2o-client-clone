@@ -15,6 +15,12 @@ class Login extends Component {
     componentDidMount(){
         const code =this.props.location.query.code;
         console.log('code',code);
+        if(code){
+            this.props.login({
+                code
+            })
+            return
+        }
         if(this.props.data && this.props.data.token){
             const {location} = this.props;
             if (location.state && location.state.nextPathname) {
@@ -23,11 +29,6 @@ class Login extends Component {
                 this.props.router.replace('/main')
             }
             return
-        }
-        if(code){
-            this.props.login({
-                code
-            })
         }
 
     }

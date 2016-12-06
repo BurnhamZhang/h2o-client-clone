@@ -156,7 +156,9 @@ class RecordsForm extends Component {
                         })(
                             <RangePicker format="YYYY/MM/DD" style={{width: 300}}
                                          onOpenChange={(status)=>!status && this.handleSubmit()}
-                                         allowClear={false}/>
+                                         allowClear={false} disabledDate={(date)=>{
+                                return date.isAfter(moment())
+                            }}/>
                         )
                     }
                 </FormItem>
@@ -335,7 +337,7 @@ class Records extends Component {
             <CourierAction updateHandle={this.updateHandle}/>
             <CourierModal payload={this.state.chosen} onCancel={this.onCancel} onOk={this.onOk} />
             <Table columns={columns} title={()=><RecordsForm payload={this.state.param} fetchData={this.fetchData}/>}
-                   dataSource={this.props.data} bordered
+                   bordered
                    pagination={pagination}/>
         </div>)
     }

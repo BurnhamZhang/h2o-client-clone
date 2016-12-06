@@ -35,15 +35,20 @@ const columns = [
     }
     },
     {
-        title: '商品/数量', dataIndex: 'goods', key: '3', render: (items, record, index) => {
-        if (items.length == 1) {
-            return items[0].goodsName + '/' + items[0].count
-        }
-        const content = items.map((item, index)=> (<p key={index}>{item.goodsName + '/' + item.count}</p>))
+        title: '商品/数量', dataIndex: 'goods', key: '3', render: (items, {orderType}, index) => {
+            if(orderType=='1'){
+                if (items.length == 1) {
+                    return items[0].goodsName + '/' + items[0].count
+                }
+                const content = items.map((item, index)=> (<p key={index}>{item.goodsName + '/' + item.count}</p>))
 
-        return (<Popover content={content} trigger="hover">
-            <div>{ items.length }样商品</div>
-        </Popover>)
+                return (<Popover content={content} trigger="hover">
+                    <div>{ items.length }样商品</div>
+                </Popover>)
+            }
+            else {
+                return '退桶'
+            }
     }
     },
     {

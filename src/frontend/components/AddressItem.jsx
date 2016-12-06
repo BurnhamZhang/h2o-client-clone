@@ -135,13 +135,14 @@ class AddressItem extends Component {
                                    }]
                                })}
                                placeholder="您所在的具体地址(门牌号等)"
-                                  rows="3" count="100"
+                                  rows="3" count="20"
                     />
                 </List>
                 <WhiteSpace/>
                 <WingBlank>
                     <Button  type="primary" onClick={()=>this.onSubmit()}>
-                           确定</Button>
+                            <Icon type="plus" />
+                            {type=='create'?'新建收货地址':'编辑收货地址'}</Button>
                 </WingBlank>
 
             </div>

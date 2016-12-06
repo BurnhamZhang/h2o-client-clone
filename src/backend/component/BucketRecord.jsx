@@ -300,7 +300,7 @@ class BucketRecord extends Component {
                     }
 
                     const content = userAddresses.map(({houseNumber, name, phone},index)=><p key={index}>{`${houseNumber}/${name}/${phone}`}</p>)
-                    return  (<Popover content={content} title="Title">
+                    return  (<Popover content={content}>
                         <div>
                             {`${houseNumber}/${name}/${phone}`} <Icon type="down" />
                         </div>

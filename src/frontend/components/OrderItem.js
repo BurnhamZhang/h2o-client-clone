@@ -2,7 +2,8 @@
  * Created by zhangbohan on 16/11/21.
  */
 import React, {Component} from 'react';
-import { List,Icon ,Flex,Button,Modal ,WingBlank,WhiteSpace} from 'antd-mobile';
+import {withRouter, Link} from 'react-router';
+import { List,Icon ,Flex,Button,Modal ,WingBlank,WhiteSpace,NavBar} from 'antd-mobile';
 import {connect} from 'react-redux';
 import Order from './Order';
 const Item = List.Item;
@@ -30,12 +31,16 @@ const map={
     '9':'已取消',
 }
 
+
+@withRouter
 class OrderDetail extends Component {
     render(){
-        const  {version,tradeMoney,courierName,courierPhone,userLocation,userHouseNumber,userName,userPhone,orderNo,createdDate,payType,orderDetails,status} = this.props.data;
+        const  {version,courierImageUrl,tradeMoney,courierName,courierPhone,userLocation,userHouseNumber,userName,userPhone,orderNo,createdDate,payType,orderDetails,status} = this.props.data;
         console.log('render',this.props)
         return (
             <div>
+                <NavBar leftContent="返回" mode="light"  onLeftClick={() =>this.props.router.goBack() }
+                >订单详情</NavBar>
                 <List>
                     <Item>
                         <Flex justify="center">
@@ -57,10 +62,12 @@ class OrderDetail extends Component {
                             <img src={orderDetails[0].imageUrls[0]} alt="" style={{height: 100, width: 100}}/>
                             <Flex.Item className="Item">
                                 {
-                                    orderDetails.map((item,index)=>(<div key={index}>
-                                        <span style={{float:'right'}}>￥：{item.money}</span>
-                                        {item.name+'*'+item.count}
-                                    </div>))
+                                    orderDetails.map((item,index)=>(<Flex key={index} justify="between" align="top" style={{whiteSpace:'normal'}}>
+                                        <Flex.Item >
+                                            {item.name+'*'+item.count}
+                                        </Flex.Item>
+                                        <div>￥：{item.money}</div>
+                                    </Flex>))
                                 }
                                 <div style={{color:'red'}}>
                                     <span style={{float:'right'}}>￥：{tradeMoney}</span>
@@ -73,7 +80,7 @@ class OrderDetail extends Component {
                         courierName?(
                             <Item>
                                 <Flex justify="center">
-                                    <img alt="" style={{height: 100, width: 100}}/>
+                                    <img alt="" src={courierImageUrl} style={{height: 100, width: 100}}/>
                                     <Flex.Item className="Item">
                                         配送员  {courierName}
                                         <Brief>{courierPhone}</Brief>

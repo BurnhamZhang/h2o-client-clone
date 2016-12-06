@@ -32,12 +32,12 @@ const columns = [
     },
     {
         title: '空桶数量', dataIndex: 'buckets', key: '4', render: (buckets)=> {
-        return  buckets.reduce((item,num)=>(num+item.count*1),0)
+        return  buckets.reduce((num,item)=>(num+item.count*1),0)
     }
     },
     {
         title: '押金金额', dataIndex: 'buckets', key: '5',render: (buckets)=> {
-        return  buckets.reduce((item,num)=>(num+item.money*1),0).toFixed(2)
+        return  buckets.reduce((num,item)=>(num+item.money*1),0).toFixed(2)
     }
     },
     {title: '状态', dataIndex: 'status', key: '6', render: (status)=>statusMap[status]}
@@ -169,10 +169,13 @@ class OrderForm extends Component {
                 >
 
                     <span style={{display: 'inline-block', width: 300, verticalAlign: 'middle'}}>
-                         {getFieldDecorator('typeValue', {})(
+                         {getFieldDecorator('typeValue',{
+                             initialValue:''
+                         })(
                              <Input placeholder={'请输入'+typeMap[getFieldValue('type')] } size="large"
                                     addonBefore={
                                     getFieldDecorator('type', {
+                                        initialValue: 'orderNo'
                                     })(
                                         <Select  style={{width: 80}}>
                                             {
@@ -225,6 +228,7 @@ class Bucket extends Component {
             pageNum,
             pageSize,
         })
+        console.log('Submit!!!', values);
 
         values.orderType = 2;
         values.startDate = values.range[0].format('YYYY-MM-DD');

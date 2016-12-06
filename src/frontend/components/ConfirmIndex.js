@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {Toast, List, Switch, Icon, Stepper,Result,Flex,Button} from 'antd-mobile';
+import {Toast, List, Switch, Icon, Stepper,Result,Flex,Button,NavBar} from 'antd-mobile';
 import {connect} from 'react-redux';
 import {getDeliveryType} from  '../actions/delivery';
 import {shopChoose} from  '../actions/shop';
@@ -111,7 +111,7 @@ class ConfirmIndexContent extends Component {
     render() {
 
         const {data, cacheUpdate} = this.props;
-        const cache = this.props.location.query.cache;
+        const cacheId = this.props.location.state.cacheId;
 
         const {addressId,name, phone, houseNumber, location,orderDetails, bucketType, buckets, payType,showMoneyYuan,tradeMoneyYuan,bucketMoneyYuan} = this.props.data;
 
@@ -133,15 +133,17 @@ class ConfirmIndexContent extends Component {
         </Flex>)
 
         return <div id="confirm">
+            <NavBar leftContent="返回" mode="light"  onLeftClick={() =>this.props.router.goBack() }
+            >订单确认</NavBar>
             <List>
                 {
                     addressId?(
                         <Item thumb={<Icon type="environment"/>} multipleLine arrow="horizontal" onClick={()=> {
                             this.props.router.push({
-                                pathname: `/confirm/address`,
-                                query: {
-                                    cache,
-                                    address: Math.random().toString(36).substr(2)
+                                pathname: `/address`,
+                                state: {
+                                    cacheId,
+                                    choose:true,
                                 }
                             })
                         }
@@ -153,9 +155,8 @@ class ConfirmIndexContent extends Component {
                         <Item thumb={<Icon type="environment"/>} arrow="horizontal" onClick={()=> {
                             this.props.router.push({
                                 pathname: `/address/create`,
-                                query: {
-                                    cache,
-                                    address: Math.random().toString(36).substr(2)
+                                state: {
+                                    cacheId,
                                 }
                             })
                         }
@@ -176,8 +177,8 @@ class ConfirmIndexContent extends Component {
                 <Item arrow="horizontal" onClick={()=> {
                     this.props.router.push({
                         pathname: '/confirm/type',
-                        query: {
-                            cache
+                        state: {
+                            cacheId
                         }
                     })
                 }}>
@@ -188,8 +189,8 @@ class ConfirmIndexContent extends Component {
                 <Item arrow="horizontal" onClick={()=> {
                     this.props.router.push({
                         pathname: '/confirm/remark',
-                        query: {
-                            cache
+                        state: {
+                            cacheId
                         }
                     })
                 }}>

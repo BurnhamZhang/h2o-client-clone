@@ -20,7 +20,7 @@ class MainPage extends Component {
             <div id="main">
                 <NavBar leftContent={[<Icon type="environment" key="0"/>, location, <Icon type="down" key="2"/>]}
                         mode="light" onLeftClick={() => this.props.router.push('/geo')}
-                >NavBar</NavBar>
+                />
                 <GoodsList/>
             </div>
         );

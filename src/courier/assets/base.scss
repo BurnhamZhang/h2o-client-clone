@@ -1,4 +1,3 @@
-#react-content,
 .demo-preview-item,
 .am-tab-bar,
 .am-tab-bar-content,
@@ -6,140 +5,19 @@
   height: 100%;
 }
 
-html, body, .full-height {
-  height: 100%;
-  overflow: hidden;
-}
-
-
-#react-content {
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-}
-
 .am-tab-bar-tab-title {
   margin: 0;
 }
 
-#main {
-  .am-navbar-left-icon {
-    display: none;
-  }
 
+.order-list {
+  .am-list-body:after{
+    border-bottom: none;
+  }
 }
 
-#cart {
+.am-list.no-padding {
   .am-list-footer {
     padding: 0;
-  }
-  .cart-info {
-    line-height: 100px;
-    padding-left: 30px;
-    background: white;
-    position: relative;
-    p {
-      margin: 0;
-    }
-    &:after {
-      display: block;
-      position: absolute;
-      content: '';
-      left: 0;
-      bottom: 0;
-      right: auto;
-      top: auto;
-      width: 100%;
-      border-bottom: 1PX solid #ddd;
-    }
-  }
-
-  .submit {
-    height: 100px;
-    background: red;
-    color: white;
-    border: none;
-  }
-}
-
-#map {
-  position: fixed;
-  top:0;
-  left: 0;
-  height:100%;
-  width:100%;
-  padding-top: 91px;
-  box-sizing: border-box;
-  .search-bar {
-    position: absolute;
-    top:0;
-    left:0;
-    width:100%;
-  }
-
-  .map-mask {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    height: 100%;
-    z-index: 1;
-    background-color: rgba(0,0,0,.8);
-  }
-
-  .map-container {
-    height: 50%;
-    position: relative;
-  }
-  .map-list {
-    -webkit-overflow-scrolling: touch;
-    height: 50%;
-    overflow-y: scroll;
-  }
-  .search-list {
-    position: absolute;
-    z-index: 2;
-    top:0;
-    left: 0;
-    -webkit-overflow-scrolling: touch;
-    height: 100%;
-    width: 100%;
-    overflow-y: scroll;
-  }
-}
-
-#confirm{
-
-  padding-bottom: 100px;
-  .confirm-footer{
-    position: fixed;
-    bottom:0;
-    width:100%;
-
-    &:before {
-      display: block;
-      position: absolute;
-      content: '';
-      left: 0;
-      top: 0;
-      right: auto;
-      width: 100%;
-      border-bottom: 1PX solid #ddd;
-    }
-  }
-  .confirm-info {
-    line-height: 50px;
-    padding-left: 30px;
-    background: white;
-    p {
-      margin: 0;
-    }
-  }
-
-  .submit {
-    height: 100px;
-    background: red;
-    color: white;
-    border: none;
   }
 }

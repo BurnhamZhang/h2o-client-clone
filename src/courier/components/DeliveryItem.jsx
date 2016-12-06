@@ -6,7 +6,6 @@ import moment from 'moment';
 import {connect} from 'react-redux';
 
 const  invoiceMap={
-    '1':'无发票',
     '2':'普通发票',
     '3':'增值税发票',
 }
@@ -20,7 +19,7 @@ class DeliveryItem extends Component {
 
 
     render() {
-        const {deliveryNo,status,payType,orderType,orderCreatedDate,invoiceType,invoiceTitle,orderNo,tradeMoney,deliveryType,appointStart,appointEnd,goods,userAddress,userName,userPhone} = this.props.data;
+        const {deliveryNo,status,payType,orderType,orderCreatedDate,invoiceType,memo,orderNo,tradeMoney,deliveryType,appointStart,appointEnd,goods,userAddress,userName,userPhone} = this.props.data;
 
         const renderFooter =()=>{
             if(status=='0'){
@@ -34,14 +33,18 @@ class DeliveryItem extends Component {
             }
             if(status=='1'){
                 return  <Flex>
-                    <Flex.Item>
-                        <Button type='ghost' onClick={()=>{
-                            this.props.modifyDeliveryById(deliveryNo,{
-                                deliveryNo,
-                                status:4
-                            })
-                        }}>申请取消</Button>
-                    </Flex.Item>
+                    {
+                        orderType=='1'?(
+                            <Flex.Item>
+                                <Button type='ghost' onClick={()=>{
+                                    this.props.modifyDeliveryById(deliveryNo,{
+                                        deliveryNo,
+                                        status:4
+                                    })
+                                }}>申请取消</Button>
+                            </Flex.Item>
+                        ):null
+                    }
                     <Flex.Item>
                         <a href={'tel:'+userPhone}>
                             <Button>联系用户</Button>
@@ -82,7 +85,7 @@ class DeliveryItem extends Component {
                                 收货时间：{deliveryType=='1'?'即时送':(moment(appointStart).format('YYYY-MM-DD  HH:mm')+'  '+moment(appointEnd).format('HH:mm'))}
                             </div>
                             <div>
-                                备注信息：{invoiceMap[invoiceType]  }{invoiceTitle?('（'+invoiceTitle+'）'):null}
+                                备注信息：{invoiceMap[invoiceType]  }{memo?('（'+memo+'）'):null}
                             </div>
                             <WhiteSpace/>
                             <Flex>
@@ -101,7 +104,7 @@ class DeliveryItem extends Component {
                     ):(
                         <div>
                             <div>
-                                个数：2个
+                                个数：个
                             </div>
                             <WhiteSpace/>
                             <Tag>

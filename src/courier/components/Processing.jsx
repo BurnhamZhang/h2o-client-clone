@@ -1,5 +1,5 @@
 import React, {Component , PropTypes } from 'react';
-import { Toast } from 'antd-mobile';
+import { Toast,NavBar } from 'antd-mobile';
 import {withRouter} from 'react-router';
 import DeliveryList from './DeliveryList';
 
@@ -9,7 +9,13 @@ import DeliveryList from './DeliveryList';
 class Processing extends Component {
 
     render() {
-     return   <DeliveryList  params={{status:1}}/>
+     return   (
+         <div>
+             <NavBar leftContent="返回" mode="light"  onLeftClick={() =>this.props.router.goBack() }
+             >配送中订单</NavBar>
+             <DeliveryList  params={{status:1}}/>
+         </div>
+         )
     }
 }
 ;

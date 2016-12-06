@@ -5,6 +5,16 @@ import { List,InputItem ,Button,WhiteSpace,WingBlank,Toast} from 'antd-mobile';
 import { createForm } from 'rc-form';
 import { fetchUserIfNeeded } from '../actions/user';
 
+import Action from './Action';
+
+@connect((state, ownProps)=>({
+    remoteMsg: state.user.remoteMsg,
+    didInvalidate: state.user.didInvalidate,
+    didUpdate: state.user.didUpdate,
+}))
+class UserAction extends Action{
+
+}
 
 @createForm()
 @withRouter
@@ -56,6 +66,7 @@ class Login extends Component {
         const { getFieldProps } = this.props.form;
         return (
             <div>
+                <UserAction/>
                 <List>
                     <InputItem  {...getFieldProps('account',{
                         rules:[{

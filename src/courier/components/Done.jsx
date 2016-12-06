@@ -1,5 +1,5 @@
 import React, {Component , PropTypes } from 'react';
-import { Toast } from 'antd-mobile';
+import { Toast ,NavBar} from 'antd-mobile';
 import {withRouter} from 'react-router';
 import DeliveryList from './DeliveryList';
 
@@ -10,10 +10,13 @@ import DeliveryList from './DeliveryList';
 class Done extends Component {
 
     render() {
-     return   <DeliveryList  params={{status:3}}/>
+     return  (<div>
+             <NavBar leftContent="返回" mode="light"  onLeftClick={() =>this.props.router.goBack() }
+             >已配送完成订单</NavBar>
+         <DeliveryList  params={{status:3}}/>
+         </div>)
     }
-}
-;
+};
 
 
 export default Done;

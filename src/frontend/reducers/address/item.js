@@ -48,12 +48,12 @@ export default function (state = {
             })
             break;
         case ADDRESS_UPDATE_SUCCESS:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
                 ...action.payload,
-                data:null,
             })
             break;
 
@@ -75,12 +75,12 @@ export default function (state = {
             })
             break;
         case ADDRESS_CREATE_SUCCESS:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
                 ...action.payload,
-                data:null,
             })
             break;
 
@@ -103,12 +103,12 @@ export default function (state = {
             })
             break;
         case ADDRESS_DELETE_SUCCESS:
+            delete action.payload.data;
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
                 didUpdate:true,
                 ...action.payload,
-                data:null,
             })
             break;
         

@@ -34,7 +34,7 @@ class RetreatContent extends Component {
     cacheUpdate(data){
         console.log(this.props)
         this.props.cacheUpdate({
-            key: this.props.cache,
+            key: this.props.cacheId,
             data
         })
     }
@@ -56,6 +56,7 @@ class RetreatContent extends Component {
         } = this.props.bucket;
 
 
+        const {cacheId} = this.props;
 
         return <div >
             <BucketAction/>
@@ -79,9 +80,10 @@ class RetreatContent extends Component {
                             addressId?(
                                 <Item thumb={<Icon type="environment"/>} multipleLine arrow="horizontal" onClick={()=> {
                                     this.props.router.push({
-                                        pathname: `/confirm/address`,
-                                        query: {
-                                            address: Math.random().toString(36).substr(2)
+                                        pathname: `/address`,
+                                        state: {
+                                            cacheId,
+                                            choose:true
                                         }
                                     })
                                 }
@@ -93,8 +95,8 @@ class RetreatContent extends Component {
                                 <Item thumb={<Icon type="environment"/>} arrow="horizontal" onClick={()=> {
                                     this.props.router.push({
                                         pathname: `/address/create`,
-                                        query: {
-                                            address: Math.random().toString(36).substr(2)
+                                        state: {
+                                            cacheId,
                                         }
                                     })
                                 }
@@ -153,6 +155,10 @@ class RetreatContent extends Component {
 
 
 @connect((state, ownProps)=> {
+
+    console.warn('location',ownProps.location);
+
+
     const {id, name, geo, houseNumber, streetId, phone, location} = state.address.bucket.data || {}
     const data = Object.assign({
         shopId: Array.isArray(state.shop.data) ? state.shop.data[0] : null,
@@ -177,7 +183,7 @@ class RetreatContent extends Component {
         houseNumber,
         streetId,
         phone
-    } : null, state.cache[ownProps.location.query.cache])
+    } : null, state.cache[ownProps.cacheId])
 
     const showMoneyYuan = data.buckets.reduce((value, item)=>value + item.count * item.priceYuan, 0).toFixed(2);
 
@@ -210,7 +216,7 @@ class RetreatContorl extends Component {
         }
 
         return (
-            <RetreatContent data={data} bucket={bucket}  cache={this.props.location.query.cache} />
+            <RetreatContent data={data} bucket={bucket}  cacheId={this.props.cacheId} />
         )
     }
 }
@@ -218,8 +224,10 @@ class RetreatContorl extends Component {
 
 class Retreat extends Component {
     render(){
+
+        const cacheId =  Math.random().toString(36).substr(2);
         return <Shop>
-            <RetreatContorl  {...this.props}/>
+            <RetreatContorl  {...this.props} cacheId={cacheId}/>
         </Shop>
     }
 }

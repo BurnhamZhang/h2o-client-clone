@@ -89,7 +89,6 @@ class CourierList extends Component {
         )
         return (<div className="ant-layout-content">
             <Table title={title} columns={columns} bordered dataSource={this.props.data} bgoodsed
-                   loading={this.props.isFetching}
                    pagination={pagination}/>
         </div>)
     }
