@@ -33,14 +33,18 @@ class DeliveryItem extends Component {
             }
             if(status=='1'){
                 return  <Flex>
-                    <Flex.Item>
-                        <Button type='ghost' onClick={()=>{
-                            this.props.modifyDeliveryById(deliveryNo,{
-                                deliveryNo,
-                                status:4
-                            })
-                        }}>申请取消</Button>
-                    </Flex.Item>
+                    {
+                        orderType=='1'?(
+                            <Flex.Item>
+                                <Button type='ghost' onClick={()=>{
+                                    this.props.modifyDeliveryById(deliveryNo,{
+                                        deliveryNo,
+                                        status:4
+                                    })
+                                }}>申请取消</Button>
+                            </Flex.Item>
+                        ):null
+                    }
                     <Flex.Item>
                         <a href={'tel:'+userPhone}>
                             <Button>联系用户</Button>

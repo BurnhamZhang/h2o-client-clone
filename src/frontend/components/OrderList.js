@@ -95,7 +95,7 @@ class OrderList extends Component {
                     Toast.info('成功', 1, ()=> {
                         this.data = [];
                         this.props.fetchOrderListIfNeeded({
-                            pageNum: 0,
+                            pageNum: 1,
                             pageSize: 20
                         })
                     })

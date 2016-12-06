@@ -39,6 +39,9 @@ class MyListView  extends Component {
     }
     componentWillReceiveProps(nextProps){
         console.warn('componentWillReceiveProps',nextProps);
+        if(nextProps.pagination.pageNum=='1'){
+            this.data =[];
+        }
         if(nextProps.isLoading && !this.props.isLoading){
             this.setState({
                 isLoading: true,
