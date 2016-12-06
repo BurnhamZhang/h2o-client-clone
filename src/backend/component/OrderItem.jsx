@@ -207,19 +207,13 @@ class OrderItem extends Component {
                                 {...formItemLayout}
                                 label="申请人："
                             >
-                                <p>{ data.createdDate }</p>
+                                <p>{ data.cancelUserName }</p>
                             </FormItem>
                             <FormItem
                                 {...formItemLayout}
-                                label="付款时间："
+                                label="取消理由："
                             >
-                                <p>{ data.payTime }</p>
-                            </FormItem>
-                            <FormItem
-                                {...formItemLayout}
-                                label="完成时间："
-                            >
-                                <p>{ data.modifiedDate }</p>
+                                <p>{ data.cancelReason }</p>
                             </FormItem>
                         </Card>
                     </Col>
@@ -235,7 +229,7 @@ class OrderItem extends Component {
                                 {...formItemLayout}
                                 label="发票&抬头："
                             >
-                                <p>{ (data.invoiceType == '1' ? '不' : '') + '需要' + data.invoiceTitle }</p>
+                                <p>{ (data.invoiceType == '1' ? '不' : '') + '需要' + data.memo }</p>
                             </FormItem>
 
                         </Card>
