@@ -43,7 +43,7 @@ const columns = [
                 const content = items.map((item, index)=> (<p key={index}>{item.goodsName + '/' + item.count}</p>))
 
                 return (<Popover content={content} trigger="hover">
-                    <div>{ items.length }样商品</div>
+                    <a>{ items.length }样商品</a>
                 </Popover>)
             }
             else {
