@@ -23,7 +23,6 @@ export default function (state = {
       })
       break;
     case MANAGE_ORDER_SUCCESS:
-      delete action.payload.data;
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,

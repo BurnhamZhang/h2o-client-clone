@@ -52,7 +52,7 @@ class Geo extends Component {
                 >地址选择</NavBar>
                 <List  renderHeader={() => '当前地址'}>
                     <Item onClick={()=>this.onClick(this.props.geo.addressComponents)} extra={<span onClick={()=> this.props.get_geolocation()} >{this.props.geo.isFetching?<Icon type="loading" />:<Icon type="reload" />}重新定位</span>}>
-                        {this.props.geo.streetNumber}
+                        {this.props.geo.streetNumber||this.props.geo.street}
                     </Item>
                 </List>
                 { data? <AddressList renderHeader={() => '收货地址'} data={data} onChoose={({ streetId,

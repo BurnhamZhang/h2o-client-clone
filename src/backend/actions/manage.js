@@ -38,7 +38,7 @@ function manage_order_success(json) {
 function fetchManageOrderList(data) {
     return dispatch => {
         dispatch(manage_order_request(data));
-        return fetch('/api/order/assign?pageSize=1&pageNum=999999', {
+        return fetch('/api/order/assign?pageSize=9999999&pageNum=1', {
             data
         })
             .then((json) => {

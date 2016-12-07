@@ -9,7 +9,7 @@ class MyListView  extends Component {
         super(props);
         const dataSource = new ListView.DataSource({
             rowHasChanged: (row1, row2) => {
-                return row1.id !== row2.id
+                return row1 !== row2
             },
         });
         this.state=  {

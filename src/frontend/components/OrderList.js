@@ -42,7 +42,7 @@ class FeedBackAction extends Action {
 class OrderItem extends Component {
 
     render() {
-        const {orderDetails, tradeMoney, orderNo} = this.props.data;
+        const {orderDetails, tradeMoney, orderNo,createdDate} = this.props.data;
         return (
             <Item onClick={
                 ()=> {
@@ -52,16 +52,17 @@ class OrderItem extends Component {
                 <Flex justify="center">
                     <img src={orderDetails[0].imageUrls[0]} alt="" style={{height: '1rem', width: '1rem'}}/>
                     <Flex.Item className="Item">
-                        <Flex justify="between" align="start">
-                            <span>{orderDetails[0].name + '*' + orderDetails[0].count}</span>
-                            <span>
+                        <Flex justify="between" align="start" wrap="wrap">
+                            <div style={{whiteSpace:'normal'}} >{orderDetails[0].name + '*' + orderDetails[0].count}</div>
+                            <div>
                             {
                                 this.props.renderTag.call(this)
                             }
-                       </span>
+                            </div>
                         </Flex>
+                        <Brief>{createdDate}</Brief>
                         <Flex justify="between">
-                            <Brief>￥{tradeMoney} </Brief>
+                            <Brief style={{color:'#000'}}>￥{tradeMoney} </Brief>
                             {
                                 this.props.renderButton.call(this)
 
@@ -93,7 +94,6 @@ class OrderList extends Component {
                 >我的订单</NavBar>
                 <FeedBackAction updateHandle={ (component)=> {
                     Toast.info('成功', 1, ()=> {
-                        this.data = [];
                         this.props.fetchOrderListIfNeeded({
                             pageNum: 1,
                             pageSize: 20
