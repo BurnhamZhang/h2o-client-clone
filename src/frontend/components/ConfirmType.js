@@ -144,46 +144,52 @@ class ConfirmType extends Component {
                 >
                     预约选择 <span className="am-list-brief">每日({type.deliveryStart + '-' + type.deliveryEnd})</span>
                 </RadioItem>
+            </List>
+
                 {
                     getFieldValue('deliveryType') == '2' ? (
                         <div>
-                            <DatePicker
-                                mode="date"
-                                title="选择日期"
-                                extra="可选,小于结束日期"
-                                {...getFieldProps('date', {
-                                    initialValue: minDate,
-                                })}
-                                minDate={minDate}
-                                maxDate={maxDate}
-                            >
-                                <List.Item arrow="horizontal">配送日期</List.Item>
-                            </DatePicker>
-                            <DatePicker mode="time"
-                                        {...getFieldProps('appointStart', {
-                                            initialValue: appointStart,
-                                        })}
-                                        minDate={minTime}
-                                        maxDate={getFieldValue('appointEnd') || maxTime}
+                            <List>
+                                <DatePicker
+                                    mode="date"
+                                    title="选择日期"
+                                    extra="可选,小于结束日期"
+                                    {...getFieldProps('date', {
+                                        initialValue: minDate,
+                                    })}
+                                    minDate={minDate}
+                                    maxDate={maxDate}
+                                >
+                                    <List.Item arrow="horizontal">配送日期</List.Item>
+                                </DatePicker>
+                            </List>
+                            <List renderHeader={() => '配送时段'}>
+                                <DatePicker mode="time"
+                                            {...getFieldProps('appointStart', {
+                                                initialValue: appointStart,
+                                            })}
+                                            minDate={minTime}
+                                            maxDate={getFieldValue('appointEnd') || maxTime}
 
-                            >
-                                <List.Item arrow="horizontal">开始时间</List.Item>
-                            </DatePicker>
-                            <DatePicker
-                                mode="time"
-                                {...getFieldProps('appointEnd', {
-                                    initialValue: appointEnd,
-                                })}
-                                minDate={getFieldValue('appointStart') || minTime}
-                                maxDate={maxTime}
-                            >
-                                <List.Item arrow="horizontal">结束时间</List.Item>
-                            </DatePicker>
+                                >
+                                    <List.Item arrow="horizontal">起</List.Item>
+                                </DatePicker>
+                                <DatePicker
+                                    mode="time"
+                                    {...getFieldProps('appointEnd', {
+                                        initialValue: appointEnd,
+                                    })}
+                                    minDate={getFieldValue('appointStart') || minTime}
+                                    maxDate={maxTime}
+                                >
+                                    <List.Item arrow="horizontal">止</List.Item>
+                                </DatePicker>
+                            </List>
                         </div>
                     ) : null
                 }
 
-            </List>
+
             <WhiteSpace/>
             <WingBlank>
                 <Button type="primary" onClick={()=> {

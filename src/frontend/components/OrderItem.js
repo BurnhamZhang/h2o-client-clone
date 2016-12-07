@@ -44,7 +44,7 @@ class OrderDetail extends Component {
                 <List>
                     <Item>
                         <Flex justify="center">
-                            <img src="https://zos.alipayobjects.com/rmsportal/NRzOqylcxEstLGf.png" style={{height: 100, width: 100}}/>
+                            <img src="https://zos.alipayobjects.com/rmsportal/NRzOqylcxEstLGf.png" style={{height: '1rem', width: '1rem'}}/>
                             <Flex.Item className="Item">
                                 {map[status]}
                                 {
@@ -59,7 +59,7 @@ class OrderDetail extends Component {
                     </Item>
                     <Item>
                         <Flex justify="center">
-                            <img src={orderDetails[0].imageUrls[0]} alt="" style={{height: 100, width: 100}}/>
+                            <img src={orderDetails[0].imageUrls[0]} alt="" style={{height: '1rem', width: '1rem'}}/>
                             <Flex.Item className="Item">
                                 {
                                     orderDetails.map((item,index)=>(<Flex key={index} justify="between" align="top" style={{whiteSpace:'normal'}}>
@@ -80,7 +80,7 @@ class OrderDetail extends Component {
                         courierName?(
                             <Item>
                                 <Flex justify="center">
-                                    <img alt="" src={courierImageUrl} style={{height: 100, width: 100}}/>
+                                    <img alt="" src={courierImageUrl} style={{height: '1rem', width: '1rem'}}/>
                                     <Flex.Item className="Item">
                                         配送员  {courierName}
                                         <Brief>{courierPhone}</Brief>
@@ -93,7 +93,7 @@ class OrderDetail extends Component {
 
                         <Flex justify="center" align="center">
                             收货信息
-                            <Flex.Item style={{marginLeft:20}}>
+                            <Flex.Item style={{marginLeft:'0.2rem'}}>
                                 {userLocation+userHouseNumber}
                                 <Brief>{userName+userPhone}</Brief>
                             </Flex.Item>

@@ -5,10 +5,22 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter,Link} from 'react-router';
 import {orderPay, orderCancelConfirm, feedbackOrder, fetchOrderIfNeeded,orderComplete} from '../actions/order';
-import {ListView, List, Flex, Button, Modal, Tag, Toast} from 'antd-mobile';
+import {ListView, List, Flex, Button, Modal, Tag, Toast,Picker} from 'antd-mobile';
 
 
-
+const list = [{
+    value:'未及时送达，多次催单无果',
+    label:'未及时送达，多次催单无果'
+},{
+    value:'送水人员态度恶劣',
+    label:'送水人员态度恶劣'
+},{
+    value:'送水人员操作不规范',
+    label:'送水人员操作不规范'
+},{
+    value:'其他',
+    label:'其他'
+}]
 
 @connect((state, ownProps)=>({}), (dispatch, ownProps)=>({
     orderPay: (payload)=>dispatch(orderPay(payload)),
@@ -50,22 +62,41 @@ class Order extends Component {
 
     renderButton() {
         const {status, orderNo,version} = this.props.data;
-        const ts = <Button inline size="small" key="3" onClick={(e)=> {
-            e.stopPropagation();
-            Modal.prompt('投诉', '请输入投诉的内容', [
-                {text: '取消'},
-                {
-                    text: '提交', onPress: memo => {
-                    this.props.feedbackOrder({
-                        orderNo,
-                        type: 0,
-                        memo
-                    })
-                }
-                },
-            ]);
 
-        }}>投诉</Button>
+
+        const ts = (<Picker data={list} cols={1} onChange={(value)=>{
+            if(value =='其他'){
+                Modal.prompt('投诉', '请输入投诉的内容', [
+                    {text: '取消'},
+                    {
+                        text: '提交', onPress: memo => {
+                        this.props.feedbackOrder({
+                            orderNo,
+                            type: 0,
+                            memo
+                        })
+                    }
+                    },
+                ]);
+            }
+            else {
+                this.props.feedbackOrder({
+                    orderNo,
+                    type: 0,
+                    memo:value
+                })
+            }
+
+        }}>
+            <Button inline size="small" key="3" onClick={(e)=>{
+                e.stopPropagation();
+            }}>投诉</Button>
+            </Picker>)
+
+
+
+
+
 
         const cd = <Button inline size="small" key="4" onClick={(e)=> {
             e.stopPropagation();
