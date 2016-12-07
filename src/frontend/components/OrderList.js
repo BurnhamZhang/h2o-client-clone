@@ -52,7 +52,7 @@ class OrderItem extends Component {
                 <Flex justify="center">
                     <img src={orderDetails[0].imageUrls[0]} alt="" style={{height: '1rem', width: '1rem'}}/>
                     <Flex.Item className="Item">
-                        <Flex justify="between" align="start" wrap="wrap">
+                        <Flex justify="between" align="start">
                             <div style={{whiteSpace:'normal'}} >{orderDetails[0].name + '*' + orderDetails[0].count}</div>
                             <div>
                             {
