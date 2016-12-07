@@ -17,8 +17,8 @@ class GoodsItem extends Component {
         return  (
             <Item>
                 <Flex justify="center">
-                    <div style={{display:'inline-block',height: 100, width: 100,position:'relative'}}>
-                        <img style={{ height: 100, width:100, marginRight: 8 }} src={imagesArray[0]} />
+                    <div style={{display:'inline-block',height: '1rem', width: '1rem',position:'relative'}}>
+                        <img style={{ height: '1rem', width:'1rem', marginRight: 8 }} src={imagesArray[0]} />
                         {
                             stock*1 ==0?(
                                 <Flex style={{position:'absolute',top:0,left:0,width:'100%',height:'100%',background:'rgba(0,0,0,0.15)'}} justify="center" align="center">

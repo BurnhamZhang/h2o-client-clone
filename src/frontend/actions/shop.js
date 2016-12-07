@@ -44,7 +44,7 @@ export function shopChoose(data) {
             data:streetId?{streetId}:{province,city,district,street:town}
         })
             .then((json) => {
-                json.location = data.location||data.streetNumber
+                json.location = data.location||data.streetNumber||data.street;
                 dispatch(shop_choose_success(json));
             }).catch(error => {
                 dispatch(shop_choose_failure(error))

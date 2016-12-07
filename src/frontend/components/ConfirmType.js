@@ -73,7 +73,7 @@ class ConfirmType extends Component {
             <List renderHeader={() => '支付方式'}>
                 <Item>
                     {
-                        orderDetails.map((item,index)=>(<img key={index} src={item.imagesArray[0]} style={{width:100,height:100,margin:'10px 10px 0 0'}} alt=""/>))
+                        orderDetails.map((item,index)=>(<img key={index} src={item.imagesArray[0]} style={{width:'1rem',height:'1rem',margin:'0.1rem 0.1rem 0 0'}} alt=""/>))
                     }
                 </Item>
                 <Item>

@@ -69,7 +69,7 @@ class ConfirmIndex extends Component {
                 }
                 <Item>
                     <Flex justify="center">
-                        <img src={orderDetails[0].imagesArray[0]} alt="" style={{height: 100, width: 100}}/>
+                        <img src={orderDetails[0].imagesArray[0]} alt="" style={{height: '1rem', width: '1rem'}}/>
                         <Flex.Item className="Item">
                             {orderDetails[0].name + orderDetails[0].memo}
                             <List.Item.Brief>￥：{orderDetails[0].priceYuan +'*'+orderDetails[0].count}</List.Item.Brief>

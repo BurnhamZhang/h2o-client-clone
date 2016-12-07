@@ -158,7 +158,7 @@ class Confirm extends Component {
         console.warn('componentWillMount')
         if (this.props.data.shopId) {
             this.props.getDeliveryAddress();
-            !this.props.type && this.props.getDeliveryType();
+            this.props.getDeliveryType();
         }
 
     }
