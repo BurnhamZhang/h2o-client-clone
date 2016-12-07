@@ -64,7 +64,7 @@ class Order extends Component {
         const {status, orderNo,version} = this.props.data;
 
 
-        const ts = (<Picker data={list} cols={1} onChange={(value)=>{
+        const ts = (<Picker data={list} cols={1} onChange={([value])=>{
             if(value =='其他'){
                 Modal.prompt('投诉', '请输入投诉的内容', [
                     {text: '取消'},
