@@ -8,6 +8,7 @@ const createForm = Form.create;
 import {connect} from 'react-redux';
 import {fetchCandidateCourierListIfNeeded, updateCourierStatus} from '../actions/courier';
 import {createDelivery} from '../actions/delivery';
+import {fetchManageOrderListIfNeeded} from '../actions/manage';
 import Delivery from './Delivery';
 import Action from './Action';
 
@@ -87,10 +88,14 @@ class Order extends Component {
 
 
 @connect((state, ownProps)=>({
-    ...state.manage.order
+    ...state.manage
+}), (dispatch, ownProps)=>({
+    fetchManageOrderListIfNeeded: ()=>dispatch(fetchManageOrderListIfNeeded()),
 }))
 class OrderBox extends Component {
-
+    componentWillMount() {
+        this.props.fetchManageOrderListIfNeeded()
+    }
     render() {
         const {orderMap, data} = this.props;
 

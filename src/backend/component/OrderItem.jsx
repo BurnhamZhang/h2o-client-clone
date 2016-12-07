@@ -46,7 +46,7 @@ const deliveryStatusMap = {
     0: '待接单',
     1: '已接单',
     2: '配送中',
-    3: '换人',
+    3: '配送完成',
     4: '申请取消',
     5: '已取消',
     6: '配送完成',
@@ -229,8 +229,19 @@ class OrderItem extends Component {
                                 {...formItemLayout}
                                 label="发票&抬头："
                             >
-                                <p>{ (data.invoiceType == '1' ? '不' : '') + '需要' + data.memo }</p>
+                                <p>{ (data.invoiceType == '1' ? '不需要' : ('需要'+ data.memo)) }</p>
                             </FormItem>
+
+                            {
+                                data.invoiceType == '1'?(
+                                    <FormItem
+                                        {...formItemLayout}
+                                        label="备注"
+                                    >
+                                        <p>{  data.memo }</p>
+                                    </FormItem>
+                                ):null
+                            }
 
                         </Card>
                     </Col>

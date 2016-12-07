@@ -3,7 +3,8 @@
  */
 
 import fetch from '../common/fetch';
-import {get_orders} from  './manage'
+import {fetchManageOrderListIfNeeded} from  './manage'
+import {fetchCandidateCourierListIfNeeded} from  './courier'
 
 export const DELIVERY_CREATE_REQUEST = 'DELIVERY_CREATE_REQUEST';
 export const DELIVERY_CREATE_SUCCESS = 'DELIVERY_CREATE_SUCCESS';
@@ -115,7 +116,13 @@ export function createDelivery(payload) {
         })
             .then((json) => {
                 dispatch(delivery_create_success(json));
-                get_orders();
+                dispatch(fetchManageOrderListIfNeeded());
+                dispatch(fetchCandidateCourierListIfNeeded());
+                dispatch(fetchDeliveryListIfNeeded({
+                    pageNum:1,
+                    pageSize:20,
+                    status: [0, 1],
+                }));
             }).catch(error => {
                 dispatch(delivery_create_failure(error))
             });

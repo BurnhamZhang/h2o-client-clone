@@ -3,46 +3,66 @@
  */
 
 
-import {getStore} from '../index';
 
-export const MANAGE_LOGIN = 'MANAGE_LOGIN';
-export const MANAGE_LEAVE = 'MANAGE_LEAVE';
-export const MANAGE_RECEIVE_ORDERS = 'MANAGE_RECEIVE_ORDERS';
+import fetch from '../common/fetch';
 
 
 
+export const MANAGE_ORDER_REQUEST = 'MANAGE_ORDER_REQUEST';
+export const MANAGE_ORDER_SUCCESS = 'MANAGE_ORDER_SUCCESS';
+export const MANAGE_ORDER_FAILURE = 'MANAGE_ORDER_FAILURE';
 
 
-
-function manage_login_success(payload) {
+function manage_order_failure(payload) {
     return {
-        type: MANAGE_LOGIN,
+        type: MANAGE_ORDER_FAILURE,
         payload
     };
 }
 
+function manage_order_request(payload) {
+    return {
+        type: MANAGE_ORDER_REQUEST,
+        payload
+    };
+}
 
+function manage_order_success(json) {
+    return {
+        type: MANAGE_ORDER_SUCCESS,
+        receiveAt: Date.now(),
+        payload: json
+    };
+}
 
-export function manage_login() {
-    return (dispatch, getState) => {
-        const token = getState().user.data.token;
-        socket.emit('login',{
-            token:token
+function fetchManageOrderList(data) {
+    return dispatch => {
+        dispatch(manage_order_request(data));
+        return fetch('/api/order/assign?pageSize=1&pageNum=999999', {
+            data
         })
-
-        console.warn('manage_login_success')
-        dispatch(manage_login_success())
+            .then((json) => {
+                dispatch(manage_order_success(json));
+            }).catch(error => {
+                dispatch(manage_order_failure(error))
+            });
     };
 }
 
 
-export function get_orders() {
-    socket.emit('get orders')
+function shouldFetchManageOrderList(state) {
+    if (state.manage.isFetching) {
+        return false;
+    }
+    return true;
 }
 
-function receive_orders(payload) {
-    return {
-        type: MANAGE_RECEIVE_ORDERS,
-        payload
+
+export function fetchManageOrderListIfNeeded(data) {
+    return (dispatch, getState) => {
+        if (shouldFetchManageOrderList(getState())) {
+            return dispatch(fetchManageOrderList(data));
+        }
     };
 }
+

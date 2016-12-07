@@ -1,13 +1,34 @@
-import {MANAGE_LEAVE,MANAGE_LOGIN,MANAGE_RECEIVE_ORDERS } from '../actions/manage';
+import {MANAGE_ORDER_REQUEST,MANAGE_ORDER_FAILURE,MANAGE_ORDER_SUCCESS } from '../actions/manage';
 
-export default function example(state = {
-  order: {},
-  courier: {}
+export default function (state = {
+  isFetching: false,
+  didInvalidate: false,
+  didUpdate: false,
+  data:null
 }, action) {
   switch (action.type) {
-    case MANAGE_RECEIVE_ORDERS:
+    case MANAGE_ORDER_FAILURE:
       return Object.assign({}, state, {
-        order:action.payload
+        isFetching: false,
+        didInvalidate: true,
+        didUpdate:false,
+        ...action.payload
+      })
+      break;
+    case MANAGE_ORDER_REQUEST:
+      return Object.assign({}, state, {
+        isFetching: true,
+        didInvalidate: false,
+        didUpdate:false,
+      })
+      break;
+    case MANAGE_ORDER_SUCCESS:
+      delete action.payload.data;
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        didUpdate:true,
+        ... action.payload
       })
       break;
     default:
